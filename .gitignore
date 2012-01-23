@@ -16,6 +16,3 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
-
-# this file
-.gitignore
