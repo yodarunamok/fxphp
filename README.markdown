@@ -1,4 +1,4 @@
-FX.php
+# FX.php
 
 A FREE, Open Source PHP database abstraction class for accessing FileMaker Pro and other databases
 by Chris Hansen with Chris Adams, Gjermund Thorsen, and others.
