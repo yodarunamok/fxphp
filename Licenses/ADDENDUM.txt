@@ -1,0 +1,42 @@
+FX.php License Addendum
+=======================
+
+Please note that many of these items may already be required by law in one 
+locality or another, but the actions of some individuals and companies have 
+indicated that some clarification is required.  Note that compliance with these 
+items is required in order to use and/or distribute FX.php.  By using or 
+distributing FX.php in any form you accept the terms of this addendum as well as 
+the licenses associated with each part of FX.php.
+
+1) This addendum must be included, unmodified, with any distribution of FX.php.
+
+2) As stated elsewhere, FX.php(TM) is a trademark of Chris Hansen, and both 
+FX.php and the FX.php logo are copyrighted by Chris Hansen.
+
+3) If either the text "FX.php" or the FX.php logo are used on a web page, each 
+must be a hyperlink to "http://www.iviking.org/FX.php/".
+
+4) If FX.php is referred to in printed material, that material must clearly 
+indicate the trademark and copyright ownership of FX.php as stated above.
+
+5) Should any website distribute FX.php, or link to an archive containing FX.php, 
+that site must provide the following disclaimer (in addition to copyright and/or 
+Trademark notices) within 1/4 inch of all download links and/or buttons:
+"This site is neither affiliated with nor endorsed by Chris Hansen"
+
+6) Whenever any party distributes FX.php via a delivery method other than 
+download, the disclaimer in five (above) must be prominently displayed.  If 
+FX.php and/or its logo are present on the packaging, the disclaimer must also be 
+present on the packaging.
+
+7) Any party which collects information in connection with FX.php must inform all 
+individuals from whom that information is collected of how that information will 
+be used as well as with whom that information will be shared.
+
+8) Should a party wish to be exempted from any of the requirements above, that 
+party may apply to the Trademark/Copyright holder via email (chris@iviking.org) 
+for exemption.  Exceptions will be considered on a case by case basis, and given 
+at the sole discretion of the Trademark/Copyright holder.  Any exceptions will be 
+given in writing.  The party requesting exception must comply with all terms of 
+the licenses and this addendum until granted an exception.  An exception granted 
+to one portion of this addendum does not imply exceptions to any other parts.

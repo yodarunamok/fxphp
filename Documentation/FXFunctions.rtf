@@ -1,0 +1,1168 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red255\green0\blue0;}
+\margl1440\margr1440\vieww12260\viewh14020\viewkind0
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\f0\fs48 \cf0 Function Reference for FX.php
+\fs24 \
+\
+This document is intended to demonstrate the functions in FX.php.  Almost all of the functions within FX can be called in any order.  There are, however, some exceptions:  1) the declaration of an instance of FX must come before the others; and 2) 
+\i\b one
+\i0\b0  of the query functions must be called very last.  A list of the functions follows with descriptions of each relevant parameter.  Please note that in the original release, the FX class was called FMData() instead.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs22 \cf0 Important:  Whenever FX is used, you 
+\i\fs24 must
+\i0\fs22  call FX() and 
+\i\fs24 one
+\i0\fs22  of the query functions.  Some of the other functions are required as well, depending on the type of query you're trying to execute.  Within this document, the description of each of the functions in the 'Next Functions' Group indicates where it is required and where it is optional.\
+\
+\
+Conventions used:\
++ $ReturnedData is used to signify the array containing the data returned by a query.  For examples of the syntax used to populate $ReturnedData, see the 'Last Functions' portion of this document.\
++ Lines where parameter descriptions begin are indicated by a leading '
+\fs28 >>
+\b0\fs24  '
+\b\fs22 .
+\b0\fs24 \
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 \ul \ulc0 ___First Function to Call___________________\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0\fs24 \cf0 \ulnone \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FX ($dataServer, $dataPort=591, $dataType='', $dataURLType='')
+\b0 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  The first parameter, 
+\b $dataServer
+\b0 , should be the IP address (I think a domain name would work, too) of the machine where you have the FileMaker Pro Web Companion running.\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $dataPort
+\b0  is an optional parameter specifying on which port FileMaker data is accessible.\
+\
+In FileMaker 5 thru 6, this can be configured in FileMaker Unlimited (under the 'Edit' menu in most versions or the 'FileMaker Pro' menu in Mac OS X) under:\
+\
+	Preferences->Application->Plug-Ins\
+\
+Then select 'Web Companion' and click the 'Configure...' button.  There will be a box where the Port Number can be entered.  This is set to port 80 by default, but it states in the FileMaker help (under 'Web Companion, Specifying a port number for web publishing'):\
+\
+FileMaker, Inc. has registered port number 591 with the Internet Assigned Numbers Authority (IANA) for use with FileMaker Pro Web Companion.\
+\
+If neither of these ports works for you, you might also consider using one of the ports between 49152 and 65535.  According to IANA, these ports are considered Dynamic and/or Private.  That is to say, they aren't registered to any specific application.\
+\
+In the case of FileMaker 7 Server Advanced, FIleMaker data will be accessible on the same port on which the associated web server is running.  This will usually be port 80, or port 443 for SSL connections.\
+\
+
+\b\fs28 >>
+\b0\fs24  The thrid parameter, 
+\b $dataType
+\b0 , is new as of version 3.x of FX.php.  This optional parameter is used to specify what sort of database will be accessed.  Please note that if you will always be accessing the same type of data source, you can simply change this line in FX.php:\
+\
+var $dataServerType = 'xxxx';\
+\
+Where 'xxxx' is the parameter from the list below corresponding to your data source.\
+\
+The possible values for this parameter (case is not important) are:\
+\
+FMPro5/6 - for FileMaker version 5 thru 6 databases.\
+\
+FMPro7 - for FileMaker 7 Server Advanced data sources.\
+\
+CAFEphp4PC - when using FMWebschool's CAFEphp to connect to FileMaker client on the PC.\
+\
+ODBC - to connect to an ODBC data source.\
+\
+OpenBase - if connecting to an OpenBase data source.\
+\
+MySQL - if connecting to a MySQL data source.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 >>
+\b0  The final parameter is 
+\b $dataURLType
+\b0 .  This parameter is new as of version 4.x of FX.php, and is only relevant when connecting to a FileMaker 7 data source.  $dataURLType is an optional parameter with two possible values (case insensitive):  HTTP or HTTPS.  When HTTPS isn't specified (or when not connecting to FileMaker 7), HTTP is assumed.  This parameter is used when connecting to FileMaker 7 Server Advanced via SSL.\
+\
+Typically, you would call this function thus:\
+\
+$InstanceName = new FX('127.0.0.1');                             // if you are using port 591\
+\
+or,\
+\
+$portNumber = '49494';                                                      // where the value is the port you want to use\
+$InstanceName = new FX('127.0.0.1', $portNumber);\
+\
+or,\
+\
+$InstanceName = new FX('127.0.0.1', 591, 'FMPro5/6'); // to connect to FileMaker 5 or 6\
+\
+or,\
+\
+$InstanceName = new FX('127.0.0.1', 591, 'FMPro7', 'HTTPS'); // to connect to FM7SA using HTTPS\
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 \ul ___Next Functions to Call___________________\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0\fs24 \cf0 \ulnone \
+The functions within this group can be called in any order relative to one another.  Some of these functions are optional, and some might be used multiple times in a particular query.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 SetDBData ($database, $layout="", $groupSize=50, $responseLayout="")\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+SetDBData() is a required function 
+\i\b except
+\i0\b0  when the action called is FMDBNames().  When performing an FMDBNames() action, the SetDBData() function should not be called.  In any other instance, if you fail to specify the data relating to where FX can find your data, only an error will be returned.
+\b \
+
+\b0 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  The 
+\b $database
+\b0  parameter is a required parameter for every action 
+\i\b except
+\i0\b0  FMDBNames().  It should contain the name of the database to be accessed.  The parameter can either be a variable, as shown here, or the literal name of the database:  e.g. 'Books.fp5'.\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $layout
+\b0  is technically an optional parameter for FileMaker versions 5 thru 6, but is required for most queries in version 7 (failure to specify a layout when connecting to a FileMaker 7 database will result in an error.  It indicates the name of the layout to access.  It is optional in the older versions of FileMaker because by default FileMaker 5 and 6 access an internal layout which contains every field.  However, using the default layout 
+\i\b will almost always result in reduced performance
+\i0\b0 .  On the other hand, this parameter should not be passed, regardless of FileMaker version, when that action to be called is FMLayoutNames().  The $layout parameter is also unnecessary for FMScriptNames(), a new function in FX.php version 3.x specifically for FileMaker 7.  For all other actions (e.g. FMFind(), FMAdd(), etc.), I recommend that the developer create layouts which contain 
+\i\b only
+\i0\b0  those fields necessary for a specific query (this is generally good practice, no matter how you access FileMaker via the web.)  This will result in a measurable improvement in the Web Companion's performance.\
+\
+
+\b\fs28 >>
+\b0\fs24  The next parameter, 
+\b $groupSize
+\b0 , is used to set how many records FX returns at once.  As is shown above, this is 50 by default.  The special value 'All' may be used as well.  The example below sets the database, layout, and a group size of 10 records:\
+\
+$returnCount = 10;\
+$InstanceName->SetDBData('MyDatabase', 'web_layout', $returnCount);\
+\
+
+\b\fs28 >>
+\b0\fs24   Finally, 
+\b $responseLayout
+\b0  is a new parameter in version 3.x of FX.php which is specific to version 7 of FileMaker.  When accessing a FileMaker version 7 data source, it is possible to perform the request on one layout, and then use a different layout to pull the returned data.  Caution should be used with this parameter since a change in layout in FileMaker 7 may correspond to a change in context.  In the following example, the query will be performed on a layout called "web_find", but the data returned will use the layout "web_details":\
+\
+$InstanceName->SetDBData('MyDatabase', 'web_find', 20, 'web_details');\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 SetDBPassword ($DBPassword, $DBUser='FX')\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+SetDBPassword() is an optional function unless your FileMaker database is password protected.  However, if your database is password protected, you need to provide a password that provides the level of access a user would need to perform the actions your script will be asked to do.   Should you fail to specify a password for a database that is configured to require one, only an error will be returned.\
+\
+In the event that you're using FileMaker Pro's Web Security database for Web Companion security, or you're accessing a secured FileMaker 7 database, you'll need to specify both a user name and password.  As is always the case with FileMaker Pro passwords, be sure that the user name and password combination that you're using is allowed to perform the desired action.  In the case of version 7 of FileMaker, this includes insuring that the password used is allowed to access data via the web. \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $DBPassword
+\b0  is the only parameter needed by SetDBPassword() if you're using FileMaker Pro's built in security.  It can either be the literal password for the database, or a variable containing the password.  For an extra measure of security, it may be a good idea to keep the file containing your password outside of your web folder and include it via PHP.  A literal password would be set like this:\
+\
+$InstanceName->SetDBPassword('knock-knock');\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $DBUser
+\b0  need only be passed if: 1) you're using FileMaker Pro's Web Security database for Web Companion security (check your plug-in settings); 
+\b or
+\b0  2) you're accessing a secured FileMaker 7 database.  Please note that because 
+\b $DBUser
+\b0  is only needed for a specific type of FileMaker authentication, it is always passed 
+\b second
+\b0  when it is used.  Usage and security concerns are similar to those for 
+\b $DBPassword
+\b0 .  A literal user and password could be set like this:\
+\
+$InstanceName->SetDBPassword('knock-knock', 'webuser');\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 SetDBUserPass ($DBUser, $DBPassword ='')\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+This function -- SetDBUserPass() -- is identical to the one above, but it may seem friendlier to users of FileMaker 7 and SQL databases.  The notes for SetDBPassword() should be consulted for details about the use of this script.  Notes about the minor differences related to the parameters follow:\
+\
+ 
+\b\fs28 >>
+\b0\fs24  FileMaker 7 and SQL databases generally always operate with a username, even if there is no password for a given user.   For this reason, 
+\b $DBUser
+\b0  is the only parameter required by SetDBUserPass().  In contrast to the previous function,  SetDBUserPass() expects 
+\b $DBUser 
+\b0 to be the first parameter passed.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $DBPassword
+\b0  is passed to SetDBUserPass() second.  This password is optional, and should contain the password associated with the user specified via $DBUser (see above.)\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 SetCharacterEncoding ($encoding)
+\b0 \
+\
+This function, and the one below -- SetDataParamsEncoding() -- are new in version 4.x of FX.php and are used when connecting to a multi-byte data-source without using UTF-8 encoding.  Note that this function and the one below 
+\b \cf2 both require that multi-byte support be compiled into PHP
+\b0 \cf0  (on the Mac, Complete PHP includes multi-byte support.)\
+\
+
+\b >>
+\b0  The 
+\b $encoding
+\b0  parameter passed to this function is used to determine both how data is passed to FileMaker, and how data is returned from FileMaker.  If you need to set separate encoding for each direction, 
+\i\b first
+\i0\b0  use SetCharacterEncoding() to set the encoding of data coming from FileMaker, then use SetDataParamsEncoding(), below, to set the encoding of data being passed to FileMaker.\
+\
+\
+
+\b SetDataParamsEncoding ($encoding)
+\b0 \
+\
+This function, and the one above -- SetCharacterEncoding() -- are new in version 4.x of FX.php and are used when connecting to a multi-byte data-source without using UTF-8 encoding.  Note that this function and the one above 
+\b \cf2 both require that multi-byte support be compiled into PHP
+\b0 \cf0  (on the Mac, Complete PHP includes multi-byte support.)\
+\
+
+\b >>
+\b0  The 
+\b $encoding
+\b0  parameter passed to this function is only used to determine how data is passed to FileMaker.  See SetCharacterEncoding() for information on how to use the encoding functions together.\
+\
+\
+
+\b SetDefaultOperator ($op)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+By default, FX.php performs begins with searches when performing a find.  If desired, SetDefaultOperator() can be used to change this behavior -- if, for example, most of your queries compare using equals.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $op
+\b0  is the only parameter taken by SetDefaultOperator().  Possible values for 
+\b $op
+\b0  are covered in detail in the 
+\b $op
+\b0  parameter section of  AddDBParam().
+\b \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 AddDBParam ($name, $value, $op="")\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+The AddDBParam function is not technically required (you won't see a query related error if you omit it), but calls to FMFind(), FMDelete(), and FMEdit() won't do much without it.  AddDBParam() is the method by which query criteria are specified.  It is common to use more than one instance of this function in a query, especially when performing complex searches or updating an existing record.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  The 
+\b $name
+\b0  parameter is used to specify which data you wish to make a query against.  Usually, this will be a field name.  The examples at the bottom of this function will be of this type.  In such cases, there are a few things to keep in mind:\
+\
+- If the field is from a related database, you'll need to make sure that the relationship is appended to the field name, e.g. relationship_name::field_name.\
+\
+- When working with FileMaker versions 5 thru 6, the field specified must appear on the layout to be used for the current query.\
+\
+- For FileMaker 7, if the field specified doesn't occur on the table associated with the current layout, the field name must be fully qualified. (e.g. tableName::fieldName(repetitionNumber).recordID)\
+\
+Beyond the use of field names in AddDBParam(), there are a few special cases:\
+\
+
+\b\fs28 1)
+\b0\fs24  When performing an FMEdit() or FMDelete() query, you'll need some code similar to this:\
+\
+$InstanceName->AddDBParam('-recid', $currentRecord);\
+\
+Where $currentRecord is the FileMaker RecordID of the record you wish to update.  The FileMaker RecordID is part of the information returned by FX.php for each record in a found set.  If an array  called $ReturnedData contains the data returned by FX.php, the keys in the $ReturnedData['data'] subarray contain both the RecordID and the ModifyID (the next exception that will be discussed) separated by a period.  Both IDs could be extracted from the current key like this:\
+\
+$recordPointers = explode ('.', $key);     // where $key is the current key from $ReturnedData['data']\
+$currentRecord = $recordPointers[0];    // here's the RecordID\
+$currentModified = $recordPointers[1];  // and here's the ModifyID\
+\
+
+\b\fs28 2)
+\b0\fs24  When performing an FMEdit() query, there might be cases that you want to ensure that the data being submitted is indeed newer than what's in the database.  This can be done by adding an instance of AddDBParam() where 
+\b $name
+\b0  is '-modid' (as mentioned in conjunction with -'recid' above.)  Like this:\
+\
+$InstanceName->AddDBParam('-modid', $currentModified);\
+\
+If the record in the database is more recent than the data upon which the current update is based, $ReturnedData['errorCode'] will contain the value 306.  This condition could be checked in this manner:\
+\
+if ($ReturnedData['errorCode'] == 306) \{\
+    echo "Sorry the data submitted is older than the existing data.";\
+\}\
+\
+Complete documentation on the error codes that may be returned to FX by the Web Companion can be downloaded from:\
+\
+http://www.filemaker.com/downloads/pdf/xml_Appendix_C.pdf\
+\
+
+\b\fs28 3)
+\b0\fs24  Searches by default are logical 'and' searches.  This means that if you pass in multiple AddDBParam() statements, the resulting find will return only those records that match 
+\i\b all
+\i0\b0  of the criteria.  If you would instead like to perform a search that returns items that match 
+\i\b any
+\i0\b0  of the criteria specified, you can set a logical 'or' search using the special '-lop' 
+\b $name
+\b0  parameter:\
+\
+$InstanceName->AddDBParam('-lop', 'or');\
+\
+This special parameter 
+\i\b only
+\i0\b0  needs to be used when requesting a logical 'or' search.  Logical 'and' is always assumed otherwise (this makes sense if one considers the ways that logical 'or' and 'and' searches are performed in FileMaker.)\
+\
+
+\b\fs28 4)
+\b0\fs24  There may be cases when you would like to perform a FileMaker script on the returned data set.  In such cases, use one of the '-script' 
+\b $name
+\b0  parameters: '-script', '-script.prefind', or '-script.presort'.   When these parameters are used, the 
+\b $value
+\b0  parameter should be the name of the FileMaker script that you wish to be executed.  Usage is fairly self-explanatory.  When '-script' is used, the specified FileMaker script will be executed 
+\i\b after
+\i0\b0  the current find and sort (if any) are performed.  Using '-script.prefind' causes the specified FileMaker script to execute 
+\i\b before
+\i0\b0  the current find and sort are executed.  The '-script.presort' 
+\b $name
+\b0  parameter runs the specified FileMaker script 
+\i\b after
+\i0\b0  the current find, but 
+\i\b before
+\i0\b0  the current sort is executed.  Usage of these parameters would be similar to the following examples:\
+\
+$InstanceName->AddDBParam('-script', 'Relookup Addresses');\
+$InstanceName->AddDBParam('-script.prefind', 'Delete Expired Records');\
+$InstanceName->AddDBParam('-script.presort', 'Omit Dulicates');\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $value
+\b0  contains the value that a query should locate within the field specified by 
+\b $name
+\b0 .  In the case of an FMEdit() query, 
+\b $value
+\b0  is used to hold the new values to be assigned to the fields in the record specified with the '-recid' AddDBParam() statement, as described in the special cases above.  
+\b $value
+\b0  may also hold values corresponding to special cases as previously described.\
+\
+Wild cards can be used in 
+\b $value
+\b0  variables just like they can in FileMaker.  If your wild cards seem to be behaving strangely, try using PHP's urlencode() function on 
+\b $value
+\b0 .\
+\
+
+\b\fs28 >>
+\b0\fs24  The third parameter in AddDBParam statements is 
+\b $op
+\b0 .  This parameter is optional and without it, FileMaker's default 'begins with' search is performed.  This parameter should not be used with the special cases described above.  
+\b $op
+\b0  is the operator that you wish to use to compare data at the field level.  A value for 
+\b $op
+\b0  must be specified for each field that you wish to search in a manner other than the default search.  The possible values for $op are as follows (syntax is the same for all of these; see the examples at the end of this section for an example):\
+\
+'eq' - an 'equals' search.\
+'cn' - a 'contains' search.\
+'bw' - a 'begins with' search.\
+'ew' - an 'ends with' search.\
+'gt' - a 'greater than' search.\
+'gte' - a 'greater than or equal to' search.\
+'lt' - a 'less than' search.\
+'lte' - a 'less than or equal to' search.\
+'neq' - a 'not equal to' search.\
+\
+For additional information related to FileMaker versions 5 thru 6, see page B-7 in the following documentation from FileMaker:\
+\
+http://www.filemaker.com/downloads/pdf/xml_Appendix_B.pdf\
+\
+AddDBParam() could be used for a FMFind() query something like this:\
+\
+$InstanceName->AddDBParam('FirstName', 'John');\
+$InstanceName->AddDBParam('LastName', 'Smith', 'eq');\
+\
+On the other hand, the AddDBParam() statements for an FMEdit() query might look something like the following:\
+\
+$InstanceName->AddDBParam('-recid', $currentRecord);\
+$InstanceName->AddDBParam('FullName', $fullName);\
+$InstanceName->AddDBParam('Address', $address);\
+\
+Please note that operators are not used for FMEdit() queries.  Other than that (and the special '-recid' parameter) AddDBParam() is used in the same manner in these examples.  In either case, variables or literal values can be used as the parameters.\
+\
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 AddDBParamArray ($paramsArray, $paramOperatorsArray=array())
+\b0 \
+\
+This function is designed to streamline the creation of FX.php database queries.  Instead of calling AddDBParam() multiple times, the field names and parameters can be combined into an array and a single call made to AddDBParamArray().\
+\
+>> 
+\b $paramsArray
+\b0  is the primary parameter for this function and should contain an array with each key the name of a field, and each value the data which should be passed.\
+\
+>> The second parameter, 
+\b $paramOperatorsArray
+\b0 , should be an array containing one operator for each field where the default operator should not be used.  As with $paramsArray, each key should be a field name, but the values should be the operator to be used.  Note that operators are only meaningful for find requests.  For more information about operators, see the information in AddDBParam(), above.\
+\
+An basic example use follows:\
+\
+$formNames2FieldNames = array('fname' => 'FIrst_Name', 'lname' => 'Last_Name', 'id' => 'Rep_ID');\
+$fieldOperators = array('Rep_ID', 'eq');\
+$searchArray = array();\
+// the next lines take data from a form, and associate it with the appropriate fields\
+foreach ($formNames2FieldNames as $formName => $fieldName) \{\
+    if (isset($_POST[$formName])) \{\
+        $searchArray[$fieldName] = $_POST[$formName];\
+    \}\
+\}\
+// since the data is in arrays, the find requires very few lines\
+$InstanceName = new FX('127.0.0.1', 591);\
+$InstanceName->AddDBParamArray($searchArray, $fieldOperators);\
+$InstanceData = $InstanceName->FMFind();\
+\
+\
+
+\b SetPortalRow ($fieldsArray, $portalRowID=0, $relationshipName='')
+\b0 \
+\
+The SetPortalRow() function is used to edit a portal row, or to create a record via a portal row.  It's the equivalent of making several AddDBParam() calls using the full FileMaker portal syntax for the field name: "relationship_name::fieldName.<recID>".\
+\
+>> The first parameter, 
+\b $fieldsArray
+\b0 , should be an array of the data to be passed into the portal row.  Each element of the array should have the FileMaker field name as the key, with the desired value as the value.\
+\
+>> 
+\b $portalRowID
+\b0   is the ID of the relevant portal row.  For FileMaker 7, this means the RecordID of the row in question, whereas for FIleMaker 5/6, this is the number of the portal row (e.g. the third row of the portal would be '3'.)  The default value, 0 (zero), creates a new portal row.  Note that only one row may be created in this manner per query (although multiple calls to SetPortalRow() could be used to 
+\i edit 
+\i0 multiple records in a portal via a single FX.php action.)\
+\
+>> The 
+\b $relationshipName
+\b0  parameter is optioned and is intended as a method of minimizing repetition in field names.  For example, instead of prefixing all of your field names with "myRelationship::", you could just pas "myRelationship" (no double colon) as the last parameter.\
+\
+\
+
+\b SetRecordID ($recordID)
+\b0 \
+\
+This function is equivalent to using AddDBParam() per special case (1), above.\
+\
+
+\b >>
+\b0  
+\b $recordID
+\b0  is the only parameter and must contain the internal FileMaker RecordID of the record to be edited or deleted.\
+\
+\
+
+\b SetModID ($modID)
+\b0 \
+\
+This function is equivalent to using AddDBParam() per special case (2), above.\
+\
+
+\b >>
+\b0  
+\b $modID
+\b0  is the only parameter and must contain the internal FileMaker ModID of the record to be edited.\
+\
+\
+
+\b SetLogicalOR ()
+\b0 \
+\
+This function is equivalent to using AddDBParam() per special case (3), above.  Since all FileMaker searches are 'AND' searches by default, the function only need be used when performing a logical 'OR' search.  SetLogicalOR() does just that, and toggles the current request to use logical 'OR'.  This function has no parameters.\
+\
+\
+
+\b SetFMGlobal ($globalFieldName, $globalFieldValue)
+\b0 \
+\
+This function is FileMaker 7 specific and is equivalent to appending ".global" to a field name in order to set a global field.  In order to ensure that a global is set in FIleMaker 7 (before performing a script, for example), use this function instead of AddDBParam() to set the global field.\
+\
+>> The $globalFieldName parameter should contain the name of the FileMaker global field to be set.\
+\
+>> The value passed via 
+\b $globalFieldValue
+\b0  will be stored in the specified global field before other FileMaker actions are performed.\
+\
+\
+
+\b PerformFMScript ($scriptName)\
+PerformFMScriptPrefind ($scriptName)\
+PerformFMScriptPresort ($scriptName)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+These functions are equivalent to using AddDBParam() per special case (4), above.  Please see that discussion for a detailed description of how FileMaker scripts work with FX.php.  In brief, PerformFMScript() causes the specified script to exit just before data is returned; PerformFMScriptPrefind() executes the specified script before executing any actions in FileMaker; and a script specified for PerformFMScriptPresort() is executed after FileMaker has assembled a data set (via a find, for example), but before the resulting records are sorted.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 >>
+\b0  
+\b $scriptName
+\b0  is the only parameter for each of these functions, and must contain the name of the FileMaker script to be executed.\
+
+\b \
+\
+AddSortParam ($field, $sortOrder="", $performOrder=0)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+AddSortParam() is used to determine how FileMaker will sort the found records before returning the data to FX.  If functions in much the same way that Sort mode does in FileMaker Pro.  This function is optional with FMFind() and FMFindAll() actions and not relevant to any of the other final functions.\
+\
+By default, the order in which multiple calls to AddSortParam() appear determines sort precedence -- i.e. the results will first be sorted as specified in the first call, next by the second call, etc.  The behavior can be modified by using the 
+\b $performOrder
+\b0  parameter (see below.)\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $field
+\b0  specifies which field you wish to sort by.  (Also, see above note about determining sort order for FileMaker 7 databases.)\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $sortOrder
+\b0  can contain one one of three values in FileMaker versions 5 through 6:  Ascend, Descend, or Custom.    Custom sorting works the same way that it does in FileMaker (i.e. it uses the value list formatted for the field specified on the current layout, as specified by SetDBData() in the case of FX.)  Syntax is as follows:\
+\
+$InstanceName->AddSortParam('FirstName', 'Descend');\
+\
+In FileMaker 7, the possible values are "ascend", "descend", or the name of a value list.  In the event that the name of a value list is passed, the returned data will be sorted based on that value list.  The following code would sort a field called "departmentName" based on a value list named "department":\
+\
+$InstanceName->AddSortParam('departmentName', 'department');\
+\
+Regardless of data source, if AddSortParam() is called with only a 
+\b $field
+\b0  parameter, an ascending sort is assumed by default.\
+\
+
+\b\fs28 >>
+\b0\fs24  The 
+\b $performOrder
+\b0  parameter can be used to place multiple sort requests in a specified order.  The value passed should be an integer greater than zero.  For example, the following lines would cause the returned data to be sorted first by a field called "lastName", and then by the field "firstName" in ascending order:\
+\
+$InstanceName->AddSortParam('firstName', 'ascend', 2);\
+$InstanceName->AddSortParam('lastName', 'ascend', 1);\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMSkipRecords ($skipSize)
+\b0 \
+\
+This function is used to specify which record in the found set should be the first returned to FX.  FMSkipRecords() is optional.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $skipSize
+\b0  is the only parameter taken by FMSkipRecords().  By incrementing or decrementing this value, records in the found set could be paged through in groups whose size was specified with the 
+\b $groupSize
+\b0  parameter in SetDBData().  For example:\
+\
+$skipSize = $skipSize + $groupSize;\
+$InstanceName->FMSkipRecords($skipSize);\
+\
+This would increment the number of records skipped by the value stored in 
+\b $groupSize
+\b0 , and then pass that parameter to FX so that 
+\b $skipSize
+\b0  records will be skipped and the next 
+\b $groupSize
+\b0  number of records will be returned by the current query.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMPostQuery ($isPostQuery = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+This optional function is used to change FX's method of accessing FileMaker from an HTTP GET to an HTTP POST.  Generally, the two methods are interchangeable and FX uses POST by default, because there is a limit to how long URLs can be.  In the event that you wish to use GET requests for one reason or another, FMPostQuery(false) can be called.  Data should always be passed with an HTTP POST when working with large amounts of data (a few hundred characters will cause an HTTP GET problems.)\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 IMPORTANT:
+\b0   FMPostQuery() determines the method in which data is sent from your server to FileMaker Pro's web companion, 
+\i\b NOT
+\i0\b0  the method by which data is sent from a user's browser to your server (this is almost always done in the HTML <form> tag.)\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $isPostQuery
+\b0  is set to true by default, so a call to FMPostQuery() to use GET instead of POST will look like this:\
+\
+$InstanceName-> FMPostQuery(false);  // sets the current request to the Web Companion as a GET\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 \
+FMUseCURL ($useCURL = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+This optional function is used to specify whether FX.php accesses FileMaker Pro using cURL or sockets.  FX.php has logic built in to detect cURL support, but there may be times when it may be helpful to control this explicitly.  By default, cURL is used by FX.  Should you want or need to use sockets instead, FMUseCURL(false) can be called.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 IMPORTANT:
+\b0   Although cURL and sockets are generally interchangeable, if there are several calls to FileMaker from a single page using sockets may result in the truncation of your data.  For this reason, it's usually best to allow FX.php to communicate with FileMaker via cURL (the default.)\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  
+\b $useCURL
+\b0  is set to true by default, so a call to FMUseCURL() to use sockets instead of cURL will look like this:\
+\
+$InstanceName-> FMUseCURL(false);  // sends the current request to the FileMaker via sockets\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FlattenInnerArray ()
+\b0 \
+\
+By default, FX.php adds an inner layer to the returned array to allow for FileMaker repeating fields and/or portals.  Since most fields on a layout usually do not fall into these criteria, often code to display field data will have a trailing "[0]".  FlattenInnerArray() can be used to remove this inner layer if desired, and so obviate the need for the trailing, bracketed zero.  This function has no associated parameters.\
+\
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 \ul ___Last Functions to Call___________________
+\b0\fs24 \ulnone \
+\
+Only 
+\i\b one
+\i0\b0  of the following functions should be used for each query with FX.php.  Calling one of these functions is what actually causes the interaction with FileMaker Pro.  The result of the current query (if relevant) can then be stored in an array, if desired.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  Whether data is returned by the function or not is determined by the first parameter that is passed to each of these functions:  
+\b $returnDataSet
+\b0 .  Setting 
+\b $returnDataSet
+\b0  to "true" will cause FX to return the data that it received from FileMaker.  In instances where data is only being sent to FileMaker, 
+\b $returnDataSet
+\b0  can be set to "false".  (Not returning any data will increase performance somewhat.)\
+\
+
+\b\fs28 >>
+\b0\fs24  In addition to determining whether data is returned, the extent of the returned data can be determined by setting 
+\b $returnData
+\b0 .  This parameter can have one of three values: 'basic', 'full', or 'object'.  Setting 
+\b $returnData
+\b0  to 'basic' will return all data from FileMaker 
+\i\b except
+\i0\b0  the contents of the records in the current found set.  Passing 'full' as a parameter will return the full set of data from FileMaker Pro.  If 'object' is passed as the value of 
+\b $returnData
+\b0 , 
+\i\b only
+\i0\b0  the data from the retrieved records will be returned, and the topmost level of the return array (with 'data', 'foundCount', etc. as keys) is omitted; the other metadata can be retrieved via FX.php instance variables -- all of whose names begin with 'last'.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 >>
+\b0  The final parameter, 
+\b $useInnerArray
+\b0 , determines whether the returned data should make allowance for repeating fields and/or portals.  This is discussed in greater detail in connection with the FlattenInnerArray() function, above.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 >>
+\b0   The last function in this group (it appears just before the SQL functions section of this document), DoFXAction() is a one stop shop for the actions which can be accomplished by the other actions in this group, and its use is highly recommended.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMDelete ($returnDataSet = false, $returnData = 'basic', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+This function deletes the record specified by an AddDBParam() call using the special '-recid' parameter documented above.  Since a record is being deleted, data 
+\i\b is not
+\i0\b0  returned by default.  However, should you wish to access URL or error information, simply calling FMDelete() as shown below will return basic query information (i.e. no record data.)\
+\
+$InstanceName->AddDBParam('-recid', $currentRecord);\
+$InstanceName->FMDelete(true);\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMDup ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+FMDup is new to FX.php version 3.x and is only available for FileMaker 7 data sources.  As might be expected, this function duplicates a specified record.  As is the case with FMDelete(), FMDup() requires an AddDBParam() call that sets the special '-recid' parameter -- the record corresponding to the RecordID passed, will be the one duplicated.  Data is returned by default.\
+\
+$InstanceName = new FX('127.0.0.1', 591, 'FMPro7');\
+$InstanceName->SetDBData('Customer_List.fp5', 'web_view');\
+$InstanceName->AddDBParam('-recid', $selectedRecord);\
+$ReturnedData = $InstanceName->FMDup();               // stores the new record in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMEdit ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+The function used to update the contents of a given record.  FMEdit() requires an AddDBParam() call that sets the special '-recid' parameter, as well.  Data 
+\i\b is
+\i0\b0  returned by default for this function (after all, you want to make sure the correct changes were made, right?)\
+\
+$InstanceName = new FX('127.0.0.1');\
+$InstanceName->SetDBData('Customer_List.fp5', 'web_view');\
+$InstanceName->AddDBParam('-recid', $currentRecord);\
+$InstanceName->AddDBParam('FirstName', $firstName);\
+$InstanceName->AddDBParam('LastName', $lastName);\
+$InstanceName->AddDBParam('Title', $title);\
+$InstanceName->AddDBParam('Address', $address);\
+$InstanceName->AddDBParam('Office', 'Austin, TX');\
+$InstanceName->AddDBParam('CSR', $currentRep);\
+$ReturnedData = $InstanceName->FMEdit();               // stores the updated record in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMFind ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+Performs a find in FileMaker Pro as specified by the parameters previously passed.  By default, this function 
+\i\b will
+\i0\b0  return data -- a group of records who size was specified in SetDBData().\
+\
+$InstanceName = new FX('127.0.0.1');\
+$InstanceName->SetDBData('Customer_List.fp5', 'web_view');\
+$InstanceName->AddDBParam('FirstName', $firstName);\
+$InstanceName->AddDBParam('LastName', $lastName, 'eq');\
+$InstanceName->AddDBParam('Office', 'Austin, TX');\
+$ReturnedData = $InstanceName->FMFind();                       // stores the found set in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMFindAll ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+Equivalent to "Show All Records" in FileMaker Pro.  Data 
+\i\b is
+\i0\b0  returned by default.  Only the number of records specified by the 
+\b $groupSize
+\b0  parameter of SetDBData() will be returned.  However, the remainder of the records can be returned by using the FMSkipRecords() function as documented above.\
+\
+$InstanceName = new FX('127.0.0.1');\
+$InstanceName->SetDBData('CDList', 'web_view', 'All');\
+$ReturnedData = $InstanceName->FMFindAll();              // stores all records in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMFindAny ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+Returns a random record.  By default data 
+\i\b is
+\i0\b0  returned.\
+\
+$InstanceName = new FX('127.0.0.1');\
+$InstanceName->SetDBData('CDList', 'web_view');\
+$ReturnedData = $InstanceName->FMFindAny();      // stores a random record in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMNew ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+Creates a new record in FileMaker pro with fields populated with the values specified by instances of the AddDBParam() function.  By default, data 
+\i\b is
+\i0\b0  returned -- the record just created.\
+\
+// Not a complete query, FX() and SetDBData() are missing...\
+$InstanceName->AddDBParam('FirstName', $firstName);\
+$InstanceName->AddDBParam('LastName', $lastName);\
+$InstanceName->AddDBParam('Office', 'Austin, TX');\
+$ReturnedData = $InstanceName->FMNew();                  // stores the new record in $ReturnedData\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMView ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+This function is somewhat different from the others in this group in that it returns information about the layout, not a certain set of records.  Data is returned by default, and I can see little use for this function if 
+\b $returnDataSet
+\b0  is set to 'false'.  If there are fields that are formatted as drop-down menus 
+\i\b on the current layout
+\i0\b0  (as specified by SetDBData()), the following example will display a drop-down on the resulting web page for each one on the specified layout in the database:\
+\
+$InstanceName = new FX('127.0.0.1');\
+$InstanceName->SetDBData('CDList', 'web_view');\
+$ReturnedData = $InstanceName->FMView();      // stores layout information in $ReturnedData\
+foreach ($ReturnedData['valueLists'] as $key => $value) \{\
+    foreach ($value as $key1 => $value1) \{\
+        $valuelistData[$key] .= "\\t<option value=\\"$value1\\">$value1</option>\\n";\
+    \}\
+    echo "<select name=\\"$key\\">\\n";\
+    echo $valuelistData[$key];\
+    echo "</select>\\n";\
+    echo "<br />\\n";\
+\}\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMDBNames ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+FMDBNames() is similar to FMView() in that it returns information about the FileMaker environment on the current server, rather than a group of records.  Unlike every other action function, the SetDBData() function 
+\i\b should not be called
+\i0\b0  in conjunction with this function.  When called, FMDBNames() returns the names of all databases that are open and shared via the Web Companion on the target machine.  Data is returned by default.  As above, setting 
+\b $returnDataSet
+\b0  to false would be of little practical use.  A query to display the currently active databases available via web companion might look like this:\
+\
+$serverIPAddress = '127.0.0.1';\
+$InstanceName = new FX($serverIPAddress);\
+$ReturnedData = $InstanceName->FMDBNames();      // stores layout information in $ReturnedData\
+echo "<b>Databases Open on $serverIPAddress </b><br />\\n";\
+foreach ($ReturnedData['data'] as $value) \{\
+    echo $value['DATABASE_NAME'][0] . "<br />\\n";\
+\}\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMLayoutNames ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+Like the two preceding functions, FMLayoutNames() returns information about the FileMaker environment on the current server, rather than a group of records.  Like them, data is returned by default.  And like them, setting 
+\b $returnDataSet
+\b0  to false would be of little practical use.  However, unlike every other action function, the SetDBData() function should be called, 
+\i\b but no layout should be specified
+\i0\b0 .  FMLayoutNames() returns the names of all available layouts in the database specified by the SetDBData() function.  A query to display the available layouts in a database might look like this:\
+\
+$serverIPAddress = '127.0.0.1';\
+$currentDatabase = 'My_Database.fm5';\
+$InstanceName = new FX($serverIPAddress);\
+$InstanceName->SetDBData($currentDatabase);\
+$ReturnedData = $InstanceName->FMLayoutNames();\
+echo "<b>Layouts in $currentDatabase </b><br />\\n";\
+foreach ($ReturnedData['data'] as $value) \{\
+    echo $value['LAYOUT_NAME'][0] . "<br />\\n";\
+\}\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 FMScriptNames ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+FMScriptNames() is another function which returns information about a database, rather than a record set.  As is the case with the other informational functions, data is returned by default, and setting the function's 
+\b $returnDataSet
+\b0  parameter to false would be of little practical use.   This function is like FMLayoutNames() in that 
+\b no layout is specified
+\b0 .  Rather, the function returns the names of all available scripts for the specified database.  An example query to display the available scripts in a database follows:\
+\
+$serverIPAddress = '127.0.0.1';\
+$currentDatabase = 'My_Database.fp7';  // FMScriptNames() is only available in FM7\
+$InstanceName = new FX($serverIPAddress, 80, 'FMPro7');\
+$InstanceName->SetDBData($currentDatabase);\
+$ReturnedData = $InstanceName->FMScriptNames();\
+echo "<b>Scripts in $currentDatabase </b><br />\\n";\
+foreach ($ReturnedData['data'] as $value) \{\
+    echo $value['SCRIPT_NAME'][0] . "<br />\\n";\
+\}\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 DoFXAction ($currentAction,$returnDataSet=true,$useInnerArray=false,$returnType='object')
+\b0 \
+\
+DoFXAction() is intended to streamline FX.php queries for advanced users.  It works much the same as the other functions in this group, with a couple of exceptions.  First, note that this function adds an additional, required function: 
+\b $currentAction
+\b0 .  Also, the default values of 
+\b $useInnerArray
+\b0  and 
+\b $returnType
+\b0  are different than its group-mates.\
+\
+
+\b >>
+\b0  
+\b $currentAction
+\b0  is a required parameter for DoFXAction() which specifies which type of action (find, edit, delete, etc.) is to be performed with the current query.  In the latest versions, this is simply a string which may have one of the following values: 'delete', 'duplicate', 'update', 'perform_find', 'show_all', 'show_any', 'new', 'view_layout_objects', 'view_database_names', 'view_layout_names', or 'view_script_names'.\
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 \ul ___SQL Functions       ___________________
+\b0\fs24 \ulnone \
+\
+The following functions are only used when using FX.php to connect to a SQL data source.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 PerformSQLQuery ($SQLQuery, $returnDataSet = true, $useInnerArray = false, $returnType = 'object')
+\b0 \
+\
+FX.php is capable of creating very basic SQL statements from the parameters passed via AddDBParam(), AddSortParam(), etc.  However, users who need to retrieve data from SQL data sources for whatever reason may find this limiting.  To this end, PerformSQLQuery() allows an SQL query to be specified.  The other parameters ($returnDataSet, $useInnerArray, and $returnType are discussed in detail above.)\
+\
+
+\b >>
+\b0  
+\b $SQLQuery
+\b0  should contain the SQL statement to be executed.  Documentation of SQL is beyond the scope of this document, and varies somewhat from one data-source to another.\
+\
+\
+
+\b SetDataKey ($keyField, $modifyField = '', $separator = '.')\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+In FileMaker, each record has a built-in unique record identifier: RecordID; as well as a built-in means of tracking modification order: ModID.  Although many SQL databases have columns which perform the same functions, the name of these columns will likely vary from one database to another.  SetDataKey() is intended to aid those who for whatever reason are moving an FX.php/FileMaker solution to an FX.php/SQL solution achieve feature parity.  (The key used for each element in the data array from a FileMaker query is the RecordID, a period, and then the ModID.)\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  The 
+\b $keyField
+\b0  parameter should contain the name of the field whose contents should be used as they keys of the data array for the current query.\
+\
+
+\b\fs28 >>
+\b0\fs24  
+\b $modifyField
+\b0  is is an optional parameter which can be used to further identify each returned row.  The contents of this parameter should be the name of the field in the SQL database whose contents should be used for this purpose.  In the case of ModID, the FileMaker equivalent, a common use would be to insure that a user did not overwrite a modification made by another active user.\
+\
+
+\b\fs28 >>
+\b0\fs24  The final parameter, 
+\b $separator
+\b0 , contains the character that should be used to separate the data from the 
+\b $keyField
+\b0  and the 
+\b $modifyField
+\b0 .  The default character is a period, as is used for the data returned from FileMaker queries.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 SetSelectColumns ($columnList)
+\b0 \
+\
+This function is designed to aid those who prefer to let FX.php create most portions of their SQL queries for them, but need only specific columns of data returned.  As its name implies, SetSelectColumns() is 
+\i\b only
+\i0\b0  relevant when performing an SQL SELECT statement.  FX.php will use the list of columns specified to determine the returned columns, rather than returning all columns.\
+\
+
+\b >>
+\b0  The 
+\b $columnList
+\b0  parameter should contain a comma separated list of columns which should be returned by the current query.  For example, your code might contain lines like the following:\
+\
+$myColumns = "first_name, last_name, address1, address2, city, state, zip, employee_id";\
+$InstanceName->SetSelectColumns($myColumns);\
+\
+\
+
+\b SQLFuzzyKeyLogicOn ($logicSwitch = false)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+The SetDataKey() function, above, is used to specify which field's content should be used as the key  for the returned data array.  SQLFuzzyKeyLogicOn() tells FX.php to make it's best guess as to the field to use.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 >>
+\b0\fs24  The only parameter of SQLFuzzyKeyLogicOn, 
+\b $logicSwitch,
+\b0  is optional.  If set to 'true', FX.php will attempt to determine a field whose contents would best work as keys for the returned data array (which has one element per row/record.)\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 UseGenericKeys ($genericKeys = true)
+\b0 \
+\
+By default, FX.php uses the keys of the records returned as the indices for its returned data array.  While this parallels FileMaker behavior, this may not be desirable in some cases.  When UseGenericKeys() is called with $genericKeys equal to true, FX.php will return its data set with integer indices (i.e. 0, 1, 2, etc.)\
+\
+
+\b >>
+\b0  The lone parameter, 
+\b $genericKeys
+\b0 , should be set to true in order to use integer keys, and false to use records' keys as indices.\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b\fs28 \cf0 \ul ___Additional Reading___________________
+\b0\fs24 \ulnone \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For more information about FX.php (including the latest version of this document):\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+http://www.iviking.org/\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For information about getting started with PHP and FX.php you might try one of these books:\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\i \cf0 Advanced FileMaker Pro 6 Web Development
+\i0 \
+http://www.amazon.com/exec/obidos/ASIN/1556228600/ivikingorg-20\
+\
+
+\i FX.php for FileMaker\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\i0 \cf0 http://www.fmwebschool.com/php.htm
+\i \
+\
+Open Source Technology Expanding FileMaker\
+
+\i0 http://www.fmwebschool.com/opensource.htm\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For more information on FileMaker 7, Custom Web Publishing, and XML:
+\b0 \
+\
+http://www.filemaker.com/downloads/pdf/fmsa7_custom_web_guide.pdf\
+\
+
+\b For more information on FileMaker 5/6 and XML:\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+http://www.filemaker.com/downloads/pdf/xml_Chapter_7.pdf\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For more information on the parameters accepted by the FileMaker 5/6 Web Companion:\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+http://www.filemaker.com/downloads/pdf/xml_Appendix_B.pdf\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For additional information on the error codes returned the FileMaker 5/6 Web Companion:\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+http://www.filemaker.com/downloads/pdf/xml_Appendix_C.pdf\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 For additional information about PHP, see the online manual at:\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b0 \cf0 \
+http://www.php.net/manual/en/\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ri-1440\ql\qnatural
+
+\b \cf0 or look for books on PHP or FileMaker at your local bookseller.\
+\
+}
