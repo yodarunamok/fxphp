@@ -8,12 +8,16 @@ FileMaker Pro has quite a following, and with good reason:  it mixes the power o
 FX.php is a PHP class which parses the XML output by FileMaker Pro's web companion into a multi-level array which is easily manipulated using PHP.  Records can be searched, edited, created, and deleted.  In addition, a number of other actions can be performed including script execution, etc.  (See the documentation for more details.)  When any action is performed, the returned array is organized in up to four arrays, as follows (these are the relevant index or key values):
 
 * Level 1: (optional, depending on the return type)
+
     'linkNext', 'linkPrevious', 'foundCount', 'fields', 'data', 'URL', 'errorCode', 'valueLists'
 * Level 2: (of 'data')
+
     RecordID.ModificationID
 * Level 3:
+
     fieldName
 * Level 4: (optional, depending on the return type)
+
     Numbers, starting at zero; one for each related or repeating value
 
 So, a reference to a specific value will be structured like one of the following:
