@@ -10,12 +10,15 @@ FX.php is a PHP class which parses the XML output by FileMaker Pro's web compani
 * Level 1: (optional, depending on the return type)
 
     'linkNext', 'linkPrevious', 'foundCount', 'fields', 'data', 'URL', 'errorCode', 'valueLists'
+
 * Level 2: (of 'data')
 
     RecordID.ModificationID
+
 * Level 3:
 
     fieldName
+
 * Level 4: (optional, depending on the return type)
 
     Numbers, starting at zero; one for each related or repeating value
