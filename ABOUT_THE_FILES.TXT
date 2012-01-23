@@ -1,0 +1,88 @@
+FILES IN THIS RELEASE: (all file are listed relative to the primary distribution directory.)
+
+
+_Main_FX_Files________
+
+FX.php - Class for accessing FileMaker or MySQL data.
+
+FX_Error.php - Error class used for elegant reporting of FX.php errors.
+
+FX_constants.php - File which defines constants to be used for improved legibility in FX.php version 4.0.
+
+image_proxy.php - File used to proxy image requests (and only image requests) through to FileMaker machine.
+
+Developer/echo_new_key.php - Used to generate a new encryption key for image_proxy.php (instructions for use are in image_proxy.php.)
+
+Developer/PHPCACHE - Directory containing PHP caching cache for improving FileMaker performance.
+
+
+_Documentation________
+
+ABOUT_THE_FILES.TXT - This file.  A list of all of the files in the FX.php distribution with descriptions.
+
+CHANGES.TXT - Information on the changes made to FX.php (with associated credits for ALL files) up to the current version.
+
+README (in pdf, rich text, and text) - Basic information and getting started guide.
+
+fxparser - Directory containing an awesome tool for viewing the internal structure of the array returned by FX.php.  (Submitted by Lance Hallberg.)
+
+Documentation/FXFunctions (in pdf and rich text) - Documentation of all of the useful functions in FX.php.
+
+Documentation/FXDataFormat (in pdf and rich text) - Textual description of the array format returned by FX.php.
+
+Documentation/DatasetDiagram (in jpeg and pdf formats) - Graphical representation of the array format returned by FX.php
+
+Developer/FMErrors (in Excel and PHP formats) - The PHP version is an array, indexed by the error code.  There is also a Microsoft Excel spreadsheet.
+
+Documentation/Francais - Directory containing the documentation translated into French.  This is getting out-of-date.
+
+
+_Demo_Files___________
+
+index.php - Main demo file.  Accesses the Book List FileMaker database and displays results.  (Uses server_data.php.)
+
+detail.php - Supplemental file to index.php.  Displays details about a single Book List record as selected from index.php.  (Uses server_data.php.)
+
+Tutorials/FXExamples.php - Demo file designed to access (and modify) and FileMaker database.  Just point it at a data source.  (Uses server_data.php.)
+
+server_data.php - File containing connection information used by demo files.  BE SURE TO UPDATE THE VALUES TO MATCH YOUR SETUP.
+
+Tutorials/FX_charset - Files demonstrating the use of the expanded character support now built into FX.php.  (Courtesy of Masayuki Nii.)
+
+Tutorials/displayFXDatabaseList.php - Demo file which displays an FX data array containing a list of databases.  (Uses server_data.php.)
+
+Tutorials/displayFXDataset.php - Demo file which displays an FX data array resulting from a findall query.  (Uses server_data.php.)
+
+Tutorials/displayFXLayoutInfo.php - Displays an FX data array containing information about a specific FileMaker layout.  (Uses server_data.php.)
+
+Tutorials/displayFXLayoutList.php - Displays an FX data array containing a list of layouts for a specific DB.  (Uses server_data.php.)
+
+Tutorials/fx_tester.php - Example of FX Fuzzy Debugger use with FX.php.  (Uses server_data.php.)
+
+Tutorials/fx_tester_fap.php - Example of FX Fuzzy Debugger use with the FileMaker API for PHP.  (Uses server_data.php.)
+
+
+_FileMaker_Databases__
+
+Databases/Book_List.fp5 - Book List database used in examples files.  (Version for FM5/6)
+
+Databases/Book_List.fp7 - Book List database used in examples files.  (Version for FM7 or later.)
+
+Databases/Contacts.fp7 - Contacts database used by the FX Fuzzy Debugger examples.  (Only .fm7 version included.)
+
+Databases/Tester.fp5 - Tester database for use with some of the included example files (in FileMaker 5/6 format.)
+
+Databases/Tester_Related.fp5 - Related file containing supplemental Tester information (for demonstration purposes.)
+
+Databases/Tester.fp7 - Combination of Tester and Tester_Related above (in FileMaker 7 format -- only one file needed =).
+
+
+_Licenses_____________
+
+Licenses/ArtisticLicense.rtf - Most portions of FX.php are released under the Artistic License.
+
+Licenses/ADDENDUM.txt - An addendum to the Artistic License for FX.php.  (Covers all files in the release covered by the Artistic License.)
+
+Licenses/COPYRIGHT_INFO.txt - Copyright information about the FX.php release.
+
+Licenses/PHP_LICENSE.txt - The PHP license.  Covers FX_Error.php.

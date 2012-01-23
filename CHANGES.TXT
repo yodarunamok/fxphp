@@ -1,0 +1,243 @@
+Latest Changes:
+
+January 2012 (version 5.0)
+
+* Added SetCustomPrimaryKey(), SetNumberAutoConversionComma2PeriodForDecimal(), and FMFOpenQuery()  (Thanks Gjermund!)
+
+* Added RemainAsArray()  (Thanks Masayuki!)
+
+* Objective Referencing for queried data  (Thanks Masayuki!)
+
+April 2009 (version 4.5.3)
+
+* Added additional error handling to the fuzzy debugger.
+
+* Tweaked fuzzy debugger to work with PHP4.
+
+May 2008 (version 4.5.2)
+
+* Update SQL code generated such that default behavior for an update is no records rather than all records.
+
+February 2008 (version 4.5.1)
+
+* Various very minor bug fixes.
+
+February 2008 (version 4.5)
+
+* Fixed some problems related to MySQL support.  (Thanks to Chris Beecher and Marisa Smith.)
+
+* Updated OpenBase support to work with the most recent API.
+
+* Fixed a problem with SSL connections to FileMaker.  (Thanks to Nick Fowlie for spotting the issue, and supplying the fix.)
+
+* Fixed a problem with image_proxy.php that could result in plain text URLs being returned by vignereEncryptURL().
+
+* Fixed a problem with the include path in echo_new_key.php (thanks to Lance Hallberg.)
+
+* Added the FX Fuzzy Debugger and related support (thanks to Chris Moyer for introducing me to levenshtein distances.)
+
+* Added new, simpler syntax for DoFXAction() (Thanks to Lance Hallberg for helping me think this through.)
+
+* Made the $errorsList array in FMErrors.php global in scope.
+
+* Simplified and expanded the values used to specify the target datasource's type.
+
+November 2005 (version 4.2)
+
+* Updated version of "FX Parser" from Lance Hallberg.
+
+* Added PostgreSQL support
+
+* Fixed a bug in the data output portion of DoFXAction()
+
+* Various small bug fixes.
+
+August 2005 (version 4.1)
+
+* Minor variable related error quashed.  (Thanks to the folks at FMWebschool for catching this.)
+
+* Added a function called SetPortalRow() to allow an entire portal row to be edited/created with a single function call.
+
+* Added the SetFMGlobal() function to handle FM7 globals without requiring knowledge of FM URL syntax.
+
+August 2005 (version 4.0)
+
+* Added an excellent utility called "FX Parser" by Lance Hallberg which will aid many users in understanding the FX.php data set.  Thanks Lance!
+
+* The character encoding of data (both inbound and outbound) can now be specified.  (A big thanks to Masayuki Nii for contributing this!)
+
+* Added versioning constants.  One, FX_VERSION, is suitable for use in logical operations; the other, FX_VERSION_FULL, is for display purposes.  (Thanks to Gjermund Thorsen.)
+
+* Added the ability to connect to FM7 using HTTPS (SSL).  (Thanks to Chuck Chang for submitting this.)
+
+* Added support for ODBC.  (ODBC was tested with FM7SA and may work with other iODBC data sources as well, but has not been tested.)
+
+* Added OpenBase support.
+
+* Added the PerformSQLQuery() function as a means of executing a user specified SQL query where appropriate.  Currently works with SQL data sources.  (Thanks to Lance Halberg for noticing this missing functionality.)
+
+* Added the DoFXAction() function as a means of streamlining FX.php code by requiring knowledge of a single action function.  (A HUGE thank you to all those on the FX.php list who provided suggestions and feedback.)
+
+* Added functions for each of the "special cases" documented for the AddDBParam() function.
+    - The new functions are: SetRecordID(), SetModID(), SetLogicalOR(), PerformFMScript(), PerformFMScriptPrefind(), and PerformFMScriptPresort().
+
+* Added a function to allow the passing of an array of parameters -- AddDBParamArray().  (Thanks to Dave Strickler for sharing his FX class wrapper with me.)
+
+* Added the ability to return FX data without the innermost array (used for repeating fields and portals), if desired.
+
+* Added code to allow columns to be specified, if desired, for SELECT statements in SQL queries.
+
+* Fixed a bug that could result in a warning error in certain situations.  (Thanks to Brion Vibber!)
+
+* Default form policy is now 'POST' again and is set via $defaultPostPolicy.  This new variable is used when initializing $isPostQuery.  (Thanks for all the feedback on the FX.php mailing list related to this issue!)
+
+* Related to the previous issue, fixed a bug related to reinitializing $isPostQuery.  (Thanks to Brion Vibber!)
+
+* Applied version 3.1 fix to FileMaker 5/6 specific code.
+
+* Added an Excel spreadsheet of FileMaker error codes.  (Thanks to Phil Yaffe for suggesting this, and submitting the initial copy.)
+
+* Fixed a bug which could occasionally play havoc with image retrieval in image_proxy.php.  (Thanks to those who caught this.)
+
+* Distribution directory cleaned up and basic information about all files documented in ABOUT_THE_FILES.TXT.
+
+* Cleaned up example files and databases to work with FileMaker 7 with fewer modifications.
+
+January 2005 (version 3.1.1)
+
+* Tests and minor tweaks to ensure that FX.php works with PHP5.
+
+* Improved support for FM7 in demo files -- modifications to server_data.php among other things.
+
+December 2004 (version 3.1)
+
+* Fixed an issue that resulted in records being added twice under certain circumstances.  (Thanks to all those who caught this.)
+
+August 2004 (version 3.0)
+
+* Added support for FileMaker 7 Server Advanced -- new features, updated error messages, etc.  (Thanks to those who helped with testing: Dan Weiss, Jason H. Awbrey; Steve Lane; Yousaf Shah; Alex Klepov; Dan Stein; James Hea; John May; and Imadiff's team -- Philippe Laury, Jean-Philippe Palha, Stéphane Bédon-Rouanet.
+
+* Added preliminary support for MySQL queries via standard FX.php syntax.
+
+* Added elegant, object-based error handling.  (Thanks to Steve Lane for submitting the code, and thanks to Sterling Hughes, Stig Bakken, and Tomas V.V.Cox for their work on the PEAR_Error class, from which FX_Error was modified.)
+
+* Added files to allow encryption of URLs of image fields and proxy of related images.  (HUGE thanks to Micah Woods for talking this through with me and suggesting the solution.)
+
+* Corrected deprecated code in the XML handler.  (Thanks to those who caught this.)
+
+* Tweaked FXExamples.php to pull FileMaker IP and port data from server_data.php.
+
+* Added tweak in FXExamples.php and Book List example to allow for IIS lameness.
+
+* Added catching of an additional forbidden character.  (Thanks to Brent Baisley for finding which one.)
+
+* Fixed some code in the Book List example that caused problems when working with FM7SA.
+
+* Added a missing call to restore_error_handler().  (Thanks to Brion Vibber, Steve Lane, and Tyler LaGrange.)
+
+January 2004 (version 2.3.2)
+
+* Added elements to the returned array for the numbers of the first and last records in the current found set.
+
+* Added a function to proxy images from FileMaker Pro.
+
+* Related documentation updates.
+
+December 2003 (version 2.3.1)
+
+* Fixed a difference in the two download versions.  (Thanks to those who caught this.)
+
+* Added some new code to catch additional invalid characters.  (Thanks to Brent Baisley for spotting this.)
+
+November 2003 (version 2.3)
+
+* Added a function to allow easy toggling of cURL use.
+
+* Minor tweak to handle cases where a server variable is not set.  (Thanks to Micah Woods.)
+
+* Fixed a bug that sometimes resulted in an improperly closed end tag in FileMaker data.
+
+* Added code to remove a prohibited, invisible character entity from returned XML before parsing.  (Thanks to Christoper Ross.)
+
+August 2003 (version 2.2)
+
+* Fixed a bug that could cause the results of GET queries to FileMaker to be truncated.
+
+* Reimported graphics into Book_List.fp5 database to ensure cross-platform compatibility. (Thanks to Glenn Singleton for pointing this out.)
+
+August 2003 (version 2.1)
+
+* Added French documentation to distribution.  (Thanks to Philippe Waterloos.)
+
+* Began assigning version numbers to FX.php releases.  (Thanks to Philippe Waterloos for suggesting this.)
+
+* Fixed a bug in the way that password data was sent when using sockets.  (Thanks to Julian Clementson for catching this.)
+
+* Fixed a bug in the way that FX.php checks for cURL support.  (Thanks to Julian Clementson for catching this.)
+
+July 2003
+
+* Updated UTF-8 decoding to remove the need for those long tables!  (Thanks to Gjermund Thorsen for convincing me there had to be a better way ;-p)
+
+* Updated all FileMaker pro actions to allow the extent of the returned data to be specified.
+
+* Changed FX.php to use HTTP POST by default.  FX.php will now check for cURL support and do a POST with sockets if it is not present.  (Thanks to Peter Wagemans for sharing his POST with sockets code.)
+
+* Streamlined code for 'linkNext' and 'linkPrevious'.
+
+* Added additional documentation, examples, and databases to distribution.
+
+* Made database connection portion of FX.php modular to allow easy modification to connect to other data sources.
+
+* Fixed a value list related bug.  (Thanks to Bob Bowers of the Moyer Group for catching this.)
+
+* Added FMErrors.php (a handy list of the errors returned by FileMaker) to the FX.php distribution.  (Thanks to Gjermund Thorsen for doing the legwork.)
+
+* Added a diagram of the dataset returned by FX.php to the distribution.
+
+-- KNOWN ISSUE: when using sockets to POST to FileMaker, making more than three calls to FileMaker consecutively on the same page seems to result in data truncation.
+
+May 2003
+
+* Added support for the FileMaker Pro Web Security Database.  (Thanks to Bernhard Schulz for submitting code and to all those who requested this.)
+
+July 2002
+
+* Added 'linkNext' and 'linkPrevious' to returned data (Thanks to Tyler LaGrange!)
+
+* Fixed up example code to work with PHP 4.2 and earlier.
+
+* Bug fixes (thanks to Jaz Brown.)
+
+* Repaired UTF-8 decoding.
+
+May/June 2002
+
+* Added FMDBNames() function. (Thanks to Arjen Brouwer!)
+
+* Added FMLayoutNames() function. (Thanks to Arjen Brouwer!)
+
+* Added FMPostQuery() function. (Thanks to all those who asked indirectly for this!)
+
+March 2002
+
+* Added full set of character translation files. (Thanks to Gjermund G. Thorsen!)
+
+* Added PHP cache to distribution.
+
+* Added FileMaker password function. (Thanks to all those who asked how to do this!)
+
+* Added functions to email error reports to a specified address.
+
+
+January 2002
+
+* Added UTF-8 decoding to View action.
+
+* Added first of new character set files. (Thanks to Gjermund G. Thorsen!)
+
+* Fixed clean up bug which occured when no data was returned from an action.
+
+* Name of primary class in FX.php changed from FMData to FX.
+
+* Added FX Function documentation in various formats.
