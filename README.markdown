@@ -1,7 +1,7 @@
 # FX.php
 
 A FREE, Open Source PHP database abstraction class for accessing FileMaker Pro and other databases
-by Chris Hansen with Chris Adams, Gjermund Thorsen, and others.
+by Chris Hansen with Chris Adams, Gjermund Thorsen, Masayuki Nii, and others.
 
 FileMaker Pro has quite a following, and with good reason:  it mixes the power of a relational database with phenomenal ease-of-use.  PHP is a free, embedded scripting language in use on nearly half of all Apache web servers (which themselves account for about 60% of web servers.)  PHP can access just about any data source, but there was no easy way for it to pull data from FileMaker until 2001.  FX.php was the first PHP class which allowed FileMaker enthusiasts to access their data via PHP.  More recent versions have also added support for MySQL, PostgreSQL, OpenBase, ODBC data sources, and more.
 
