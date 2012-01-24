@@ -28,4 +28,4 @@ So, a reference to a specific value will be structured like one of the following
 * $DataArray['12.3']['First_Name']
 * $DataArray['data']['12.3']['First_Name'][0]
 
-Look at the sample code to get a better feel for how things work.  You can also see it at work on [my site](www.iviking.org/FX.php/)
+Look at the sample code to get a better feel for how things work.  You can also see it at work on [my site](http://www.iviking.org/FX.php/)
