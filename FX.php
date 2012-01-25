@@ -151,7 +151,7 @@ class FX
     // These variables are related to sending data to FileMaker via a Post.
     var $defaultPostPolicy = true;
     var $isPostQuery;
-    var $defaultFOpenQuery = false;
+    var $defaultFOpenPolicy = false;
     var $isFOpenQuery;
     var $useCURL = true;
     var $customPrimaryKey = '';
