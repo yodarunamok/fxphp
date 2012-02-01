@@ -579,7 +579,7 @@ class FX
     {
         $data = '';
         if ($this->DBPassword != '') {                                      // Assemble the Password Data
-            $this->userPass = $this->DBUser . ':' . $this->DBPassword . '@';
+            $this->userPass = rawurlencode($this->DBUser) . ':' . rawurlencode($this->DBPassword) . '@';
         }
         if ($this->layout != "") {                                          // Set up the layout portion of the query.
             $layRequest = "&-lay=" . urlencode($this->layout);
@@ -676,7 +676,7 @@ class FX
     {
         $data = '';
         if ($this->DBPassword != '' || $this->DBUser != 'FX') {             // Assemble the Password Data
-            $this->userPass = $this->DBUser . ':' . $this->DBPassword . '@';
+            $this->userPass = rawurlencode($this->DBUser) . ':' . rawurlencode($this->DBPassword) . '@';
         }
         if ($this->layout != "") {                                          // Set up the layout portion of the query.
             $layRequest = "&-lay=" . urlencode($this->layout);
