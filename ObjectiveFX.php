@@ -4,7 +4,7 @@
  * Start from Jan 23, 2011
  * 
  * How to use this, check following blog article:
- * https://msyk.net/users/msyk/weblog/cb14c/
+ * https://server.msyk.net/wiki/pages/f8C0Q7a6/
  * *****************************************************
  */
 

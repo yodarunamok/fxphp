@@ -130,7 +130,8 @@ class FX
     var $remainNamesReverse = array();	// Added by Masayuki Nii(nii@msyk.net) Jan 23, 2010
     var $portalAsRecord =false;	// Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
     var $currentSubrecordIndex;	// Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
-    
+    var $forceFlatten = false;	// Added by Masayuki Nii(nii@msyk.net) Feb 1, 2012
+
     // Flags and Error Tracking
     var $currentFlag = '';
     var $currentRecord = '';
@@ -272,7 +273,15 @@ class FX
         if (strlen($dataType) > 0) {
             $this->dataServerType = $dataType;
         }
-        if (strlen($dataURLType) > 0 && ($dataType == 'FMPro7' || $dataType == 'FMPro8' || $dataType == 'FMPro9' || $dataType == 'FMPro10') && strtolower($dataURLType) == 'https') {
+        $dataTypeSmallCapital = strtolower($dataType);
+        if (strlen($dataURLType) > 0
+            &&
+            (   $dataTypeSmallCapital == 'fmpro7' || $dataTypeSmallCapital == 'fmpro8' ||
+                $dataTypeSmallCapital == 'fmpro9' || $dataTypeSmallCapital == 'fmpro10' ||
+                $dataTypeSmallCapital == 'fmpro11'  )
+            &&
+            strtolower($dataURLType) == 'https') {
+
             $this->useSSLProtocol = true;
             $this->urlScheme = 'https';
         } else {
@@ -289,6 +298,8 @@ class FX
         $currentSort = "";
 
         foreach ($this->sortParams as $key1 => $value1) {
+            $field = '';
+            $sortOrder = '';    // prevent to report error in IDE. (msyk, Feb 1, 2012)
             foreach ($value1 as $key2 => $value2) {
                 $$key2 = $value2;
             }
@@ -317,6 +328,9 @@ class FX
         $currentSearch = '';
 
         foreach ($this->dataParams as $key1 => $value1) {
+            $name = '';
+            $value = '';
+            $op = '';   // prevent to report error in IDE. (msyk, Feb 1, 2012)
             foreach ($value1 as $key2 => $value2) {
                 $$key2 = $value2;
             }
@@ -394,6 +408,7 @@ class FX
                 }
                 break;
             case "row":
+                $recordid = '';    // prevent to report error in IDE. (msyk, Feb 1, 2012)
                 foreach ($attrs as $key => $value) {
                     $key = strtolower($key);
                     $$key = $value;
@@ -806,6 +821,8 @@ This function is particularly written for huge queries of data that are less lik
             $counter = 0;
             $currentOrderBy .= ' ORDER BY ';
             foreach ($this->sortParams as $key1 => $value1) {
+                $field = '';
+                $sortOrder = '';   // prevent to report error in IDE. (msyk, Feb 1, 2012)
                 foreach ($value1 as $key2 => $value2) {
                     $$key2 = $value2;
                 }
@@ -831,6 +848,10 @@ This function is particularly written for huge queries of data that are less lik
         $currentQuery = '';
         $counter = 0;
         $whereClause = '';
+
+        $name = '';
+        $value = '';
+        $op = '';   // prevent to report error in IDE. (msyk, Feb 1, 2012)
 
         switch ($action) {
             case '-find':
@@ -949,6 +970,8 @@ This function is particularly written for huge queries of data that are less lik
                 $tempColList = '(';
                 $tempValueList = '(';
                 foreach ($this->dataParams as $key1 => $value1) {
+                    $name = '';
+                    $value = '';
                     foreach ($value1 as $key2 => $value2) {
                         $$key2 = $value2;
                     }
@@ -1552,7 +1575,7 @@ This function is particularly written for huge queries of data that are less lik
                 	xml_set_object($xml_parser, $this);
                 	xml_set_element_handler($xml_parser, "StartElement", "EndElement");
                 	xml_set_character_data_handler($xml_parser, "ElementContents");
-                	$xmlParseResult = xml_parse($xml_parser, ConvertSarrogatePair( $data ), true);
+                	$xmlParseResult = xml_parse($xml_parser, ConvertSurrogatePair( $data ), true);
                 	if (! $xmlParseResult) {
 /* ==============End of the addition */            	
                 	$theMessage = sprintf("ExecuteQuery XML error: %s at line %d",
@@ -1781,7 +1804,11 @@ This function is particularly written for huge queries of data that are less lik
 
     function FMAction ($Action, $returnDataSet, $returnData, $useInnerArray)
     {
-        $this->useInnerArray = $useInnerArray;
+        if ( $this->forceFlatten )  {           // Added by msyk, Feb 1, 2012
+            $this->useInnerArray = false;
+        } else {
+            $this->useInnerArray = $useInnerArray;
+        }                                       // ====================
         $queryResult = $this->ExecuteQuery($this->actionArray[strtolower($Action)]);
         if (FX::isError($queryResult)){
             if (EMAIL_ERROR_MESSAGES) {
@@ -2009,7 +2036,7 @@ This function is particularly written for huge queries of data that are less lik
     // When these are not present, or when accessing SQL data, this may not be desirable.  FlattenInnerArray() removes this extra layer.
     function FlattenInnerArray ()
     {
-        $this->useInnerArray = false;
+        $this->forceFlatten = true;
     }
 
 /* The actions that you can send to FileMaker start here */
@@ -2133,6 +2160,7 @@ This function is particularly written for huge queries of data that are less lik
     }
     
     // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
+    // Modifye by msyk, Feb 1, 2012
     function RemainAsArray (
     			$rArray1,$rArray2=NULL,$rArray3=NULL,$rArray4=NULL,$rArray5=NULL,
     			$rArray6=NULL,$rArray7=NULL,$rArray8=NULL,$rArray9=NULL,$rArray10=NULL,
@@ -2140,14 +2168,15 @@ This function is particularly written for huge queries of data that are less lik
     	$this->portalAsRecord = false;
     	$counter = 0;
     	for ( $i=1 ; $i<13 ; $i++ )	{
-    		eval('$param=$rArray'.$i.';');
-     		if ( $param === NULL )	{
+            $valName = "rArray{$i}";
+     		if ( ! isset($$valName) )	{
     			break;
     		}
-    		if (is_array($param))	{
+    		if (is_array($$valName))	{
     			$this->portalAsRecord = true;
     			$isFirstTime = true;
-    			foreach($param as $item)	{
+                $firstItemName = '';
+    			foreach($$valName as $item)	{
     				if($isFirstTime)	{
     					$isFirstTime = false;
     					$firstItemName = $item;
@@ -2159,8 +2188,8 @@ This function is particularly written for huge queries of data that are less lik
     				$counter++;
     			}	
     		} else {
-    			$this->remainName[$counter] = $param;
-    			$this->remainNamesReverse[$param] = true;
+    			$this->remainName[$counter] = $$valName;
+    			$this->remainNamesReverse[$$valName] = true;
     			$counter++;
     		}
     	}
@@ -2190,11 +2219,11 @@ This function is particularly written for huge queries of data that are less lik
     }
 }
 
-/* Convert wrong sarrogated-pair character to light code sequence in UTF-8
+/* Convert wrong surrogated-pair character to light code sequence in UTF-8
  * Masayuki Nii (msyk@msyk.net) Oct 9, 2009
  * Refered http://www.nii.ac.jp/CAT-ILL/about/system/vista.html
  */
-function ConvertSarrogatePair($data)	{
+function ConvertSurrogatePair($data)	{
 	$altData = '';
 	for ($i=0; $i<strlen($data); $i++)	{
 		$c = substr( $data, $i, 1 );
