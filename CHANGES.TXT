@@ -1,5 +1,11 @@
 Latest Changes:
 
+February 2012 (version 6.0)
+
+* Reworked FX.php to use cleaner, faster object model.
+
+* FX.php is now fully active on github -- watch https://github.com/yodarunamok/fxphp/commits/master for small changes.
+
 January 2012 (version 5.0)
 
 * Added SetCustomPrimaryKey(), SetNumberAutoConversionComma2PeriodForDecimal(), and FMFOpenQuery()  (Thanks Gjermund!)
