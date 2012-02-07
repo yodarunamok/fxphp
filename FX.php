@@ -745,7 +745,7 @@ class FX {
     }
 
     // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
-    // Modified by msyk, Feb 1, 2012
+    // Modified by msyk, Feb 1-6, 2012
     function RemainAsArray (
                 $rArray1,$rArray2=NULL,$rArray3=NULL,$rArray4=NULL,$rArray5=NULL,
                 $rArray6=NULL,$rArray7=NULL,$rArray8=NULL,$rArray9=NULL,$rArray10=NULL,
@@ -769,51 +769,15 @@ class FX {
                     } else {
                         $this->remainNamesReverse[$item] = $firstItemName;
                     }
-                    $this->remainName[$counter] = $item;
+                    $this->remainNames[$counter] = $item;
                     $counter++;
                 }    
             } else {
-                $this->remainName[$counter] = $$valName;
+                $this->remainNames[$counter] = $$valName;
                 $this->remainNamesReverse[$$valName] = true;
                 $counter++;
             }
         }
     }
-
-    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
-    function isRemainName($fieldName) {
-        foreach($this->remainNames as $fName) {
-            if (strpos($fieldName,$fName) === 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
-
-/* Convert wrong surrogated-pair character to light code sequence in UTF-8
- * Masayuki Nii (msyk@msyk.net) Oct 9, 2009
- * Refered http://www.nii.ac.jp/CAT-ILL/about/system/vista.html
- */
-function ConvertSurrogatePair($data) {
-    $altData = '';
-    for ($i=0; $i<strlen($data); $i++) {
-        $c = substr( $data, $i, 1 );
-        if (( ord($c) == 0xed )&&( (ord(substr( $data, $i+1, 1 )) & 0xF0) == 0xA0 )) {
-            for ( $j = 0; $j < 6 ; $j++ )
-                $utfSeq[] = ord(substr($data, $i+$j,1));
-            $convSeq[3] = $utfSeq[5];
-            $convSeq[2] = $utfSeq[4] & 0x0F | (($utfSeq[2] & 0x03) << 4) | 0x80;
-            $topDigit = ($utfSeq[1] & 0x0F) + 1;
-            $convSeq[1] = (($utfSeq[2] >> 2) & 0x0F) | (($topDigit & 0x03) << 4) | 0x80;
-            $convSeq[0] = (($topDigit >> 2) & 0x07) | 0xF0;
-            $c = chr( $convSeq[0] ).chr( $convSeq[1] ).chr( $convSeq[2] ).chr( $convSeq[3] );
-            $i += 5;
-        }
-        $altData .= $c;
-    }
-    return $altData;
-}
-
 ?>

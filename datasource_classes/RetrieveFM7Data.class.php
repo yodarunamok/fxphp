@@ -208,7 +208,7 @@ This function is particularly written for huge queries of data that are less lik
             xml_set_object($xml_parser, $this);
             xml_set_element_handler($xml_parser, "StartElement", "EndElement");
             xml_set_character_data_handler($xml_parser, "ElementContents");
-            $xmlParseResult = xml_parse($xml_parser, ConvertSurrogatePair( $data ), true);
+            $xmlParseResult = xml_parse($xml_parser, $this->ConvertSurrogatePair( $data ), true);
             if (! $xmlParseResult) {
 /* ==============End of the addition */
                 $theMessage = sprintf("ExecuteQuery XML error: %s at line %d",
@@ -226,6 +226,30 @@ This function is particularly written for huge queries of data that are less lik
         xml_parser_free($xml_parser);
         return true;
 
+    }
+
+/* Convert wrong surrogated-pair character to light code sequence in UTF-8
+ * Masayuki Nii (msyk@msyk.net) Oct 9, 2009, Moved here on Feb 6,2012
+ * Refered http://www.nii.ac.jp/CAT-ILL/about/system/vista.html
+ */
+    function ConvertSurrogatePair($data) {
+        $altData = '';
+        for ($i=0; $i<strlen($data); $i++) {
+            $c = substr( $data, $i, 1 );
+            if (( ord($c) == 0xed )&&( (ord(substr( $data, $i+1, 1 )) & 0xF0) == 0xA0 )) {
+                for ( $j = 0; $j < 6 ; $j++ )
+                    $utfSeq[] = ord(substr($data, $i+$j,1));
+                $convSeq[3] = $utfSeq[5];
+                $convSeq[2] = $utfSeq[4] & 0x0F | (($utfSeq[2] & 0x03) << 4) | 0x80;
+                $topDigit = ($utfSeq[1] & 0x0F) + 1;
+                $convSeq[1] = (($utfSeq[2] >> 2) & 0x0F) | (($topDigit & 0x03) << 4) | 0x80;
+                $convSeq[0] = (($topDigit >> 2) & 0x07) | 0xF0;
+                $c = chr( $convSeq[0] ).chr( $convSeq[1] ).chr( $convSeq[2] ).chr( $convSeq[3] );
+                $i += 5;
+            }
+            $altData .= $c;
+        }
+        return $altData;
     }
 
 }
