@@ -68,6 +68,8 @@ class FX {
     var $groupSize;
     var $currentSkip = 0;
     var $defaultOperator = 'bw';
+    var $findquerynumber = 1; // added by Nick Salonen
+    var $findquerystring = ''; // added by Nick Salonen
     var $dataParams = array();
     var $sortParams = array();
     var $actionArray = array(
@@ -78,6 +80,7 @@ class FX {
             "-find"                 =>"-find",
             "-findall"              =>"-findall",
             "-findany"              =>"-findany",
+            '-findquery'            =>'-findquery',
             "-new"                  =>"-new",
             "-view"                 =>"-view",
             "-dbnames"              =>"-dbnames",
@@ -228,6 +231,8 @@ class FX {
         $this->remainNames = array();    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
         $this->remainNamesReverse = array();    // Added by Masayuki Nii(nii@msyk.net) Jan 23, 2011
         $this->portalAsRecord = false;    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
+        $this->findquerynumber = 1; // added by Nick Salonen
+        $this->findquerystring = ''; // added by Nick Salonen
     }
 
     function ErrorHandler ($errorText) {
@@ -300,7 +305,15 @@ class FX {
             $appendFlag = true;
             foreach ($_POST as $key => $value) {
                 if ($appendFlag && strcasecmp($key, '-foundSetParams_begin') != 0 && strcasecmp($key, '-foundSetParams_end') != 0) {
-                    $tempQueryString .= urlencode($key) . '=' . urlencode($value) . '&';
+                    if (is_array($value))
+                    {
+                        foreach($value as $innertkey => $innertvalue)
+                        {
+                            $tempQueryString .= urlencode($key.'[]') . '='.$innertvalue.'&';
+                        }
+                    } else {
+                        $tempQueryString .= urlencode($key) . '=' . urlencode($value) . '&';
+                    }
                 } elseif (strcasecmp($key, '-foundSetParams_begin') == 0) {
                     $appendFlag = true;
                     if ($paramSetCount < 1) {
@@ -513,6 +526,181 @@ class FX {
         return true;
     }
 
+// start of findquery section
+    /**
+    * Returns the "q" number (q1, q2, etc) if a duplicate name/value pair exists already, else returns a false value (q cannot be 0 anyway).
+    *
+    * @param mixed $name
+    * @param mixed $value
+    */
+    function FindQuery_DuplicateExists($name, $value)
+    {
+        $currentParamList = $this->GetKeyPairDataParams();
+        for($c = 1; $c <= $this->findquerynumber; $c++)
+        {
+            if (isset($currentParamList['-q'.$c]))
+            {
+                $cname = $currentParamList['-q'.$c];
+                $cvalue = $currentParamList['-q'.$c.'.value'];
+                if ($cname == $name && $cvalue == $value)
+                {
+                    return $c;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+    * when using FMFindQuery, appends name and value pairs to the findquery query string. optionally (doModify=false), returns the string for further manipulation.
+    *  example:  $searchFields = array();
+$searchFields[] = array('zAssignedGroup::ID_Group', $group);
+$searchFields[] = array('DateClosed', $startdate.'...'.$enddate);
+$wo_find->FindQuery_Append($searchFields);
+    *   note the two arrays, to allow multiple of the same key in one find, to handle fields with multiple values separated by return.
+    * @param mixed $namevaluepair
+    * @param mixed $doModify
+    */
+    function FindQuery_Append($namevaluepair = array(), $doModify = true)
+    {
+        if (is_array($namevaluepair) && count($namevaluepair) > 0)
+        {
+            $appendquerystring = '';
+            foreach($namevaluepair as $fieldInfo)  // fieldInfo is just an array with [0] as name, and [1] as data
+            {
+
+                    $foundFlagQNumber = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]);
+
+                    if (!$foundFlagQNumber)
+                    {
+                        $this->AddDBParam('-q'.$this->findquerynumber, $fieldInfo[0]);
+                        $this->AddDBParam('-q'.$this->findquerynumber.'.value', $fieldInfo[1]);
+
+                        // add the find to the end of the string
+                        $appendquerystring .= ',q'.$this->findquerynumber;
+
+                        $this->findquerynumber++;
+                    } else {
+                        // the exact namevalue pair was found and attempted to be searched on again.
+                       $appendquerystring .= ',q'.$foundFlagQNumber;
+                    }
+
+            }
+            if ($appendquerystring != '')
+            {
+                $appendquerystring = substr($appendquerystring, 1); // strip beginning comma.
+                if ($doModify)
+                {
+                    $this->findquerystring .= ';('.$appendquerystring . ')';
+                } else {
+                    return ';('.$appendquerystring . ')';
+                }
+            }
+        }
+    }
+
+    /**
+    * exact duplicate of FindQuery_Append except for the '!' near teh end..
+    *
+    * @param mixed $namevaluepair
+    * @param mixed $doModify
+    */
+    function FindQuery_Omit($namevaluepair = array(), $doModify = true)
+    {
+        $str = $this->FindQuery_Append($namevaluepair, false); // send false to not modify the internal query string.
+        if ($doModify)
+        {
+            // the string will come back looking like: ;(q1) so we have to strip the initial semicolon.
+            $this->findquerystring .= ';!'.substr($str, 1);
+        } else {
+            return ';!'.substr($str, 1);
+        }
+    }
+
+    function GetKeyPairDataParams()
+    {
+        $temp = array();
+        foreach($this->dataParams as $key=>$row)
+        {
+            $name = $row['name'];
+            $value = $row['value'];
+            $temp[$name] = $value;
+        }
+        return $temp;
+    }
+
+    /**
+    * Fields will be an array of fields you want to make an AND find on.
+    * the second param will be the querystring to be used.
+    * @param mixed $fields
+    */
+    function FindQuery_AND($namevaluepair = array(), $fieldnames = array(), $querystring = '', $doModify = true)
+    {
+        if ($querystring == '')
+        {
+            $querystring = $this->findquerystring; // use the internal querystring by default.
+        }
+        $qnumlist = array(); // used to keep a list of the qnum we are ANDing.
+        if (is_array($namevaluepair) && count($namevaluepair) > 0)
+        {
+
+            foreach($namevaluepair as $fieldInfo)
+            {
+
+                    $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]);
+                    if (!$qnum)
+                    {
+                        $this->FindQuery_Append(array(array($fieldInfo[0], $fieldInfo[1])), false); // add parameters to the list of possible query params but don't modify the query yet.
+                        $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]); // find the q number after it has been created in the dataParams.
+                    }
+                    if ($qnum !== false) $qnumlist[] = $qnum;
+
+            }
+
+            if ($this->findquerystring == '') // if starting with an AND, then do this
+            {
+                foreach($qnumlist as $num)
+                {
+                    // make sure that the query data is not already in this section ex: (q2,q2) is illegal
+                        $newquerystring .= ',q'.$num;
+                }
+                $newquerystring = ';('. substr($newquerystring, 1) .')'; // strip off initial comma
+            } else {
+
+                $findquerypieces = explode(';', $this->findquerystring);
+                $newquerystring = '';
+                foreach ($findquerypieces as $findquerypiece)
+                {
+                    if (!empty($findquerypiece))
+                    {
+                        $newquerystring .= ';'.substr($findquerypiece, 0, (strlen($findquerypiece)-1));
+                        if (strpos($findquerypiece, '!') === false)
+                        {
+    //                        if (count($fieldnames) == 0 || in_array( /// check for field in dataParams for this query piece
+                            foreach($qnumlist as $num)
+                            {
+                                // make sure that the query data is not already in this section ex: (q2,q2) is illegal
+                                if (strpos($findquerypiece, array('q'.$num.')', 'q'.$num.',')) === false)
+                                {
+                                    $newquerystring .= ',q'.$num;
+                                }
+                            }
+                        }
+                            $newquerystring .= ')';
+                    }
+//                     else {
+//                        $newquerystring .= ';'.$findquerypiece;
+//                    }
+                }
+            }
+        }
+        $this->findquerystring = $newquerystring;
+
+
+    }
+// end of findquery section
+
     function AddDBParam ($name, $value, $op="") {                        // Add a search parameter.  An operator is usually not necessary.
         if ($this->dataParamsEncoding  != '' && defined('MB_OVERLOAD_STRING')) {
             $this->dataParams[]["name"] = mb_convert_encoding($name, $this->dataParamsEncoding, $this->charSet);
@@ -681,6 +869,11 @@ class FX {
 
     function FMFindAny ($returnDataSet = true, $returnData = 'full', $useInnerArray = true) {
         return $this->FMAction("-findany", $returnDataSet, $returnData, $useInnerArray);
+    }
+
+    function FMFindQuery ($returnDataSet = true, $returnData = 'full', $useInnerArray = true)
+    {
+            return $this->FMAction("-findquery", $returnDataSet, $returnData, $useInnerArray);
     }
 
     function FMNew ($returnDataSet = true, $returnData = 'full', $useInnerArray = true) {
