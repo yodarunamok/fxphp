@@ -305,7 +305,15 @@ class FX {
             $appendFlag = true;
             foreach ($_POST as $key => $value) {
                 if ($appendFlag && strcasecmp($key, '-foundSetParams_begin') != 0 && strcasecmp($key, '-foundSetParams_end') != 0) {
-                    $tempQueryString .= urlencode($key) . '=' . urlencode($value) . '&';
+                    if (is_array($value))
+                    {
+                        foreach($value as $innertkey => $innertvalue)
+                        {
+                            $tempQueryString .= urlencode($key.'[]') . '='.$innertvalue.'&';
+                        }
+                    } else {
+                        $tempQueryString .= urlencode($key) . '=' . urlencode($value) . '&';
+                    }
                 } elseif (strcasecmp($key, '-foundSetParams_begin') == 0) {
                     $appendFlag = true;
                     if ($paramSetCount < 1) {
