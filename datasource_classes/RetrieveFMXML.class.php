@@ -51,12 +51,12 @@ class RetrieveFMXML extends RetrieveFXData {
     );
 
     var $UTF8HTMLEntities = array(
-        "\$this->BuildExtendedChar('\\1','\\2')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')"
+        "\$this->FX->BuildExtendedChar('\\1','\\2')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')"
     );
 
     function getTOCName($fieldName) {
