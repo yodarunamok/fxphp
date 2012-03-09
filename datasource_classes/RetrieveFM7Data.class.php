@@ -55,6 +55,43 @@ class RetrieveFM7Data extends RetrieveFMXML {
     }
 
     function doQuery ($action) {
+        // if section added by Nick Salonen for findquery
+        if ($action == '-findquery')
+        {
+            $queryExists = false;
+            $tempcount = count($this->FX->dataParams);
+            foreach($this->FX->dataParams as $key=>$row) // for each dataParam
+            {
+                if ($queryExists) continue;
+                // check to see if the field/value pair exists in the dataParams already. if so, use it via foundFlagQNumber.
+                if ($row['name'] === '-query')
+                {
+                    $queryExists = true;
+                }
+            }
+            if ($queryExists)
+            {
+                // continue
+            } else {
+                if ($this->FX->findquerystring == '')
+                {
+                    if ((defined("DEBUG") and DEBUG) or DEBUG_FUZZY) {
+                        $currentDebugString = "<p>FindQuery Finds must have a -query parameter</p>\n";
+                        $this->lastDebugMessage .= $currentDebugString;
+                    }
+                    return new FX_Error("FindQuery Finds must have a -query parameter.");
+                } else {
+                    if (strpos($this->FX->findquerystring, ';') === 0)
+                    {
+                        $this->FX->findquerystring = substr($this->FX->findquerystring, 1);
+                    }
+                    // would just need this section if using all of the FX->FindQuery_Append command, etc. and no manual entering.
+                    $this->FX->AddDBParam('-query', $this->FX->findquerystring);
+                    // continue
+                }
+            }
+            
+        }
         $data = '';
         if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {     // Assemble the Password Data
             $this->FX->userPass = rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword) . '@';
@@ -80,7 +117,8 @@ class RetrieveFM7Data extends RetrieveFMXML {
         } else {
             $FMFile = 'FMPXMLRESULT.xml';
         }
-        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
+        // took out {$this->FX->userPass} from the following, after the ://
+        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->dataServer}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
         $this->dataURL .= '?' . $this->dataURLParams;
 
@@ -115,8 +153,12 @@ This function is particularly written for huge queries of data that are less lik
         } elseif ($this->FX->isPostQuery) {
             if ($this->FX->useCURL && defined("CURLOPT_TIMEVALUE")) {
                 $curlHandle = curl_init(str_replace($this->dataURLParams, '', $this->dataURL));
+                curl_setopt($curlHandle, CURLOPT_HEADER, 0);
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
+                curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false); // optional, nick salonen
+                curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); // nick salonen
+                curl_setopt($curlHandle, CURLOPT_USERPWD,"{$this->FX->DBUser}:{$this->FX->DBPassword}"); // nick salonen
                 ob_start();
                 if (! curl_exec($curlHandle)) {
                     $this->FX->lastDebugMessage .= "<p>Unable to connect to FileMaker.  Use the DEBUG constant and try connecting with the resulting URL manually.<br />\n";
