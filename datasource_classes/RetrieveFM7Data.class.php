@@ -117,8 +117,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
         } else {
             $FMFile = 'FMPXMLRESULT.xml';
         }
-        // took out {$this->FX->userPass} from the following, after the ://
-        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->dataServer}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
+        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
         $this->dataURL .= '?' . $this->dataURLParams;
 
@@ -153,12 +152,8 @@ This function is particularly written for huge queries of data that are less lik
         } elseif ($this->FX->isPostQuery) {
             if ($this->FX->useCURL && defined("CURLOPT_TIMEVALUE")) {
                 $curlHandle = curl_init(str_replace($this->dataURLParams, '', $this->dataURL));
-                curl_setopt($curlHandle, CURLOPT_HEADER, 0);
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
-                curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false); // optional, nick salonen
-                curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); // nick salonen
-                curl_setopt($curlHandle, CURLOPT_USERPWD,"{$this->FX->DBUser}:{$this->FX->DBPassword}"); // nick salonen
                 ob_start();
                 if (! curl_exec($curlHandle)) {
                     $this->FX->lastDebugMessage .= "<p>Unable to connect to FileMaker.  Use the DEBUG constant and try connecting with the resulting URL manually.<br />\n";
