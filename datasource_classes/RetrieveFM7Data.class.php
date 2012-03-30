@@ -245,7 +245,7 @@ This function is particularly written for huge queries of data that are less lik
         $xmlParseResult = xml_parse($xml_parser, $data, true);
         if (! $xmlParseResult) {
 /* Masayuki Nii added at Oct 9, 2009 */
-            $this->FX->columnCount = -1; 
+            $this->columnCounter = -1; 
             xml_parser_free($xml_parser);
             $xml_parser = xml_parser_create("UTF-8");
             xml_set_object($xml_parser, $this);
