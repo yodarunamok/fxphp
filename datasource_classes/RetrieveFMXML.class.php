@@ -51,12 +51,12 @@ class RetrieveFMXML extends RetrieveFXData {
     );
 
     var $UTF8HTMLEntities = array(
-        "\$this->BuildExtendedChar('\\1','\\2')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')",
-        "\$this->BuildExtendedChar('\\1','\\2','\\3','\\4')"
+        "\$this->FX->BuildExtendedChar('\\1','\\2')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')",
+        "\$this->FX->BuildExtendedChar('\\1','\\2','\\3','\\4')"
     );
 
     function getTOCName($fieldName) {
@@ -65,10 +65,20 @@ class RetrieveFMXML extends RetrieveFXData {
             return 'ERROR-TOC name is conflicted.';
         }
         $tocName = substr($fieldName,0,$p);
-        if ($this->remainNamesReverse[$tocName] !== true)   {
-            return $this->remainNamesReverse[$tocName];
+        if ($this->FX->remainNamesReverse[$tocName] !== true)   {
+            return $this->FX->remainNamesReverse[$tocName];
         }
         return $tocName;
+    }
+
+    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010, Move to hear Feb 6, 2012
+    function isRemainName($fieldName) {
+        foreach($this->FX->remainNames as $fName) {
+            if (strpos($fieldName,$fName) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function StartElement($parser, $name, $attrs) {                      // The functions to start XML parsing begin here
@@ -78,7 +88,7 @@ class RetrieveFMXML extends RetrieveFXData {
                 if ($this->FX->useInnerArray) {
                     $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] = "";
                 } else {
-                    if ($this->FX->isRemainName($this->currentField))    {
+                    if ($this->isRemainName($this->currentField))    {
                         if ($this->FX->portalAsRecord ) {
                             $this->FX->currentData[$this->currentRecord][$this->getTOCName($this->currentField)][$this->currentSubrecordIndex][$this->currentField] = '';
                         } else {
@@ -95,7 +105,7 @@ class RetrieveFMXML extends RetrieveFXData {
                 $this->currentField = $this->FX->fieldInfo[$this->columnCounter]['name'];
                 if ($this->FX->useInnerArray) {
                     $this->FX->currentData[$this->currentRecord][$this->currentField] = array();
-                } else if ($this->FX->isRemainName($this->currentField)) {
+                } else if ($this->isRemainName($this->currentField)) {
                     if ( $this->FX->portalAsRecord ) {
                         $this->currentSubrecordIndex = 0;
                     } else {
@@ -113,7 +123,8 @@ class RetrieveFMXML extends RetrieveFXData {
                     $modid = count($this->FX->currentData);
                 }
                 $this->currentRecord = $recordid . '.' . $modid;
-                $this->FX->currentData[$this->currentRecord] = array( '-recid' => $recordid, '-modid' => $modid );
+                $this->FX->currentData[$this->currentRecord] = ! $this->FX->portalAsRecord ? array() :
+                    array( '-recid' => $recordid, '-modid' => $modid );
                 break;
             case "field":
                 if ($this->FX->charSet  != '' && defined('MB_OVERLOAD_STRING')) {
@@ -191,7 +202,7 @@ class RetrieveFMXML extends RetrieveFXData {
                     if ($this->FX->useInnerArray) {
                         $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                     } else {
-                        if ($this->FX->isRemainName($this->currentField))    {
+                        if ($this->isRemainName($this->currentField))    {
                             if ( $this->FX->portalAsRecord )    {
                                 $this->FX->currentData[$this->currentRecord][$this->getTOCName($this->currentField)][$this->currentSubrecordIndex][$this->currentField] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                             } else {
@@ -205,7 +216,7 @@ class RetrieveFMXML extends RetrieveFXData {
                     if ($this->FX->useInnerArray) {
                         $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] .= preg_replace($this->UTF8SpecialChars, $this->UTF8HTMLEntities, $data);
                     } else {
-                        if ($this->FX->isRemainName($this->currentField)) {
+                        if ($this->isRemainName($this->currentField)) {
                             if ($this->FX->portalAsRecord) {
                                    $this->FX->currentData[$this->currentRecord][$this->getTOCName($this->currentField)][$this->currentSubrecordIndex][$this->currentField] .= preg_replace($this->UTF8SpecialChars, $this->UTF8HTMLEntities, $data);
                                } else {
@@ -241,7 +252,7 @@ class RetrieveFMXML extends RetrieveFXData {
                         $this->FX->currentData[$this->FX->currentData[$this->currentRecord][$this->FX->customPrimaryKey][0]] 
                             = $this->FX->currentData[$this->currentRecord];
                     } else {
-                        if ($this->FX->isRemainName($this->currentField)) {
+                        if ($this->isRemainName($this->currentField)) {
                             if ($this->FX->portalAsRecord) {
                                 //
                             } else {

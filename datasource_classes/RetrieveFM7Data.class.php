@@ -117,8 +117,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
         } else {
             $FMFile = 'FMPXMLRESULT.xml';
         }
-        // took out {$this->FX->userPass} from the following, after the ://
-        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->dataServer}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
+        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
         $this->dataURL .= '?' . $this->dataURLParams;
 
@@ -153,12 +152,14 @@ This function is particularly written for huge queries of data that are less lik
         } elseif ($this->FX->isPostQuery) {
             if ($this->FX->useCURL && defined("CURLOPT_TIMEVALUE")) {
                 $curlHandle = curl_init(str_replace($this->dataURLParams, '', $this->dataURL));
+                curl_setopt($curlHandle, CURLOPT_PORT, $this->FX->dataPort);
                 curl_setopt($curlHandle, CURLOPT_HEADER, 0);
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
-                curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false); // optional, nick salonen
-                curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); // nick salonen
-                curl_setopt($curlHandle, CURLOPT_USERPWD,"{$this->FX->DBUser}:{$this->FX->DBPassword}"); // nick salonen
+                if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
+                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($curlHandle, CURLOPT_USERPWD, rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword));
+                }
                 ob_start();
                 if (! curl_exec($curlHandle)) {
                     $this->FX->lastDebugMessage .= "<p>Unable to connect to FileMaker.  Use the DEBUG constant and try connecting with the resulting URL manually.<br />\n";
@@ -244,13 +245,13 @@ This function is particularly written for huge queries of data that are less lik
         $xmlParseResult = xml_parse($xml_parser, $data, true);
         if (! $xmlParseResult) {
 /* Masayuki Nii added at Oct 9, 2009 */
-            $this->FX->columnCount = -1; 
+            $this->columnCounter = -1; 
             xml_parser_free($xml_parser);
             $xml_parser = xml_parser_create("UTF-8");
             xml_set_object($xml_parser, $this);
             xml_set_element_handler($xml_parser, "StartElement", "EndElement");
             xml_set_character_data_handler($xml_parser, "ElementContents");
-            $xmlParseResult = xml_parse($xml_parser, ConvertSurrogatePair( $data ), true);
+            $xmlParseResult = xml_parse($xml_parser, $this->ConvertSurrogatePair( $data ), true);
             if (! $xmlParseResult) {
 /* ==============End of the addition */
                 $theMessage = sprintf("ExecuteQuery XML error: %s at line %d",
@@ -268,6 +269,30 @@ This function is particularly written for huge queries of data that are less lik
         xml_parser_free($xml_parser);
         return true;
 
+    }
+
+/* Convert wrong surrogated-pair character to light code sequence in UTF-8
+ * Masayuki Nii (msyk@msyk.net) Oct 9, 2009, Moved here on Feb 6,2012
+ * Refered http://www.nii.ac.jp/CAT-ILL/about/system/vista.html
+ */
+    function ConvertSurrogatePair($data) {
+        $altData = '';
+        for ($i=0; $i<strlen($data); $i++) {
+            $c = substr( $data, $i, 1 );
+            if (( ord($c) == 0xed )&&( (ord(substr( $data, $i+1, 1 )) & 0xF0) == 0xA0 )) {
+                for ( $j = 0; $j < 6 ; $j++ )
+                    $utfSeq[] = ord(substr($data, $i+$j,1));
+                $convSeq[3] = $utfSeq[5];
+                $convSeq[2] = $utfSeq[4] & 0x0F | (($utfSeq[2] & 0x03) << 4) | 0x80;
+                $topDigit = ($utfSeq[1] & 0x0F) + 1;
+                $convSeq[1] = (($utfSeq[2] >> 2) & 0x0F) | (($topDigit & 0x03) << 4) | 0x80;
+                $convSeq[0] = (($topDigit >> 2) & 0x07) | 0xF0;
+                $c = chr( $convSeq[0] ).chr( $convSeq[1] ).chr( $convSeq[2] ).chr( $convSeq[3] );
+                $i += 5;
+            }
+            $altData .= $c;
+        }
+        return $altData;
     }
 
 }
