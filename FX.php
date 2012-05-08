@@ -673,7 +673,7 @@ $wo_find->FindQuery_Append($searchFields);
                             foreach($qnumlist as $num)
                             {
                                 // make sure that the query data is not already in this section ex: (q2,q2) is illegal
-                                if (strpos($findquerypiece, array('q'.$num.')', 'q'.$num.',')) === false)
+                                if (strpos($findquerypiece, 'q'.$num.')') == false && strpos($findquerypiece, 'q'.$num.',') === false)
                                 {
                                     $newquerystring .= ',q'.$num;
                                 }
