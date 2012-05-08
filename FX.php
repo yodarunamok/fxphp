@@ -62,14 +62,15 @@ class FX {
     var $dataPortSuffix;
     var $urlScheme;
     var $useSSLProtocol = false;
+    var $verifyPeer = true;
     var $database = "";
     var $layout = ""; // the layout to be accessed for FM databases.  For SQL, the table to be accessed.
     var $responseLayout = "";
     var $groupSize;
     var $currentSkip = 0;
     var $defaultOperator = 'bw';
-    var $findquerynumber = 1; // added by Nick Salonen
-    var $findquerystring = ''; // added by Nick Salonen
+    var $findquerynumber = 1;
+    var $findquerystring = '';
     var $dataParams = array();
     var $sortParams = array();
     var $actionArray = array(
@@ -681,7 +682,7 @@ $wo_find->FindQuery_Append($searchFields);
                             foreach($qnumlist as $num)
                             {
                                 // make sure that the query data is not already in this section ex: (q2,q2) is illegal
-                                if (strpos($findquerypiece, array('q'.$num.')', 'q'.$num.',')) === false)
+                                if (strpos($findquerypiece, 'q'.$num.')') == false && strpos($findquerypiece, 'q'.$num.',') === false)
                                 {
                                     $newquerystring .= ',q'.$num;
                                 }
