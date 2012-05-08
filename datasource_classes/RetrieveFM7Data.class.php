@@ -155,6 +155,7 @@ This function is particularly written for huge queries of data that are less lik
                 curl_setopt($curlHandle, CURLOPT_PORT, $this->FX->dataPort);
                 curl_setopt($curlHandle, CURLOPT_HEADER, 0);
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
+                if ($this->FX->verifyPeer == false) curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
                 if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
                     curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
