@@ -62,14 +62,15 @@ class FX {
     var $dataPortSuffix;
     var $urlScheme;
     var $useSSLProtocol = false;
+    var $verifyPeer = true;
     var $database = "";
     var $layout = ""; // the layout to be accessed for FM databases.  For SQL, the table to be accessed.
     var $responseLayout = "";
     var $groupSize;
     var $currentSkip = 0;
     var $defaultOperator = 'bw';
-    var $findquerynumber = 1; // added by Nick Salonen
-    var $findquerystring = ''; // added by Nick Salonen
+    var $findquerynumber = 1;
+    var $findquerystring = '';
     var $dataParams = array();
     var $sortParams = array();
     var $actionArray = array(
