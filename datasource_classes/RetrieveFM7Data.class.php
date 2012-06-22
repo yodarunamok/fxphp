@@ -157,6 +157,10 @@ This function is particularly written for huge queries of data that are less lik
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
                 if ($this->FX->verifyPeer == false) curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
+                if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
+                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($curlHandle, CURLOPT_USERPWD, rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword));
+                }
                 ob_start();
                 if (! curl_exec($curlHandle)) {
                     $this->FX->lastDebugMessage .= "<p>Unable to connect to FileMaker.  Use the DEBUG constant and try connecting with the resulting URL manually.<br />\n";
