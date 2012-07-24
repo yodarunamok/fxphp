@@ -232,7 +232,8 @@ class RetrieveFMXML extends RetrieveFXData {
                 $this->FX->fxError = $data;
                 break;
             case "values":
-                $this->FX->valueLists[$this->currentValueList][$this->currentValueListElement] .= preg_replace($this->UTF8SpecialChars, $this->UTF8HTMLEntities, $data);
+                $this->FX->valueLists[$this->currentValueList][$this->currentValueListElement] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
+                // Modified by Masayuki Nii informed from Naoki Hori, July 24, 2012. To avoid the multi-byte character corruptions.
                 break;
         }
     }
