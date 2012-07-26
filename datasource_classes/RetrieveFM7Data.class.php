@@ -117,7 +117,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
         } else {
             $FMFile = 'FMPXMLRESULT.xml';
         }
-        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
+        $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
         $this->dataURL .= '?' . $this->dataURLParams;
 
@@ -159,7 +159,7 @@ This function is particularly written for huge queries of data that are less lik
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
                 if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
                     curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curlHandle, CURLOPT_USERPWD, rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword));
+                    curl_setopt($curlHandle, CURLOPT_USERPWD, $this->FX->DBUser . ':' . $this->FX->DBPassword);
                 }
                 ob_start();
                 if (! curl_exec($curlHandle)) {
