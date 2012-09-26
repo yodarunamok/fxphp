@@ -703,7 +703,7 @@ $wo_find->FindQuery_Append($searchFields);
 // end of findquery section
 
     function AddDBParam ($name, $value, $op="") {                        // Add a search parameter.  An operator is usually not necessary.
-        if ($this->dataParamsEncoding  != '' && defined('MB_OVERLOAD_STRING')) {
+        if ($this->dataParamsEncoding != '' && function_exists('mb_convert_encoding')) {
             $this->dataParams[]["name"] = mb_convert_encoding($name, $this->dataParamsEncoding, $this->charSet);
             end($this->dataParams);
             $convedValue = mb_convert_encoding($value, $this->dataParamsEncoding, $this->charSet);
