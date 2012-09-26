@@ -127,7 +127,7 @@ class RetrieveFMXML extends RetrieveFXData {
                     array( '-recid' => $recordid, '-modid' => $modid );
                 break;
             case "field":
-                if ($this->FX->charSet  != '' && defined('MB_OVERLOAD_STRING')) {
+                if ($this->FX->charSet != '' && function_exists('mb_convert_encoding')) {
                     foreach ($attrs as $key => $value) {
                         $key = strtolower($key);
                         $this->FX->fieldInfo[$this->FX->fieldCount][$key] = mb_convert_encoding($value, $this->FX->charSet, 'UTF-8');
@@ -198,7 +198,7 @@ class RetrieveFMXML extends RetrieveFXData {
     function ElementContents($parser, $data) {
         switch($this->currentFlag) {
             case "parseData":
-                if ($this->FX->dataParamsEncoding  != '' && defined('MB_OVERLOAD_STRING')) {
+                if ($this->FX->dataParamsEncoding != '' && function_exists('mb_convert_encoding')) {
                     if ($this->FX->useInnerArray) {
                         $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                     } else {
@@ -232,7 +232,7 @@ class RetrieveFMXML extends RetrieveFXData {
                 $this->FX->fxError = $data;
                 break;
             case "values":
-                if ( $this->FX->charSet == 'UTF-8' )    {
+                if ($this->FX->charSet != '' && function_exists('mb_convert_encoding')) {
                     $this->FX->valueLists[$this->currentValueList][$this->currentValueListElement] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                 }
                 // Modified by Masayuki Nii informed from Naoki Hori, July 24, 2012. To avoid the multi-byte character corruptions.
