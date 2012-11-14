@@ -159,7 +159,7 @@ This function is particularly written for huge queries of data that are less lik
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
                 if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
                     curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curlHandle, CURLOPT_USERPWD, rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword));
+                    curl_setopt($curlHandle, CURLOPT_USERPWD, $this->FX->DBUser . ':' . $this->FX->DBPassword);
                 }
                 ob_start();
                 if (! curl_exec($curlHandle)) {
