@@ -131,6 +131,8 @@ class FX {
     var $remainNamesReverse = array();    // Added by Masayuki Nii(nii@msyk.net) Jan 23, 2010
     var $portalAsRecord =false;    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
 
+    var $usePortalIDs = false;    // for use with the RetrieveFM7VerboseData.class "fmalt"
+
     // Flags and Error Tracking
     var $fieldCount = 0;
     var $fxError = 'No Action Taken';
@@ -177,9 +179,9 @@ class FX {
         if ($this->dataServerType == 'fmpro') {
             $this->dataServerVersion = intval(str_replace('fmpro', '', strtolower($dataType)));
         } else {
-            $this->dataServerVersion = 0;
+                $this->dataServerVersion = 0;
         }
-        if (strlen($dataURLType) > 0 && $this->dataServerVersion >= 7 && $this->dataServerType == 'fmpro' && strtolower($dataURLType) == 'https') {
+        if (((strlen($dataURLType) > 0 && $this->dataServerVersion >= 7 && $this->dataServerType == 'fmpro') || ($this->dataServerType == 'fmalt')) && strtolower($dataURLType) == 'https') {
             $this->useSSLProtocol = true;
             $this->urlScheme = 'https';
         } else {
@@ -253,6 +255,19 @@ class FX {
                     require_once('datasource_classes/RetrieveFM5Data.class.php');
                     $datasourceClassName = 'RetrieveFM5Data';
                     $datasourceDescription = 'FileMaker Pro 5/6';
+                }
+                break;
+            case 'fmalt':
+                // calls to FMView require this fix as of server version 12 to 12.0v2, so far
+                if ($action == '-view')
+                {
+                    require_once('datasource_classes/RetrieveFM7Data.class.php');
+                    $datasourceClassName = 'RetrieveFM7Data';
+                    $datasourceDescription = 'FileMaker Server 7+';
+                } else {
+                    require_once('datasource_classes/RetrieveFM7VerboseData.class.php');
+                    $datasourceClassName = 'RetrieveFM7VerboseData';
+                    $datasourceDescription = 'FileMaker Server 7+ Verbose';
                 }
                 break;
             case 'openb':

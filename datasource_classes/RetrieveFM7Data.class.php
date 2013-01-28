@@ -11,6 +11,10 @@ require_once('RetrieveFMXML.class.php');
 
 class RetrieveFM7Data extends RetrieveFMXML {
 
+    var $fmDataFile = 'FMPXMLRESULT.xml';
+    var $xmlStartHandler = 'StartElement';
+    var $xmlContentHandler = 'ElementContents';
+    var $xmlEndHandler = 'EndElement';
 
     function CreateCurrentSort () {
         $currentSort = "";
@@ -115,7 +119,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
         if ($action == '-view') {
             $FMFile = 'FMPXMLLAYOUT.xml';
         } else {
-            $FMFile = 'FMPXMLRESULT.xml';
+            $FMFile = $this->fmDataFile;
         }
         $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
@@ -241,8 +245,8 @@ This function is particularly written for huge queries of data that are less lik
         // Parse the XML
         $xml_parser = xml_parser_create("UTF-8");
         xml_set_object($xml_parser, $this);
-        xml_set_element_handler($xml_parser, "StartElement", "EndElement");
-        xml_set_character_data_handler($xml_parser, "ElementContents");
+        xml_set_element_handler($xml_parser, $this->xmlStartHandler, $this->xmlEndHandler);
+        xml_set_character_data_handler($xml_parser, $this->xmlContentHandler);
         $xmlParseResult = xml_parse($xml_parser, $data, true);
         if (! $xmlParseResult) {
 /* Masayuki Nii added at Oct 9, 2009 */
