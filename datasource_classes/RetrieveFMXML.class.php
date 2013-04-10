@@ -71,7 +71,7 @@ class RetrieveFMXML extends RetrieveFXData {
         return $tocName;
     }
 
-    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010, Move to hear Feb 6, 2012
+    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010, Move to here Feb 6, 2012
     function isRemainName($fieldName) {
         foreach($this->FX->remainNames as $fName) {
             if (strpos($fieldName,$fName) === 0) {
@@ -203,7 +203,7 @@ class RetrieveFMXML extends RetrieveFXData {
                         $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                     } else {
                         if ($this->isRemainName($this->currentField))    {
-                            if ( $this->FX->portalAsRecord )    {
+                            if ( $this->FX->portalAsRecord ) {
                                 $this->FX->currentData[$this->currentRecord][$this->getTOCName($this->currentField)][$this->currentSubrecordIndex][$this->currentField] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');
                             } else {
                                 $this->FX->currentData[$this->currentRecord][$this->currentField][$this->currentFieldIndex] .= mb_convert_encoding($data, $this->FX->charSet, 'UTF-8');

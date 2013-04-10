@@ -255,6 +255,11 @@ class FX {
                     $datasourceDescription = 'FileMaker Pro 5/6';
                 }
                 break;
+            case 'fmalt':
+                require_once('datasource_classes/RetrieveFM7VerboseData.class.php');
+                $datasourceClassName = 'RetrieveFM7VerboseData';
+                $datasourceDescription = 'FileMaker Server 7+ Verbose';
+                break;
             case 'openb':
                 require_once('datasource_classes/RetrieveFXOpenBaseData.class.php');
                 $datasourceClassName = 'RetrieveFXOpenBaseData';

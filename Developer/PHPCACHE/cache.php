@@ -10,11 +10,11 @@ function cache_garbage_collect($Age = MAX_CACHE_AGE) {
     return mysql_affected_rows();
 }
 
-function get_url_cached($URL, $data, $ForceUpdate = false) {
+function get_url_cached($URL, $forceUpdate = false) {
     // Retrieves the contents of a URL. The retrieved data will be cached so that subsequent calls
     // will return much faster.
     //
-    // Passing true for $ForceUpdate will cause the remote content to be retrieved regardless of the
+    // Passing true for $forceUpdate will cause the remote content to be retrieved regardless of the
     // cache status
     //
     // Results are returned in an associative array with keys 'Body' and 'Headers'
@@ -24,7 +24,7 @@ function get_url_cached($URL, $data, $ForceUpdate = false) {
 
     $CachedURLQuery = mysql_query("SELECT UNIX_TIMESTAMP(Created) AS Created, Headers, Body FROM phpcache WHERE SourceURL = '$URL'") or die(mysql_error());
 
-    if (!$ForceUpdate && mysql_num_rows($CachedURLQuery) == 1) {
+    if (!$forceUpdate && mysql_num_rows($CachedURLQuery) == 1) {
         $CachedURL = mysql_fetch_array($CachedURLQuery);
         if ((time() - $CachedURL["Created"]) < MAX_CACHE_AGE) {
             if (DEBUG) echo "<P>Returning cached version of <a href=\"$URL\">$URL</a></P>\n";

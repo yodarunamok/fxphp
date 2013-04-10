@@ -11,6 +11,10 @@ require_once('RetrieveFMXML.class.php');
 
 class RetrieveFM7Data extends RetrieveFMXML {
 
+    var $fmDataFile = 'FMPXMLRESULT.xml';
+    var $xmlStartHandler = 'StartElement';
+    var $xmlContentHandler = 'ElementContents';
+    var $xmlEndHandler = 'EndElement';
 
     function CreateCurrentSort () {
         $currentSort = "";
@@ -93,7 +97,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
             
         }
         $data = '';
-        if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {     // Assemble the Password Data
+        if (($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') && !defined('CURLOPT_HTTPAUTH')) {     // Assemble the Password Data
             $this->FX->userPass = rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword) . '@';
         }
         if ($this->FX->layout != '') {                                      // Set up the layout portion of the query.
@@ -115,7 +119,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
         if ($action == '-view') {
             $FMFile = 'FMPXMLLAYOUT.xml';
         } else {
-            $FMFile = 'FMPXMLRESULT.xml';
+            $FMFile = $this->fmDataFile;
         }
         $this->dataURL = "{$this->FX->urlScheme}://{$this->FX->userPass}{$this->FX->dataServer}{$this->FX->dataPortSuffix}/fmi/xml/{$FMFile}"; // First add the server info to the URL...
         $this->dataURLParams = $this->AssembleCurrentQuery($layRequest, $skipRequest, $currentSort, $currentSearch, $action, 7);
@@ -157,9 +161,9 @@ This function is particularly written for huge queries of data that are less lik
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
                 if ($this->FX->verifyPeer == false) curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
-                if ($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') {
-                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curlHandle, CURLOPT_USERPWD, rawurlencode($this->FX->DBUser) . ':' . rawurlencode($this->FX->DBPassword));
+                if (($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') && defined('CURLOPT_HTTPAUTH')) {
+                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                    curl_setopt($curlHandle, CURLOPT_USERPWD, $this->FX->DBUser . ':' . $this->FX->DBPassword);
                 }
                 ob_start();
                 if (! curl_exec($curlHandle)) {
@@ -183,7 +187,7 @@ This function is particularly written for huge queries of data that are less lik
                         echo $currentDebugString;
                     }
                 }
-                if (strlen(trim($this->FX->userPass)) > 1) {
+                if ((strlen(trim($this->FX->DBUser)) + strlen(trim($this->FX->DBPassword))) > 0) {
                     $socketData .= "Authorization: Basic " . base64_encode($this->FX->DBUser . ':' . $this->FX->DBPassword) . $dataDelimiter;
                 }
                 $socketData .= "Host: {$this->FX->dataServer}:{$this->FX->dataPort}{$dataDelimiter}";
@@ -241,8 +245,8 @@ This function is particularly written for huge queries of data that are less lik
         // Parse the XML
         $xml_parser = xml_parser_create("UTF-8");
         xml_set_object($xml_parser, $this);
-        xml_set_element_handler($xml_parser, "StartElement", "EndElement");
-        xml_set_character_data_handler($xml_parser, "ElementContents");
+        xml_set_element_handler($xml_parser, $this->xmlStartHandler, $this->xmlEndHandler);
+        xml_set_character_data_handler($xml_parser, $this->xmlContentHandler);
         $xmlParseResult = xml_parse($xml_parser, $data, true);
         if (! $xmlParseResult) {
 /* Masayuki Nii added at Oct 9, 2009 */
