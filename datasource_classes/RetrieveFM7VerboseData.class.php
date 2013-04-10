@@ -17,7 +17,6 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
     var $currentField = '';
     var $currentFieldIndex;
     var $isInRelatedSet = false;
-    var $usePortalIDs = true;
     var $relatedSetTOC = '';
 
     // these values overwrite those in the parent class
@@ -68,7 +67,7 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
                     $modID = $attrs['MOD-ID'];
                 }
                 if ($this->isInRelatedSet) {
-                    if ($this->usePortalIDs) $this->currentSubrecordIndex = $recordID . '.' . $modID;
+                    if ($this->FX->usePortalIDs) $this->currentSubrecordIndex = $recordID . '.' . $modID;
                     if ($this->FX->portalAsRecord) {
                         $this->FX->currentData[$this->currentRecord] = array( '-recid' => $recordID, '-modid' => $modID );
                     }
@@ -150,7 +149,7 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
             case 'field':
                 break;
             case 'record':
-                if ($this->isInRelatedSet && !$this->usePortalIDs) ++$this->currentSubrecordIndex;
+                if ($this->isInRelatedSet && !$this->FX->usePortalIDs) ++$this->currentSubrecordIndex;
                 if (strlen(trim($this->FX->customPrimaryKey)) > 0) {
                     if ($this->FX->useInnerArray) {
                         $this->FX->currentData[$this->FX->currentData[$this->currentRecord][$this->FX->customPrimaryKey][0]]
@@ -202,4 +201,5 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
         return preg_replace($this->UTF8SpecialChars, $this->UTF8HTMLEntities, $value);
     }
 
+    
 }

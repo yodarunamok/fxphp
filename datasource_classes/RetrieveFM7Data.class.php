@@ -187,7 +187,7 @@ This function is particularly written for huge queries of data that are less lik
                         echo $currentDebugString;
                     }
                 }
-                if ((strlen(trim($this->FX->DBUser)) + strlen(trim($this->FX->DBPassword))) > 0) {
+                if (strlen(trim($this->FX->userPass)) > 1) {
                     $socketData .= "Authorization: Basic " . base64_encode($this->FX->DBUser . ':' . $this->FX->DBPassword) . $dataDelimiter;
                 }
                 $socketData .= "Host: {$this->FX->dataServer}:{$this->FX->dataPort}{$dataDelimiter}";
