@@ -52,7 +52,11 @@ class RetrieveFM7Data extends RetrieveFMXML {
                     $op = $this->FX->defaultOperator;
                 }
                 $tempFieldName = str_replace('%3A%3A', '::', urlencode($name));
-                $currentSearch .= '&' . $tempFieldName . '.op=' . $op . '&' . $tempFieldName . '=' . urlencode($value);
+                if ($tempFieldName == '-recid') {
+                    $currentSearch .= '&' . $tempFieldName . '=' . urlencode($value);
+                } else {
+                    $currentSearch .= '&' . $tempFieldName . '.op=' . $op . '&' . $tempFieldName . '=' . urlencode($value);
+                }
             }
         }
         return $currentSearch;
