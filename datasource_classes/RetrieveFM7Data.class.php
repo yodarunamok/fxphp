@@ -258,8 +258,8 @@ This function is particularly written for huge queries of data that are less lik
             xml_parser_free($xml_parser);
             $xml_parser = xml_parser_create("UTF-8");
             xml_set_object($xml_parser, $this);
-            xml_set_element_handler($xml_parser, "StartElement", "EndElement");
-            xml_set_character_data_handler($xml_parser, "ElementContents");
+            xml_set_element_handler($xml_parser, $this->xmlStartHandler, $this->xmlEndHandler);
+            xml_set_character_data_handler($xml_parser, $this->xmlContentHandler);
             $xmlParseResult = xml_parse($xml_parser, $this->ConvertSurrogatePair( $data ), true);
             if (! $xmlParseResult) {
 /* ==============End of the addition */
