@@ -178,6 +178,8 @@ class FX {
         }
         if ($this->dataServerType == 'fmpro') {
             $this->dataServerVersion = intval(str_replace('fmpro', '', strtolower($dataType)));
+        } elseif ($this->dataServerType == 'fmalt') {
+            $this->dataServerVersion = intval(str_replace('fmalt', '', strtolower($dataType)));
         } else {
                 $this->dataServerVersion = 0;
         }
@@ -723,7 +725,7 @@ $wo_find->FindQuery_Append($searchFields);
             end($this->dataParams);
             $convedValue = mb_convert_encoding($value, $this->dataParamsEncoding, $this->charSet);
 /* Masayuki Nii added at Oct 10, 2009 */
-            if ( ! defined('SURROGATE_INPUT_PATCH_DISABLED') && $this->charSet == 'UTF-8')    {
+            if (!defined('SURROGATE_INPUT_PATCH_DISABLED') && $this->charSet == 'UTF-8' && $this->dataServerVersion < 12) {
                 $count = 0;
                 for ($i=0; $i< strlen($value); $i++) {
                     $c = ord(substr( $value, $i, 1 ));

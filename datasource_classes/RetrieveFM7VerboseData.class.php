@@ -91,7 +91,7 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
                 $this->FX->totalRecordCount = $attrs['TOTAL-COUNT'];
                 break;
             case 'field-definition':
-                if ($this->FX->charSet  != '' && defined('MB_OVERLOAD_STRING')) {
+                if ($this->FX->charSet  != '' && function_exists('mb_convert_encoding')) {
                     $this->FX->fieldInfo[$this->FX->fieldCount]['name'] = mb_convert_encoding($attrs['NAME'], $this->FX->charSet, 'UTF-8');
                 }
                 else {
