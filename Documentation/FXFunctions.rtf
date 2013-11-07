@@ -472,7 +472,7 @@ Submits a search request using multiple find records and omit records requests (
 \par
 // Not a complete query, FX() and SetDBData() are missing...\par
 // Performs a search for all dogs that have a name of \lquote Spot\rquote  AND breed is Shiba Inu OR Corgi\par
-$InstanceName->AddDBParam(\lquote -query\rquote , \lquote (q1,q2);(q3)\rquote );\par
+$InstanceName->AddDBParam(\lquote -query\rquote , \lquote (q1,q2);(q1,q3)\rquote );\par
 $InstanceName->AddDBParam(\lquote -q1\rquote , \lquote PetName\rquote );\par
 $InstanceName->AddDBParam(\lquote -q1.value\rquote , \lquote Spot\rquote );\par
 $InstanceName->AddDBParam(\lquote -q2\rquote , \lquote Breed\rquote );\par
