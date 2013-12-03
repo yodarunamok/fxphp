@@ -159,7 +159,7 @@ This function is particularly written for huge queries of data that are less lik
             }
         } elseif ($this->FX->isPostQuery) {
             if ($this->FX->useCURL && defined("CURLOPT_TIMEVALUE")) {
-                $curlHandle = curl_init(str_replace($this->dataURLParams, '', $this->dataURL));
+                $curlHandle = curl_init(str_replace('?' . $this->dataURLParams, '', $this->dataURL));
                 curl_setopt($curlHandle, CURLOPT_PORT, $this->FX->dataPort);
                 curl_setopt($curlHandle, CURLOPT_HEADER, 0);
                 curl_setopt($curlHandle, CURLOPT_POST, 1);
