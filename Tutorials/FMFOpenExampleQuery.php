@@ -17,9 +17,9 @@ Suggested use, export as XML without XSLT to your own xml folder of webserver as
 /var/www/com.example.www/xml/order/<<ordernumber>>.fmpxmlresult.xml
 */
 
-//$q = new FX( 'file:///var/www/com.example.www/xml/order/' . $o . '.xml' );
-$q = new FX( '/var/www/com.example.www/xml/order/' . $o . '.xml' );
-//$q = new FX( 'http://www.example.com/xml/order/' . $o . '.xml' );
+//$q = new FX( 'file:///var/www/com.example.www/xml/order/' . $o . '.fmpxmlresult.xml' );
+$q = new FX( '/var/www/com.example.www/xml/order/' . $o . '.fmpxmlresult.xml' );
+//$q = new FX( 'http://www.example.com/xml/order/' . $o . '.fmpxmlresult.xml' );
 $q->FMFOpenQuery( true );
 $r = $q->FMFind();
 
