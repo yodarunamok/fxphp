@@ -79,6 +79,39 @@ The more fields and the bigger then content, the slower the query.
 
 For the purpose of bandwidth distribution it is not desirable to make the total space more narrow than it already is.
 
+
+A typical real world example below
+
 */
+
+function uriexists( $uri ) {
+// $o = output
+// $c = error code
+// $ch = cURL handler
+  $ch = curl_init( $uri );
+  curl_setopt( $ch, CURLOPT_NOBODY, true );
+  curl_exec( $ch );
+  $c = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+
+  if( $c == 200 ) {
+    $o = true;
+  } else {
+    $o = false;
+  }
+  curl_close( $ch );
+  return $o;
+}
+
+$tmpStaticFile = 'http://www.example.com/xml/order/' . $o . '.fmpxmlresult.xml';
+if( uriexists( $tmpStaticFile ) ) {
+  $q = new FX( $tmpStaticFile );
+  $q->FMFOpenQuery( true );
+} else {
+  $q = new FX( $dinnerForOne, $sandeman );
+  $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
+  $q->AddDBParam( 'ordernumber', $_POST['ordernumber'], 'eq' );
+  $q->SetDBPassword( $xmlPass, $xmlUser );
+}
+$r = $q->FMFind();
 
 ?>
