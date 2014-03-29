@@ -17,8 +17,7 @@ Suggested use, export as XML without XSLT to your own xml folder of webserver as
 
 <?php
 
-$q = new FX( 'www.example.com' );
-$q->SetDBData( 'xml/order/1234.xml' );
+$q = new FX( '/var/www/com.example.www/xml/order/1234.xml' );
 $q->FMFOpenQuery( true );
 $r = $q->FMFind();
 
