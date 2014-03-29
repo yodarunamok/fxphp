@@ -13,7 +13,20 @@ Suggested use, export as XML without XSLT to xslt folder of webserver as an exam
 /var/www/com.example.www/xml/news/<<newsnumber>>.xml
 /var/www/com.example.www/xml/article/<<articlenumber>>.xml
 /var/www/com.example.www/xml/order/<<ordernumber>>.xml
+*/
 
+<?php
+
+$q = new FX( 'www.example.com' );
+$q->SetDBData( 'xml/order/1234.xml' );
+$q->FMFOpenQuery( true );
+$r = $q->FMFind();
+
+print_r( $r );
+
+?>
+
+/*
 The only thing that should be left for direct communication via WPE in your solution when using this
 should be live order data, and places where you will have to set flags in the order process.
 
@@ -32,10 +45,6 @@ and set the
 */
 
 <?php
-session_start();
-include_once( $_SERVER['DOCUMENT_ROOT'] . '/FX/FX.php' );
-include_once( $_SERVER['DOCUMENT_ROOT'] . '/FX/server_data_projectpotato.php' );
-include_once( $_SERVER['DOCUMENT_ROOT'] . '/projectpotatokey.php' );
 
 $q = new FX( $host, $sandeman );
 $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
@@ -45,4 +54,5 @@ $q->SetDBPassword( $xmlPass, $xmlUser );
 $r = $q->FMEdit();
 
 print_r( $r );
+
 ?>
