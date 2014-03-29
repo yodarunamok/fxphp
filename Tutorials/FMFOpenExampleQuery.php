@@ -1,15 +1,16 @@
 <?php
 
 /*
-This function is written to read files exported using FileMaker XML Export in FMSA 7 and newer
+FX->FMFOpenQuery( true );
 
-This function is particularly written for huge queries of data, that are less likely
-to change often and that would otherwise choke FM WPE
+This function is written to read files exported using FileMaker XML Export in FMSA 7 and newer.
 
-It will also benefit frequent queries, and where data is updated through publishing to file,
-such as news articles, product descriptions, and similar use.
+This function is particularly written for querying data of the write once, read many, 
+that are less likely to change often and that would otherwise choke FM WPE,
+the full product catalogue? That you can export to your web space every time you make updates in FileMaker?
+Product descriptions? News articles?
 
-Suggested use, export as XML without XSLT to your own xml folder of webserver as an example:
+Suggested use, export as XML without XSLT to your own xml folder of your webspace as an example:
 
 /var/www/com.example.www/xml/product/<<productnumber>>.fmpxmlresult.xml
 /var/www/com.example.www/xml/news/<<newsnumber>>.fmpxmlresult.xml
