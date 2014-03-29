@@ -26,7 +26,7 @@ $r = $q->FMFind();
 print_r( $r );
 
 /*
-The only thing that should be left for direct communication via WPE in your solution when using this
+The only thing that should be left for direct communication via WPE in your solution when using this approach
 should be live order data, and places where you will have to set flags in the order process.
 
 These cases can be optimized by making layouts for individual queries;
