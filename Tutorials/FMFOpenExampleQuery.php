@@ -59,11 +59,14 @@ and let nginx or apache handle fopen calls from its 0.0.0.0
 most normal servers serve to the local routing table 0.0.0.0, while FMSA serves to 1 of the NICs on your FMSA,
 this is a bit of a paranoid approach and and is a very efficient way of creating a bottle neck.
 
-Imagine an FMSA node with 4 NICs
+Imagine an FMSA node with several NICs
 
 1 NIC for LAN FMAPP users
 1 NIC for WAN FMAPP users
-1 NIC for WPE
+1 NIC for WPE used with mailrobots
+1 NIC for WPE used with webservices
+1 NIC for WPE used with mailserver
+1 NIC for WPE used with openvpn
 1 NIC for dev
 
 Well, not determined by the NICs, rather by the switches and infrastructure.
