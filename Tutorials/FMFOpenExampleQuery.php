@@ -7,12 +7,12 @@ to change often and that would otherwise choke FM WPE
 It will also benefit frequent queries, and where data is updated through publishing to file,
 such as news articles, product descriptions, and similar use.
 
-Suggested use, export as XML without XSLT to xslt folder of webserver as an example:
+Suggested use, export as XML without XSLT to your own xml folder of webserver as an example:
 
-/var/www/com.example.www/xml/product/<<productnumber>>.xml
-/var/www/com.example.www/xml/news/<<newsnumber>>.xml
-/var/www/com.example.www/xml/article/<<articlenumber>>.xml
-/var/www/com.example.www/xml/order/<<ordernumber>>.xml
+/var/www/com.example.www/xml/product/<<productnumber>>.fmpxmlresult.xml
+/var/www/com.example.www/xml/news/<<newsnumber>>.fmpxmlresult.xml
+/var/www/com.example.www/xml/article/<<articlenumber>>.fmpxmlresult.xml
+/var/www/com.example.www/xml/order/<<ordernumber>>.fmpxmlresult.xml
 */
 
 <?php
