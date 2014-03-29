@@ -17,7 +17,8 @@ Suggested use, export as XML without XSLT to your own xml folder of webserver as
 
 <?php
 
-$q = new FX( '/var/www/com.example.www/xml/order/1234.xml' );
+$q = new FX( '/var/www/com.example.www/xml/order/' . $o . '.xml' );
+//$q = new FX( 'http://www.example.com/xml/order/' . $o . '.xml' );
 $q->FMFOpenQuery( true );
 $r = $q->FMFind();
 
@@ -45,7 +46,7 @@ you will have to do an FMEdit of -recid found above, to set the orderStatus
 
 <?php
 
-$q = new FX( $host, $sandeman );
+$q = new FX( $dinnerForOne, $sandeman );
 $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
 $q->AddDBParam( '-recid', $recid );
 $q->AddDBParam( 'orderStatus', 5 );
