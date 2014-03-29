@@ -71,6 +71,8 @@ Imagine an FMSA node with several NICs
 
 Well, not determined by the NICs, rather by the switches and infrastructure.
 
+Bandwidth distribution is not something that is desirable to make more narrow than it already is.
+
 */
 
 ?>
