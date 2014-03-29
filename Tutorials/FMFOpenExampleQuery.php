@@ -86,14 +86,14 @@ A typical real world example below
 
 function uriexists( $uri ) {
 // $o = output
-// $c = error code
+// $e = error code
 // $ch = cURL handler
   $ch = curl_init( $uri );
   curl_setopt( $ch, CURLOPT_NOBODY, true );
   curl_exec( $ch );
-  $c = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+  $e = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 
-  if( $c == 200 ) {
+  if( $e == 200 ) {
     $o = true;
   } else {
     $o = false;
