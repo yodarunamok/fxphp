@@ -1,3 +1,5 @@
+<?php
+
 /*
 This function is written to read files exported using FileMaker XML Export in FMSA 7 and newer
 
@@ -15,16 +17,12 @@ Suggested use, export as XML without XSLT to your own xml folder of webserver as
 /var/www/com.example.www/xml/order/<<ordernumber>>.fmpxmlresult.xml
 */
 
-<?php
-
 $q = new FX( '/var/www/com.example.www/xml/order/' . $o . '.xml' );
 //$q = new FX( 'http://www.example.com/xml/order/' . $o . '.xml' );
 $q->FMFOpenQuery( true );
 $r = $q->FMFind();
 
 print_r( $r );
-
-?>
 
 /*
 The only thing that should be left for direct communication via WPE in your solution when using this
@@ -44,8 +42,6 @@ you will have to do an FMEdit of -recid found above, to set the orderStatus
 
 */
 
-<?php
-
 $q = new FX( $dinnerForOne, $sandeman );
 $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
 $q->AddDBParam( '-recid', $recid );
@@ -54,5 +50,24 @@ $q->SetDBPassword( $xmlPass, $xmlUser );
 $r = $q->FMEdit();
 
 print_r( $r );
+
+/*
+Part of the struggle with FileMaker's XML RPC is that it only serves on 1 NIC,
+with this apporach we avoid using those NICs, we actually publish this on the disk,
+and let nginx or apache handle fopen calls from its 0.0.0.0
+
+most normal servers serve to the local routing table 0.0.0.0, while FMSA serves to 1 of the NICs on your FMSA,
+this is a bit of a paranoid approach and and is a very efficient way of creating a bottle neck.
+
+Imagine an FMSA node with 4 NICs
+
+1 NIC for LAN FMAPP users
+1 NIC for WAN FMAPP users
+1 NIC for WPE
+1 NIC for dev
+
+Well, not determined by the NICs, rather by the switches and infrastructure.
+
+*/
 
 ?>
