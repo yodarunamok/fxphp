@@ -145,8 +145,20 @@ class RetrieveFM7Data extends RetrieveFMXML {
             $data = $data["Body"];
         } elseif( $this->FX->isFOpenQuery ) {
 /*
-Amendment by G G Thorsen -> ggt667@me.com, this function is written to read files exported using File Export in FMSA 10 and newer
+Amendment by Gjermund G Thorsen -> ggt667@me.com, this function is written to read files exported using File Export in FMSA 10 and newer
 This function is particularly written for huge queries of data that are less likely to change often and that would otherwise choke FM WPE
+
+It will also prove beneficiary for queries that are frequent, and where data is updated through publishing to file,
+such as news articles, product descriptions, and similar use.
+
+Suggested use, export as XML without XSLT to xslt folder of webserver as an example:
+
+/var/www/com.example.www/xml/product/<<productnumber>>.xml
+/var/www/com.example.www/xml/news/<<newsnumber>>.xml
+/var/www/com.example.www/xml/article/<<articlenumber>>.xml
+
+The only thing that should be left for direct communication via WPE now should be live order data,
+and places where you will have to set flags in the order process.
 */
             $f = fopen( $this->FX->dataServer, 'rb' );
             $data = '';
