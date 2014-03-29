@@ -145,7 +145,7 @@ class RetrieveFM7Data extends RetrieveFMXML {
             $data = $data["Body"];
         } elseif( $this->FX->isFOpenQuery ) {
 /*
-Amendment by G G Thorsen -> ggt667@gmail.com, this function is written to read files exported using File Export in FMSA 10 and newer
+Amendment by G G Thorsen -> ggt667@me.com, this function is written to read files exported using File Export in FMSA 10 and newer
 This function is particularly written for huge queries of data that are less likely to change often and that would otherwise choke FM WPE
 */
             $f = fopen( $this->FX->dataServer, 'rb' );
