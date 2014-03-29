@@ -85,6 +85,24 @@ A typical real world example below
 
 */
 
+$tmpStaticFile = 'http://www.example.com/xml/order/' . $o . '.fmpxmlresult.xml';
+if( uriexists( $tmpStaticFile ) ) {
+  $q = new FX( $tmpStaticFile );
+  $q->FMFOpenQuery( true );
+} else {
+  $q = new FX( $dinnerForOne, $sandeman );
+  $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
+  $q->AddDBParam( 'ordernumber', $_POST['ordernumber'], 'eq' );
+  $q->SetDBPassword( $xmlPass, $xmlUser );
+}
+$r = $q->FMFind();
+
+?>
+
+uriexists implementation below:
+
+<?php
+
 function uriexists( $uri ) {
 // $o = output
 // $e = error code
@@ -102,17 +120,5 @@ function uriexists( $uri ) {
   curl_close( $ch );
   return $o;
 }
-
-$tmpStaticFile = 'http://www.example.com/xml/order/' . $o . '.fmpxmlresult.xml';
-if( uriexists( $tmpStaticFile ) ) {
-  $q = new FX( $tmpStaticFile );
-  $q->FMFOpenQuery( true );
-} else {
-  $q = new FX( $dinnerForOne, $sandeman );
-  $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
-  $q->AddDBParam( 'ordernumber', $_POST['ordernumber'], 'eq' );
-  $q->SetDBPassword( $xmlPass, $xmlUser );
-}
-$r = $q->FMFind();
 
 ?>
