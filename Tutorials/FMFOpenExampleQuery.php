@@ -16,7 +16,7 @@ Suggested use, export as XML without XSLT to your own xml folder of your webspac
 /var/www/com.example.www/xml/news/<<newsnumber>>.fmpxmlresult.xml
 /var/www/com.example.www/xml/article/<<articlenumber>>.fmpxmlresult.xml
 /var/www/com.example.www/xml/order/<<ordernumber>>.fmpxmlresult.xml
-*/
+ */
 
 //$q = new FX( 'file:///var/www/com.example.www/xml/order/' . $o . '.fmpxmlresult.xml' );
 $q = new FX( '/var/www/com.example.www/xml/order/' . $o . '.fmpxmlresult.xml' );
@@ -42,7 +42,7 @@ of some sort to find the -recid in /var/www/com.example.www/xml/order/<<ordernum
 And to set the orderStatus from WorldPay or the likes, saying paid in full is 5,
 you will have to do an FMEdit of -recid found above, to set the orderStatus
 
-*/
+ */
 
 $q = new FX( $dinnerForOne, $sandeman );
 $q->SetDBData( 'WorldWideWait', 'xmlOrderStatusFlag' );
@@ -83,7 +83,7 @@ For the purpose of bandwidth distribution it is not desirable to make the total 
 
 A typical real world example below
 
-*/
+ */
 
 $tmpStaticFile = 'http://www.example.com/xml/order/' . $o . '.fmpxmlresult.xml';
 if( uriexists( $tmpStaticFile ) ) {
@@ -97,11 +97,11 @@ if( uriexists( $tmpStaticFile ) ) {
 }
 $r = $q->FMFind();
 
-?>
+/*
 
 uriexists implementation below:
 
-<?php
+ */
 
 function uriexists( $uri ) {
 // $o = output
