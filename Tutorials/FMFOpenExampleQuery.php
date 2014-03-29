@@ -39,8 +39,8 @@ with only one number field orderStatus
 and to update this order you will only need the order number from $_SESSION[$myaccount][$currentorder]
 of some sort to find the -recid in /var/www/com.example.www/xml/order/<<ordernumber>>.xml
 
-And to set the orderStatus from WorldPay saying paid in full is 5, you will have to do an FMEdit of -recid found above,
-and set the 
+And to set the orderStatus from WorldPay or the likes, saying paid in full is 5,
+you will have to do an FMEdit of -recid found above, to set the orderStatus
 
 */
 
