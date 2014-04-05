@@ -138,6 +138,7 @@ class FX {
     var $fxError = 'No Action Taken';
     var $errorTracking = 0;
     var $useInnerArray = null;                                              // Do NOT change this variable directly.  Use FlattenInnerArray() or the appropriate param of action method.
+    var $useReturnJSONResult = false;
     var $useComma2Period = false;
 
     // These variables will be used if you need a password to access your data.
@@ -846,6 +847,11 @@ $wo_find->FindQuery_Append($searchFields);
     function FlattenInnerArray () {
         $this->useInnerArray = false;
     }
+
+    function ReturnJSON () {
+        $this->useReturnJSONResult = false;
+    }
+
 
 /* The actions that you can send to FileMaker start here */
 
