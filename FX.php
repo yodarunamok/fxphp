@@ -457,8 +457,8 @@ class FX {
         $this->ClearAllParams();
 /*
         if( $this->useReturnJSONResult == true ) {
-            $r = array_values( $dataSet );
-            $dataSet = json_encode( $r );
+            $tmp = array_values( $dataSet );
+            $dataSet = json_encode( $tmp );
         }
  */
         return $dataSet;
