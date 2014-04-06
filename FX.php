@@ -456,6 +456,7 @@ class FX {
 
         $this->ClearAllParams();
 /*
+// Added to github 4/4-2014
         if( $this->useReturnJSONResult == true ) {
             // Not sure if array_values() are needed
             $dataSet = json_encode( array_values( $dataSet ) );
