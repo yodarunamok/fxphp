@@ -856,10 +856,12 @@ $wo_find->FindQuery_Append($searchFields);
         $this->useInnerArray = false;
     }
 
+    // This will give you the fields and contents pr record as JSON
     function ReturnJSON () {
         $this->useReturnJSONResult = false;
     }
 
+    // This will give you the whole FMPXMLRESULT as JSON
     function ReturnJSONFullArray () {
         $this->useReturnJSONFullArrayResult = false;
     }
