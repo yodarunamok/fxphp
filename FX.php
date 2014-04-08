@@ -139,6 +139,7 @@ class FX {
     var $errorTracking = 0;
     var $useInnerArray = null;                                              // Do NOT change this variable directly.  Use FlattenInnerArray() or the appropriate param of action method.
     var $useReturnJSONResult = false;
+    var $useReturnJSONFullArrayResult = false;
     var $useComma2Period = false;
 
     // These variables will be used if you need a password to access your data.
@@ -457,7 +458,7 @@ class FX {
         $this->ClearAllParams();
 /*
 // Added to github 4/4-2014
-        if( $this->useReturnJSONResult == true ) {
+        if( $this->useReturnJSONFullArrayResult == true ) {
             // Not sure if array_values() are needed
             $dataSet = json_encode( array_values( $dataSet ) );
         }
@@ -859,6 +860,9 @@ $wo_find->FindQuery_Append($searchFields);
         $this->useReturnJSONResult = false;
     }
 
+    function ReturnJSONFullArray () {
+        $this->useReturnJSONFullArrayResult = false;
+    }
 
 /* The actions that you can send to FileMaker start here */
 
