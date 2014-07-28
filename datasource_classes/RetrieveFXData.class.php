@@ -10,6 +10,7 @@
 // Do not use this class directly -- it is designed to be appropriately extended
 class RetrieveFXData {
 
+    /** @var FX $FX */
     var $FX;
 
     function RetrieveFXData(&$FX) {

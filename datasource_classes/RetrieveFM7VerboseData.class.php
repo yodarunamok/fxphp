@@ -198,7 +198,7 @@ class RetrieveFM7VerboseData extends RetrieveFM7Data {
         if ($this->FX->dataParamsEncoding != '' && function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($value, $this->FX->charSet, 'UTF-8');
         }
-        return preg_replace_callback($this->UTF8SpecialChars, $this->utf8HTMLEntities, $value);
+        return preg_replace_callback($this->UTF8SpecialChars, array($this, 'utf8HTMLEntities'), $value);
     }
 
     
