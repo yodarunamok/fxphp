@@ -138,6 +138,8 @@ class FX {
     var $fxError = 'No Action Taken';
     var $errorTracking = 0;
     var $useInnerArray = null;                                              // Do NOT change this variable directly.  Use FlattenInnerArray() or the appropriate param of action method.
+    var $useReturnJSONResult = false;
+    var $useReturnJSONFullArrayResult = false;
     var $useComma2Period = false;
 
     // These variables will be used if you need a password to access your data.
@@ -176,10 +178,10 @@ class FX {
         if (strlen($dataType) > 0) {
             $this->dataServerType = substr(strtolower($dataType), 0, 5);
         }
-        if ($this->dataServerType == 'fmpro') {
-            $this->dataServerVersion = intval(str_replace('fmpro', '', strtolower($dataType)));
+        if ($this->dataServerType == 'fmpro' || $this->dataServerType == 'fmalt') {
+            $this->dataServerVersion = intval(str_replace($this->dataServerType, '', strtolower($dataType)));
         } else {
-                $this->dataServerVersion = 0;
+            $this->dataServerVersion = 0;
         }
         if (((strlen($dataURLType) > 0 && $this->dataServerVersion >= 7 && $this->dataServerType == 'fmpro') || ($this->dataServerType == 'fmalt')) && strtolower($dataURLType) == 'https') {
             $this->useSSLProtocol = true;
@@ -454,6 +456,13 @@ class FX {
         }
 
         $this->ClearAllParams();
+/*
+// Added to github 4/4-2014
+        if( $this->useReturnJSONFullArrayResult == true ) {
+            // Not sure if array_values() are needed
+            $dataSet = json_encode( array_values( $dataSet ) );
+        }
+ */
         return $dataSet;
     }
 
@@ -723,7 +732,7 @@ $wo_find->FindQuery_Append($searchFields);
             end($this->dataParams);
             $convedValue = mb_convert_encoding($value, $this->dataParamsEncoding, $this->charSet);
 /* Masayuki Nii added at Oct 10, 2009 */
-            if ( ! defined('SURROGATE_INPUT_PATCH_DISABLED') && $this->charSet == 'UTF-8')    {
+            if (!defined('SURROGATE_INPUT_PATCH_DISABLED') && $this->charSet == 'UTF-8' && $this->dataServerVersion < 12) {
                 $count = 0;
                 for ($i=0; $i< strlen($value); $i++) {
                     $c = ord(substr( $value, $i, 1 ));
@@ -845,6 +854,16 @@ $wo_find->FindQuery_Append($searchFields);
     // When these are not present, or when accessing SQL data, this may not be desirable.  FlattenInnerArray() removes this extra layer.
     function FlattenInnerArray () {
         $this->useInnerArray = false;
+    }
+
+    // This will give you the fields and contents pr record as JSON
+    function ReturnJSON () {
+        $this->useReturnJSONResult = false;
+    }
+
+    // This will give you the whole FMPXMLRESULT as JSON
+    function ReturnJSONFullArray () {
+        $this->useReturnJSONFullArrayResult = false;
     }
 
 /* The actions that you can send to FileMaker start here */

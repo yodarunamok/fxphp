@@ -41,7 +41,7 @@ class ObjectiveFXRecord	{
 	
 	function __get($name)	{
 		if (!isset($this->recordArray[$name]))	{
-			throw new ObjectiveFXExcepiton("The field name '{$name}' that you specified doesn't exist.");
+			throw new ObjectiveFXException("The field name '{$name}' that you specified doesn't exist.");
 		}
 		if (is_array($this->recordArray[$name]))	{
 			$portalArray = array();
@@ -54,7 +54,7 @@ class ObjectiveFXRecord	{
 	}
 }
 
-class ObjectiveFXExcepiton extends Exception	{
+class ObjectiveFXException extends Exception	{
 }
 
 ?>
