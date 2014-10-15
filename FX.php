@@ -123,9 +123,9 @@ class FX {
 
     // Variables used to track how data is moved in and out of FileMaker.  Used when UTF-8 just doesn't cut it (as when working with Japanese characters.)
     // This and all related code were submitted by Masayuki Nii.
-    // Note that if either of these variables are simply empty, UTF-8 is the default.
-    var $charSet = '';                                                  // Determines how outgoing data is encoded.
-    var $dataParamsEncoding = '';                                       // Determines how incoming data is encoded.
+    // These used to be blank by default, but Finn Løvenkrands found that caused problems with some characters.
+    var $charSet = 'UTF-8';                                             // Determines how outgoing data is encoded.
+    var $dataParamsEncoding = 'UTF-8';                                  // Determines how incoming data is encoded.
 
     var $remainNames = array();    // Added by Masayuki Nii(nii@msyk.net) Dec 18, 2010
     var $remainNamesReverse = array();    // Added by Masayuki Nii(nii@msyk.net) Jan 23, 2010
