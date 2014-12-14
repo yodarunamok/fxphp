@@ -490,7 +490,7 @@ class FX {
     // The functions below are those which are intended for general use by developers (i.e. public functions).
     // Once I'm quite sure that most people are using PHP5, I'll release a version using the improved object model of PHP5.
 
-    function isError($data) {
+    static function isError($data) {
         return (bool)(is_object($data) &&
                       (strtolower(get_class($data)) == 'fx_error' ||
                       is_subclass_of($data, 'fx_error')));
