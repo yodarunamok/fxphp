@@ -8,13 +8,13 @@ if (! defined('DEBUG_FUZZY')) {
     define('DEBUG_FUZZY', false);   // set to true to activate the fuzzy debugger
 }
 
-$serverIP = '127.0.0.1';
+$serverIP = '192.168.2.7';
 
 $webCompanionPort = 80;
 $dataSourceType = 'FMPro7';
 
-$webUN = 'user';
-$webPW = 'pass';
+$webUN = 'Admin';
+$webPW = '';
 
 $scheme = 'http';
 

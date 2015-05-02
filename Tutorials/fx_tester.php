@@ -26,7 +26,7 @@ if (isset($_POST['find_records'])) { // a search is only preformed if the form w
     // configure a connection to FileMaker Server Advanced
     $contactsListQuery = new FX($serverIP, $webCompanionPort, $dataSourceType);
     // set database and layout information
-    $contactsListQuery->SetDBData('Contacts.fp7', 'web_list');
+    $contactsListQuery->SetDBData('Contacts', 'web_list');
     // set database username and password
     $contactsListQuery->SetDBUserPass($webUN, $webPW);
     // add parameter array for new record
@@ -39,7 +39,7 @@ if (isset($_POST['find_records'])) { // a search is only preformed if the form w
     // configure a connection to FileMaker Server Advanced
     $contactsListQuery = new FX($serverIP, $webCompanionPort, $dataSourceType);
     // set database and layout information
-    $contactsListQuery->SetDBData('Contacts.fp7', 'web_list', 'all');
+    $contactsListQuery->SetDBData('Contacts', 'web_list', 'all');
     // set database username and password
     $contactsListQuery->SetDBUserPass($webUN, $webPW);
     // retrieve all records in this database available to the current user
