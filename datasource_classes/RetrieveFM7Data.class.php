@@ -178,7 +178,7 @@ and places where you will have to set flags in the order process.
                 if ($this->FX->verifyPeer == false) curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER,false);
                 curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->dataURLParams);
                 if (($this->FX->DBPassword != '' || $this->FX->DBUser != 'FX') && defined('CURLOPT_HTTPAUTH')) {
-                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                    curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                     curl_setopt($curlHandle, CURLOPT_USERPWD, $this->FX->DBUser . ':' . $this->FX->DBPassword);
                 }
                 ob_start();
