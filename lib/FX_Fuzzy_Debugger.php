@@ -66,7 +66,7 @@ class FX_Fuzzy_Debugger
             $this->currentDatabase = $this->currentConnection->getProperty('database');
             $this->currentLayout = '';
         } elseif ((bool)(is_object($fmConnection) && (strtolower(get_class($fmConnection)) == 'fx' || is_subclass_of($fmConnection, 'fx')))) {
-            require_once('FX.php');
+            require_once('../FX.php');
             $this->connectionType = FX_CONNECTION;
             $this->currentConnection = clone($fmConnection);
             if (is_array($dataSet) && isset($dataSet['errorCode'])) {
@@ -265,4 +265,3 @@ class FX_Fuzzy_Debugger
     }
 
 }
-?>
