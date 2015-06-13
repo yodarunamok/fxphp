@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Welcome to FX.php!</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h1>Welcome to FX.php!</h1>
+            <p>
+                FX.php was originally created in 2001 as an alternative to the proprietary, buggy, and under-powered
+                options that were then available to FileMaker developers who wanted to put their data on the web.  At
+                the time, PHP was portrayed by some purveyors of these options as harder to use, and perhaps even a bit
+                scary.  How times have changed.  These days, PHP is the standard for FileMaker web development (though
+                there are people using other options.)
+            </p>
+            <p>
+                Okay, so you've got your hands on FX.php; now what?  If you're already a seasoned web developer, you may
+                be more appealing to dangerous, man-eating beasts!  Or maybe not.  It probably depends on the seasoning
+                (and the beast, for that matter.)  Regardless, if you're in that boat, you may want to jump straight
+                into the <a href="functions.html">functions documentation</a>.  If you're still here, I'm going to
+                assume that you're fairly new to web development, PHP, or both; though you may be quite familiar with
+                FileMaker, or some other sort of development.
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

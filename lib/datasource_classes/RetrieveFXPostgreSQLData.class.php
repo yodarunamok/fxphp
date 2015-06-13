@@ -58,6 +58,7 @@ class RetrieveFXPostgreSQLData extends RetrieveFXSQLData {
             case '-edit':
             case '-find':
             case '-findall':
+            case '-findany':
             case '-new':
                 $this->FX->dataQuery = $this->BuildSQLQuery($action);
                 if (FX::isError($this->FX->dataQuery)) {
@@ -95,8 +96,6 @@ class RetrieveFXPostgreSQLData extends RetrieveFXSQLData {
                     ++$counter;
                 }
                 break;
-            case '-findany':
-                break;
             case '-dup':
                 break;
         }
@@ -104,6 +103,15 @@ class RetrieveFXPostgreSQLData extends RetrieveFXSQLData {
         return true;
     }
 
-}
+    function BuildSQLQuery ($action) {
+        if ($action == '-findany') {
+            if ($this->FX->selectColsSet) {
+                $cols = $this->FX->selectColumns;
+            }
+            else $cols = '*';
+            return "SELECT {$cols} FROM {$this->FX->layout} OFFSET FLOOR(RANDOM() * (SELECT COUNT(*) FROM {$this->FX->layout})) LIMIT 1";
+        }
+        return parent::BuildSQLQuery($action);
+    }
 
-?>
+}
