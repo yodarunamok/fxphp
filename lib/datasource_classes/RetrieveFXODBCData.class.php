@@ -40,7 +40,7 @@ class RetrieveFXODBCData extends RetrieveFXSQLData {
                 }
                 $this->FX->foundCount = odbc_num_rows($odbc_result);
                 $fieldCount = odbc_num_fields($odbc_result);
-                if ($theResult < 0) {
+                if ($fieldCount < 0) {
                     $tempErrorText = odbc_errormsg($odbc_res);
                     odbc_close($odbc_res);
                     return new FX_Error("Unable to access field count for current ODBC query.  ({$tempErrorText})");

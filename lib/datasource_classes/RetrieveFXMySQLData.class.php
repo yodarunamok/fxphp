@@ -29,7 +29,7 @@ class RetrieveFXMySQLData extends RetrieveFXSQLData {
                 return new FX_Error('Unable to connect to specified MySQL database.');
             }
         }
-        if (substr_count($action, '-db') == 0 && substr_count($action, 'names') == 0 && strlen(trim($this->FX->layout)) > 0) {
+        if ($this->retrieveMetadata && substr_count($action, '-db') == 0 && substr_count($action, 'names') == 0 && strlen(trim($this->FX->layout)) > 0) {
             $theResult = mysql_query('SHOW COLUMNS FROM ' . $this->FX->layout);
             if (! $theResult) {
                 return new FX_Error('Unable to access MySQL column data: ' . mysql_error());
@@ -70,22 +70,27 @@ class RetrieveFXMySQLData extends RetrieveFXSQLData {
             case '-findall':
             case '-findany':
             case '-new':
-                if ($action == '-findany') {
-                    $this->FX->dataQuery = 'SELECT ' . ($this->FX->selectColsSet?$this->FX->selectColumns:'*') . " FROM {$this->FX->layout} ORDER BY RAND() LIMIT 1;";
-                } else {
-                    $this->FX->dataQuery = $this->BuildSQLQuery($action);
-                    if (FX::isError($this->FX->dataQuery)) {
-                        return $this->FX->dataQuery;
+                $this->FX->dataQuery = $this->BuildSQLQuery($action);
+                if (FX::isError($this->FX->dataQuery)) {
+                    return $this->FX->dataQuery;
+                }
+                if ($this->retrieveMetadata && substr_count($action, '-find') > 0) {
+                    $theResult = mysql_query("SELECT COUNT(*) AS count FROM {$this->FX->layout}{$this->whereClause}");
+                    if ($theResult === false) {
+                        return new FX_Error('Unable to retrieve row count: ' . mysql_error());
                     }
+                    $countRow = mysql_fetch_assoc($theResult);
+                    $this->FX->foundCount = $countRow['count'];
                 }
             case '-sqlquery': // note that there is no preceding break, as we don't want to build a query
                 $theResult = mysql_query($this->FX->dataQuery);
                 if ($theResult === false) {
                     return new FX_Error('Invalid query: ' . mysql_error());
                 } elseif ($theResult !== true) {
-                    if (substr_count($action, '-find') > 0 || substr_count($this->FX->dataQuery, 'SELECT ') > 0) {
+                    // we got the found count above for generated SELECT queries, so get the residue here
+                    if ($action == '-sqlquery') {
                         $this->FX->foundCount = mysql_num_rows($theResult);
-                    } else {
+                    } elseif (substr_count($action, '-find') < 1) {
                         $this->FX->foundCount = mysql_affected_rows($theResult);
                     }
                     if ($action == '-dup' || $action == '-edit') {
@@ -116,6 +121,23 @@ class RetrieveFXMySQLData extends RetrieveFXSQLData {
         }
         $this->FX->fxError = 0;
         return true;
+    }
+
+    function BuildSQLQuery ($action) {
+        $limitClause = '';
+        if ($action == '-findany') {
+            if ($this->FX->selectColsSet) {
+                $cols = $this->FX->selectColumns;
+            }
+            else $cols = '*';
+            // syntax from http://stackoverflow.com/questions/19412/how-to-request-a-random-row-in-sql?lq=1
+            return "SELECT {$cols} FROM {$this->FX->layout} ORDER BY RAND() LIMIT 1";
+        }
+        elseif (is_numeric($this->FX->groupSize)) {
+            $limitClause = " LIMIT {$this->FX->groupSize}";
+            if ($this->FX->currentSkip > 0) $limitClause .= " OFFSET {$this->FX->currentSkip}";
+        }
+        return parent::BuildSQLQuery($action, $limitClause);
     }
 
 }

@@ -2,10 +2,10 @@
 #### FX.php #############################################################
 #                                                                       #
 #       By: Chris Hansen with Chris Adams, G G Thorsen, Masayuki Nii,   #
-#          and others                                                   #
-#  Version: 6.0                                                         #
-#     Date: 3 Feb 2012                                                  #
-#  License: Artistic License and addendum (included with release)       #
+#           and others                                                  #
+#  Version: 6.9                                                         #
+#     Date: 16 Jun 2015                                                 #
+#  License: Artistic License                                            #
 # Web Site: www.iviking.org                                             #
 #  Details: FX is a free open-source PHP class for accessing FileMaker  #
 #          and other databases.  For complete details about this class, #
@@ -14,7 +14,7 @@
 #########################################################################
 
 define('FX_VERSION', '6.9');
-define('FX_VERSION_FULL', 'FX.php version ' . FX_VERSION . ' (3 Feb 2012) by Chris Hansen, Chris Adams, G G Thorsen, Masayuki Nii, and others.');
+define('FX_VERSION_FULL', 'FX.php version ' . FX_VERSION . ' (16 Jun 2015) by Chris Hansen, Chris Adams, G G Thorsen, Masayuki Nii, and others.');
 
 require_once('lib/FX_Error.php');
 
@@ -66,7 +66,7 @@ class FX {
     var $database = '';
     var $layout = ''; // the layout to be accessed for FM databases.  For SQL, the table to be accessed.
     var $responseLayout = "";
-    var $groupSize;
+    var $groupSize = null;
     var $currentSkip = 0;
     var $defaultOperator = 'bw';
     var $findquerynumber = 1;
@@ -851,7 +851,7 @@ $wo_find->FindQuery_Append($searchFields);
         $this->useInnerArray = false;
     }
 
-    // This will give you the fields and contents pr record as JSON
+    // This will give you the fields and contents per record as JSON
     function ReturnJSON () {
         $this->useReturnJSONResult = false;
     }

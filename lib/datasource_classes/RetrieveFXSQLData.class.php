@@ -11,6 +11,8 @@ require_once('RetrieveFXData.class.php');
 
 // Do not use this class directly -- it is designed to be appropriately extended
 class RetrieveFXSQLData extends RetrieveFXData {
+    var $whereClause;
+    var $retrieveMetadata = true;
 
     function BuildSQLSorts () {
         $currentOrderBy = '';
@@ -35,16 +37,17 @@ class RetrieveFXSQLData extends RetrieveFXData {
             }
             return $currentOrderBy;
         }
+        return '';
     }
 
-    function BuildSQLQuery ($action) {
+    function BuildSQLQuery ($action, $limitClause='') {
         $currentLOP = 'AND';
         $logicalOperators = array();
         $LOPCount = 0;
         $currentSearch = '';
         $currentQuery = '';
         $counter = 0;
-        $whereClause = '';
+        $this->whereClause = '';
 
         $name = '';
         $value = '';
@@ -126,12 +129,12 @@ class RetrieveFXSQLData extends RetrieveFXData {
                     --$LOPCount;
                     $currentSearch .= ")";
                 }
-                $whereClause = ' WHERE ' . $currentSearch; // set the $whereClause variable here, to distinguish this from a "finall" request
+                $this->whereClause = ' WHERE ' . $currentSearch; // set the $this->whereClause variable here, to distinguish this from a "finall" request
             case '-findall': //
                 if ($this->FX->selectColsSet) {
-                    $currentQuery = "SELECT {$this->FX->selectColumns} FROM {$this->FX->layout}{$whereClause}" . $this->BuildSQLSorts();
+                    $currentQuery = "SELECT {$this->FX->selectColumns} FROM {$this->FX->layout}{$this->whereClause}" . $this->BuildSQLSorts() . $limitClause;
                 } else {
-                    $currentQuery = "SELECT * FROM {$this->FX->layout}{$whereClause}" . $this->BuildSQLSorts();
+                    $currentQuery = "SELECT * FROM {$this->FX->layout}{$this->whereClause}" . $this->BuildSQLSorts() . $limitClause;
                 }
                 break;
             case '-delete':
@@ -145,14 +148,14 @@ class RetrieveFXSQLData extends RetrieveFXData {
                 }
                 break;
             case '-edit':
-                $whereClause = ' WHERE 1 = 0'; // if someone wants to update all records, they need to specify such
+                $this->whereClause = ' WHERE 1 = 0'; // if someone wants to update all records, they need to specify such
                 $currentQuery = "UPDATE {$this->FX->layout} SET ";
                 foreach ($this->FX->dataParams as $key1 => $value1) {
                     foreach ($value1 as $key2 => $value2) {
                         $$key2 = $value2;
                     }
                     if ($name == '-recid') {
-                        $whereClause = " WHERE {$this->FX->primaryKeyField} = '{$value}'";
+                        $this->whereClause = " WHERE {$this->FX->primaryKeyField} = '{$value}'";
                     } else {
                         if ($counter > 0) {
                             $currentQuery .= ", ";
@@ -161,7 +164,7 @@ class RetrieveFXSQLData extends RetrieveFXData {
                         ++$counter;
                     }
                 }
-                $currentQuery .= $whereClause;
+                $currentQuery .= $this->whereClause;
                 break;
             case '-new':
                 $tempColList = '(';
@@ -188,7 +191,6 @@ class RetrieveFXSQLData extends RetrieveFXData {
                 $currentQuery = "INSERT INTO {$this->FX->layout} {$tempColList} VALUES {$tempValueList}";
                 break;
         }
-        $currentQuery .= ';';
         return $currentQuery;
     }
 

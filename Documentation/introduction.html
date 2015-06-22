@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Introduction</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Introduction</h2>
+            <h3>Why FX.php?</h3>
+            <p>
+                Regardless of what you&apos;re using as a data source these days, you have multiple options when it comes
+                to connecting to it.  These range from libraries built into PHP, to various database abstraction layers,
+                to data source specific libraries (like the FileMaker API for PHP.) It&apos;s probably safe to say that
+                there are at least as many reasons for picking a given option, as there are available options. That said,
+                here are a few items that you may find compelling:
+            </p>
+            <ol>
+                <li>
+                    <strong>Ease of Use.</strong> FX.php was originally created with PHP newbies in mind. And though its
+                    flexibility has increased, it remains very easy to learn and use.
+                </li>
+                <li>
+                    <strong>Tools.</strong> FX includes a number of great tools to help with all sorts of things. For
+                    example: the FX Parser will actually help you learn to use FX.php (more on that later in the
+                    documentation); the FX Fuzzy Debugger helps demystify FileMaker&reg; database errors; and
+                    image_proxy.php provides a slick way of getting images from FileMaker&reg; container fields.
+                </li>
+                <li>
+                    <strong>Choices.</strong> FX.php talks to FileMaker, MySQL, PostgreSQL, OpenBase, ODBC, and CafePHP
+                    data sources now, with more to come (look for some NoSQL options in future releases.) You can use
+                    built in functions for any of these, or you can take advantage of data source specific features, if
+                    desired.
+                </li>
+                <li>
+                    <strong>Open Source.</strong> FX has been open source since its creation, and it will remain so.
+                    Features and fixes can easily be submitted and discussed via the project&apos;s
+                    <a href="https://github.com/yodarunamok/fxphp">github page</a>.
+                </li>
+                <li>
+                    <strong>Abstraction.</strong> Some database abstraction layers actually require a fair amount of
+                    variation between data sources. FX.php is designed to minimize the knowledge required to use
+                    different data sources. It will even generate simple SQL statements for you.
+                </li>
+            </ol>
+            <h3>For FileMaker&reg; Developers looking at PHP</h3>
+            <p>
+                PHP is a great web scripting language because, like FileMaker&reg; Pro software, you can actually wrap
+                your head around it. With PHP you can build web applications that meet just about any client&apos;s
+                needs. The web offers many PHP resources for help, and the <a href="http://www.php.net/manual/">PHP
+                Documentation site</a> is an excellent start.
+            </p>
+            <p>
+                The benefits for FileMaker&reg; Pro developers increase dramatically because PHP can talk to
+                FileMaker&reg; databases straight from a web page, allowing you to build dynamic web pages based on the
+                content of your clients&apos; FileMaker&reg; Pro solutions. Using PHP from your HTML web page you can
+                dynamically display FileMaker&reg; find results, customize your website layout interface and enable
+                users to update, create and delete FileMaker&reg; Pro records.
+            </p>
+            <p>
+                The most tantalizing prospect of using PHP, is that although PHP scripts are part of a web document
+                (just like the HTML, CSS, and Javascript), they are processed <strong>before</strong> any of that. Thus,
+                your HTML, CSS, and JavaScript can be dynamically created and modified based on the contents of your
+                FileMaker&reg; Pro database!
+            </p>
+            <h4>What about the learning curve?</h4>
+            <p>
+                PHP is easy to learn. There are tutorials online (google it) and most any major book store (whether
+                online or brick and mortar) will offer PHP texts for the eager student (and perhaps even an offering or
+                two for the less-than-eager among you.) PHP can be used at a variety of skill levels: from simple page
+                modifications, to complex web applications that span an entire site. PHP is a lot like FileMaker&reg;
+                scripting, yet it has all the familiar functions and controls of a more traditional programming language.
+            </p>
+            <h4>What about FileMaker&reg; database compatibility?</h4>
+            <p>
+                FileMaker&reg; Pro files (any version from 7-14) need to be shared via XML for custom web publishing on
+                FileMaker&reg; Server (a <a href="http://www.filemaker.com/store/fdslearn.html?lang=ENG&locale=US">
+                FileMaker&reg; Developer subscription</a> will get you a development copy of Server, if you don't
+                already have one.) An extended privilege set needs to be added to your file with the key word “fmxml”.
+                The user account that will be used to access your file via the web will need to have fmxml privileges.
+            </p>
+            <p>
+                FileMaker&reg; Pro 6 or earlier files need to be shared through the web companion on FileMaker&reg; Pro
+                client (unlimited version, if available.)
+            </p>
+            <p>See FileMaker&reg; documentation on Custom Web Publishing via XML for more information.</p>
+            <h3>How much is this going to cost?</h3>
+            <p>
+                PHP is free, and the most common servers used with it (Apache and Nginx) are too! If you&apos;re using a
+                recent version of FileMaker&reg; Server, you already have a web server installed with PHP (someday you may
+                want a separate web server with a better PHP install, but this will work great now.) Do
+                <strong>not</strong> install your own web server software on a machine running a recent version of
+                FileMaker&reg; Server &mdash; though there are ways to make it work, things may break unexpectedly.
+            </p>
+            <p>
+                A number of other FX.php data sources like <a href="http://dev.mysql.com/downloads/">MySQL</a>,
+                <a href="http://www.postgresql.org/download/">PostgreSQL</a>, etc. are free or have free versions, as
+                well. Unfortunately, if you want to use FileMaker&reg; Server, and you don&apos;t already have a copy,
+                there is no free option (the <a href="http://www.filemaker.com/store/fdslearn.html?lang=ENG&locale=US">
+                developer subscription</a> referenced above may be your best option.)
+                <a href="https://www.apachefriends.org/index.html">XAMPP</a> will set you up with Apache, MySQL, and PHP
+                (among other things) on Mac OS X, Linux, or Windows. <a href="https://www.mamp.info/en/">MAMP</a> (on
+                Mac OS X) and <a href="http://www.wampserver.com/en/">WAMP</a> (under Windows) are platform specific
+                options. <a href="http://brew.sh">Homebrew</a> (also for Mac OS X) is a nice package manager, and can be
+                used to install a variety of data sources and web server software.
+            </p>
+            <p class="footer">
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

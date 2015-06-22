@@ -15,7 +15,6 @@ class RetrieveFM7Data extends RetrieveFMXML {
     var $xmlStartHandler = 'StartElement';
     var $xmlContentHandler = 'ElementContents';
     var $xmlEndHandler = 'EndElement';
-    var $useBasicAuth = true;
 
     function CreateCurrentSort () {
         $currentSort = "";

@@ -23,6 +23,7 @@ class RetrieveFMXML extends RetrieveFXData {
     var $dataURL = '';
     var $dataURLParams = '';
     var $invalidXMLChars = array("\x0B", "\x0C", "\x12");
+    var $useBasicAuth = true;
 
     /*
         Translation array and callback function used with preg_replace_callback

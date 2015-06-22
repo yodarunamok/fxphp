@@ -40,17 +40,29 @@ body {
 }
 
 #content {
-    position: absolute;
+    position: relative;
     left: 12.5em;
     top: 0;
     width: 36.5em;
     padding: .75em .5em;
 }
 
-#nav_list {
+#left_navigation{
+    font-size: .8em;
+}
+
+.nav_list {
     list-style-type: none;
     padding-left: 1em;
-    font-size: .8em;
+}
+
+.nav_list li {
+    padding-top: .2em;
+    padding-bottom: .2em;
+}
+
+.active {
+    color: #A11A2A;
 }
 
 a, a:link, a:visited {
@@ -61,11 +73,58 @@ a:hover {
     color: brown;
 }
 
-h1 {
+h1, h2 {
     padding-left: 1em;
+}
+
+h3, h4 {
+       padding-left: 1.5em;
 }
 
 p {
     font-size: .8em;
     padding: 0 1em;
+}
+
+p.note {
+    font-size: .8em;
+    padding: 1em;
+    background-color: beige;
+    border: .1em solid #999;
+}
+
+p.signature {
+    padding-top: 1em;
+    font-size: .9em;
+    font-weight: 300;
+}
+
+p.footer {
+    font-size: .7em;
+    padding: 2em 1em;
+    text-align: center;
+}
+
+ol {
+    font-size: .8em;
+}
+
+ol li {
+    margin-bottom: 1em;
+    padding-right: 1em;
+}
+
+pre {
+    padding: 1em;
+    font-size: .9em;
+}
+
+.code {
+    font-family: monospace;
+    background-color: #ccc;
+}
+
+span.code {
+    font-size: 1.2em;
+    padding: 1px 3px;
 }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Understanding PHP Arrays</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Understanding PHP arrays</h2>
+            <h3>What’s an array?</h3>
+            <p>
+                Simply put an array is a list of items, a lot like FMP repeating fields. Each item is indexed by a
+                number and can contain a variety of different data types. For example, you could have an array with 3
+                items in it: the first being a number; the second, text; and the third, another array.
+            </p>
+            <p>
+                Here is a simple 4 element PHP array...
+            </p>
+            <pre class="code">$modes = ('Layout','Browse','Find','Preview');</pre>
+            <p>
+                In PHP the dollar sign is used to identify variables, single or double quotes contain strings, and array
+                values are separated by commas. When you create an array like this, the elements are assigned a numeric
+                index (sometimes called the 'key') starting with zero. So in the example above...
+            </p>
+            <pre class="code">
+$modes[0] = Layout
+$modes[1] = Browse
+$modes[2] = Find
+$modes[3] = Preview</pre>
+            <p>In PHP you can also assign a name index instead of the internally assigned index, like so...</p>
+            <pre class="code">
+$modes['design'] = 'Layout';
+$modes['data']   = 'Browse';
+$modes['search'] = 'Find';
+$modes['print']  = 'Preview';</pre>
+            <p>This is called an associative array.</p>
+            <p>
+                The above is an extremely brief introduction to arrays, but it&apos;s all you need to know to start
+                working with PHP and the FX class. For more information see
+                <a href="http://php.net/manual/en/language.types.array.php">the online documentation</a>.
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>
