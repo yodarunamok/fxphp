@@ -74,33 +74,33 @@ class FX {
     var $dataParams = array();
     var $sortParams = array();
     var $actionArray = array(
-            // for backwards compatibility
-            '-delete'               => '-delete',
-            '-dup'                  => '-dup',
-            '-edit'                 => '-edit',
-            '-find'                 => '-find',
-            '-findall'              => '-findall',
-            '-findany'              => '-findany',
-            '-findquery'            => '-findquery',
-            '-new'                  => '-new',
-            '-view'                 => '-view',
-            '-dbnames'              => '-dbnames',
-            '-layoutnames'          => '-layoutnames',
-            '-scriptnames'          => '-scriptnames',
-            '-sqlquery'             => '-sqlquery',
-            // new params for DoFXAction
-            'delete'                => '-delete',
-            'duplicate'             => '-dup',
-            'update'                => '-edit',
-            'perform_find'          => '-find',
-            'show_all'              => '-findall',
-            'show_any'              => '-findany',
-            'new'                   => '-new',
-            'view_layout_objects'   => '-view',
-            'view_database_names'   => '-dbnames',
-            'view_layout_names'     => '-layoutnames',
-            'view_script_names'     => '-scriptnames'
-        );
+        // available options for DoFXAction
+        'delete'                => '-delete',
+        'duplicate'             => '-dup',
+        'update'                => '-edit',
+        'perform_find'          => '-find',
+        'show_all'              => '-findall',
+        'show_any'              => '-findany',
+        'new'                   => '-new',
+        'view_layout_objects'   => '-view',
+        'view_database_names'   => '-dbnames',
+        'view_layout_names'     => '-layoutnames',
+        'view_script_names'     => '-scriptnames',
+        // for backwards compatibility
+        '-delete'               => '-delete',
+        '-dup'                  => '-dup',
+        '-edit'                 => '-edit',
+        '-find'                 => '-find',
+        '-findall'              => '-findall',
+        '-findany'              => '-findany',
+        '-findquery'            => '-findquery',
+        '-new'                  => '-new',
+        '-view'                 => '-view',
+        '-dbnames'              => '-dbnames',
+        '-layoutnames'          => '-layoutnames',
+        '-scriptnames'          => '-scriptnames',
+        '-sqlquery'             => '-sqlquery'
+    );
 
     // Variables to help with SQL queries
     var $primaryKeyField = '';
@@ -506,7 +506,7 @@ class FX {
         // When using a different type of encoding downstream than upstream, you must call this function -- SetCharacterEncoding() --
         // to set downstream encoding (the way data FROM the database is encoded) BEFORE calling SetDataParamsEncoding().
         // When this function is called alone, both instance valiables are set to the same value.
-        // *IMPORTANT*: Using either this function or the next one is moot unless you have multi-byte support compliled into PHP (e.g. Complete PHP).
+        // *IMPORTANT*: Using either this function or the next one is moot unless you have multi-byte support compiled into PHP (e.g. Complete PHP).
     }
 
     function SetDataParamsEncoding ($encoding) {        // SetDataParamsEncoding() is used to specify the encoding of parameters sent to the database (upstream encoding.)
@@ -624,7 +624,7 @@ $wo_find->FindQuery_Append($searchFields);
     }
 
     /**
-    * exact duplicate of FindQuery_Append except for the '!' near teh end..
+    * exact duplicate of FindQuery_Append except for the '!' near the end..
     *
     * @param mixed $namevaluepair
     * @param mixed $doModify
@@ -802,16 +802,19 @@ $wo_find->FindQuery_Append($searchFields);
         $this->AddDBParam("{$globalFieldName}.global", $globalFieldValue);
     }
 
-    function PerformFMScript ($scriptName) {                            // This function is only meaningful when working with FileMaker data sources
+    function PerformFMScript ($scriptName, $scriptParam='') {            // This function is only meaningful when working with FileMaker data sources
         $this->AddDBParam('-script', $scriptName);
+        if (strlen(trim($scriptParam)) > 0) $this->AddDBParam('-script.param', $scriptParam);
     }
 
-    function PerformFMScriptPrefind ($scriptName) {                     // This function is only meaningful when working with FileMaker data sources
+    function PerformFMScriptPrefind ($scriptName, $scriptParam='') {    // This function is only meaningful when working with FileMaker data sources
         $this->AddDBParam('-script.prefind', $scriptName);
+        if (strlen(trim($scriptParam)) > 0) $this->AddDBParam('-script.prefind.param', $scriptParam);
     }
 
-    function PerformFMScriptPresort ($scriptName) {                     // This function is only meaningful when working with FileMaker data sources
+    function PerformFMScriptPresort ($scriptName, $scriptParam='') {    // This function is only meaningful when working with FileMaker data sources
         $this->AddDBParam('-script.presort', $scriptName);
+        if (strlen(trim($scriptParam)) > 0) $this->AddDBParam('-script.presort.param', $scriptParam);
     }
 
     function AddSortParam ($field, $sortOrder='', $performOrder=0) {    // Add a sort parameter.  An operator is usually not necessary.

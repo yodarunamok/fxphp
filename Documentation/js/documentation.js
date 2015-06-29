@@ -16,7 +16,33 @@ var sections = [
     ]},
     {label: 'Best Practices', address: 'best_practices.html', children: null},
     {label: 'Using image_proxy.php', address: 'image_proxy.html', children: null},
-    {label: 'Functions', address: 'functions.html', children: null},
+    {label: 'Functions', address: '', children: [
+        {label: 'Query Setup', address: 'functions.html', children: [
+            {label: 'FX()', address: 'functions.html#fx', children: null}
+        ]},
+        {label: 'Query Customization', address: 'functions_configure.html', children: [
+            {label: 'AddDBParam()', address: 'functions_configure.html#AddDBParam', children: null},
+            {label: 'AddDBParamArray()', address: 'functions_configure.html#AddDBParamArray', children: null},
+            {label: 'FindQuery_AND()', address: 'functions_configure.html#FindQuery_AND', children: null},
+            {label: 'PerformFMScript()', address: 'functions_configure.html#PerformFMScript', children: null},
+            {label: 'PerformFMScriptPrefind()', address: 'functions_configure.html#PerformFMScript', children: null},
+            {label: 'PerformFMScriptPresort()', address: 'functions_configure.html#PerformFMScript', children: null},
+            {label: 'SetCharacterEncoding()', address: 'functions_configure.html#SetCharacterEncoding', children: null},
+            {label: 'SetDataKey()', address: 'functions_configure.html#SetDataKey', children: null},
+            {label: 'SetDataParamsEncoding()', address: 'functions_configure.html#SetDataParamsEncoding', children: null},
+            {label: 'SetDBData()', address: 'functions_configure.html#SetDBData', children: null},
+            {label: 'SetDBPassword()', address: 'functions_configure.html#SetDBPassword', children: null},
+            {label: 'SetDBUserPass()', address: 'functions_configure.html#SetDBUserPass', children: null},
+            {label: 'SetDefaultOperator()', address: 'functions_configure.html#SetDefaultOperator', children: null},
+            {label: 'SetFMGlobal()', address: 'functions_configure.html#SetFMGlobal', children: null},
+            {label: 'SetLogicalOR()', address: 'functions_configure.html#SetLogicalOR', children: null},
+            {label: 'SetModID()', address: 'functions_configure.html#SetModID', children: null},
+            {label: 'SetPortalRow()', address: 'functions_configure.html#SetPortalRow', children: null},
+            {label: 'SetRecordID()', address: 'functions_configure.html#SetRecordID', children: null},
+            {label: 'SQLFuzzyKeyLogicOn()', address: 'functions_configure.html#SQLFuzzyKeyLogicOn', children: null}
+        ]},
+        {label: 'Query Execution', address: 'functions_execute.html', children: null}
+    ]},
     {label: 'Resources', address: 'resources.html', children: null}
 ];
 
@@ -45,13 +71,33 @@ function initializePage () {
 
 function populateNavigation (navElement, navArray) {
     for (var i = 0; i < navArray.length; ++i) {
-        if (currentFile == navArray[i].address) navElement.add(EE('li', {'@class':'active'}, navArray[i].label));
-        else if (navArray[i].address == '') {
-            var currentSubnav = EE('ul', {'@class':'nav_list'});
-            var currentLabel = navArray[i].label;
-            populateNavigation(currentSubnav, navArray[i].children);
-            navElement.add(EE('li', [currentLabel, EE('br'), currentSubnav]));
+        var currentElement = navArray[i];
+        var currentNav = null;
+        var currentSubnav = null;
+        // figure out how the navigation element should look
+        if (currentFile == currentElement.address) currentNav = EE('li', {'@class':'active'}, currentElement.label);
+        else if (currentElement.address == '') currentNav = EE('li', currentElement.label);
+        else {
+            currentNav = EE('li', EE('a', {'@href':currentElement.address, '@onclick':'openFunction(this.hash);'}, currentElement.label));
         }
-        else navElement.add(EE('li', EE('a', {'@href':navArray[i].address}, navArray[i].label)));
+        // does the current element have children? handle them
+        if (currentElement.children !== null) {
+            currentSubnav = EE('ul', {'@class':'nav_list'});
+            populateNavigation(currentSubnav, currentElement.children);
+            currentNav.add([EE('br'), currentSubnav]);
+        }
+        // add the current navigation element to the list
+        navElement.add(currentNav);
     }
 }
+
+function openFunction (linkHash) {
+    var headId = linkHash + '_';
+    var pseudoClick = new MouseEvent("click");
+    $(headId)[0].dispatchEvent(pseudoClick);
+
+}
+
+$('.function_name').on('click', function() {
+    $('#' + this[0].id + 'body').toggle('inactive', 'active');
+});
