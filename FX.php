@@ -177,11 +177,12 @@ class FX {
         $this->dataPortSuffix = ':' . $dataPort;
         if (strlen($dataType) > 0) {
             $this->dataServerType = substr(strtolower($dataType), 0, 5);
-        }
-        if ($this->dataServerType == 'fmpro' || $this->dataServerType == 'fmalt') {
-            $this->dataServerVersion = intval(str_replace($this->dataServerType, '', strtolower($dataType)));
-        } else {
-            $this->dataServerVersion = 0;
+            // now pull out the version
+            if ($this->dataServerType == 'fmpro' || $this->dataServerType == 'fmalt') {
+                $this->dataServerVersion = intval(str_replace($this->dataServerType, '', strtolower($dataType)));
+            } else {
+                $this->dataServerVersion = 0;
+            }
         }
         if (((strlen($dataURLType) > 0 && $this->dataServerVersion >= 7 && $this->dataServerType == 'fmpro') || ($this->dataServerType == 'fmalt')) && strtolower($dataURLType) == 'https') {
             $this->useSSLProtocol = true;
