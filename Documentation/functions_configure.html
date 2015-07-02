@@ -63,7 +63,7 @@
                 <span class="code"><a href="#SetDefaultOperator">SetDefaultOperator()</a></span> function. Available
                 operators are as follows:<br>
                 <br><span class="inline code">
-                    <span class="ul">$op</span>&nbsp;&nbsp;&nbsp;<span class="ul">function performed on field/column</span><br>
+                    <span class="uLine">$op</span>&nbsp;&nbsp;&nbsp;<span class="uLine">function performed on field/column</span><br>
                     eq &nbsp;- an &apos;equals&apos; search.<br>
                     cn &nbsp;- a &apos;contains&apos; search.<br>
                     bw &nbsp;- a &apos;begins with&apos; search.<br>
@@ -134,16 +134,181 @@ $query-&gt;SetDBData($databaseName, $tableName, $groupSize);
 $query-&gt;AddDBParamArray($fieldsArray, $operatorsArray);
 $queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
         </div>
+        <h4 id="AddSortParam_" class="function_name">AddSortParam($field, $sortOrder, $performOrder)<a
+                href="functions_configure.html#AddSortParam" name="AddSortParam">#</a></h4>
+        <div id="AddSortParam_body" class="function_body inactive">
+            <p>
+                This function is used to determine how the specified data source will sort the found records/rows before
+                returning the data to FX. This method is optional when performing a search and is not relevant to any other
+                type of query. By default, the order in which multiple calls to <span class="code">AddSortParam()</span>
+                appear determines sort precedence &mdash; i.e. the results will first be sorted as specified in the first
+                call, next by the second, etc. This behavior can be modified by using the <span class="code">$performOrder</span>
+                parameter.
+            </p>
+            <p><strong class="param">$field</strong> - field/column to sort on.</p>
+            <p><strong class="param">$sortOrder</strong> - (optional) the type of sort (ascending by default.)</p>
+            <p class="note">
+                In FileMaker&reg; &ge; 7, the possible values of <span class="code">$sortOrder</span> are
+                <span class="code">ascend</span>, <span class="code">descend</span>, or the name of a value list. In the
+                event that the name of a value list is passed, the returned data will be sorted based on that value list.
+            </p>
+            <p class="note">
+                For SQL data sources, <span class="code">DESC</span> or <span class="code">Descend</span> will sort in
+                descending order. Otherwise, an ascending sort is specified in the SQL.
+            </p>
+            <p class="note">
+                <span class="code">$sortOrder</span> can contain one one of three values in FileMaker&reg; versions 5
+                through 6: <span class="code">Ascend</span>, <span class="code">Descend</span>, or
+                <span class="code">Custom</span>. Custom sorting works the same way that it does in FileMaker&reg; Pro
+                (i.e. it uses the value list formatted for the field specified on the current layout.)
+            </p>
+            <p><strong class="param">$performOrder</strong> - (optional) the order in which this sort should be performed.</p>
+            <p class="note">
+                The <span class="code">$performOrder</span> parameter can be used to order multiple sort requests as
+                desired, rather than in the order which they appear in your code. The value passed must be a
+                <strong>positive integer</strong>.
+            </p>
+            <pre class="code">
+// will return a found set from the default data source and port
+// by searching the works table/layout of the &quot;Culture&quot; DB for
+// rows/records of &quot;Type&quot;=&quot;Art&quot; - the results will first
+// be sorted by descending &quot;Medium&quot;, then by ascending &quot;Name&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Culture&apos;;
+$layoutName = &apos;works&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;AddDBParam(&apos;Type&apos;, &apos;Art&apos;);
+$query-&gt;AddSortParam(&apos;Medium&apos;, &apos;Descend&apos;);
+$query-&gt;AddSortParam(&apos;Name&apos;);
+$foundSet = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
         <h4 id="FindQuery_AND_" class="function_name">FindQuery_AND()<a href="functions_configure.html#FindQuery_AND"
                                                                         name="FindQuery_AND">TODO!!#</a></h4>
         <div id="FindQuery_AND_body" class="function_body inactive">
         </div>
+        <h4 id="FlattenInnerArray_" class="function_name deprecated">FlattenInnerArray()<a href="functions_configure.html#FlattenInnerArray"
+                                                                                name="FlattenInnerArray">#</a></h4>
+        <div id="FlattenInnerArray_body" class="function_body inactive">
+            <p>
+                This method has been deprecated as identical functionality if available via optional parameters of the
+                <a href="functions_execute.html">execute</a> functions.
+            </p>
+        </div>
+        <h4 id="FMPostQuery_" class="function_name">FMPostQuery($isPostQuery)<a href="functions_configure.html#FMPostQuery"
+                                                                                name="FMPostQuery">#</a></h4>
+        <div id="FMPostQuery_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> This optional function is used to change FX&apos;s
+                method of accessing FileMaker&reg; databases from an HTTP GET to an HTTP POST. FX.php uses POST by
+                default for a number of reasons. In the event that you wish to use a GET request for some reason,
+                <span class="code">FMPostQuery(false)</span> can be called.
+            </p>
+            <p class="note">
+                Because of GET&apos;s many limitations &mdash; including data limits that vary across servers and browsers
+                and poorer security &mdash; it is recommended that this method be used very sparingly.
+            </p>
+            <p class="note">
+                <span class="code">FMPostQuery()</span> determines the method in which data is sent from your web server
+                to your FileMaker&reg; data source, <em>not</em> the method by which data is sent from a user&apos;s
+                browser to your server (that is most often done in the HTML &lt;form&gt; tag.)
+            </p>
+            <p><strong class="param">$isPostQuery</strong> - (optional) whether to use POST. Default is true.</p>
+            <pre class="code">
+// will request a random record via GET using the default
+// data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;FMPostQuery(false);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="FMSkipRecords_" class="function_name deprecated">FMSkipRecords($skipSize)<a
+                href="functions_configure.html#FMSkipRecords" name="FMSkipRecords">#</a></h4>
+        <div id="FMSkipRecords_body" class="function_body inactive">
+            <p>
+                <strong>Deprecated!</strong> (see <span class="code"><a href="#SetSkipSize">SetSkipSize()</a></span>)
+            </p>
+            <p><strong class="param">$skipSize</strong> - number of records/rows to skip when returning data.</p>
+        </div>
+        <h4 id="FMUseCURL_" class="function_name">FMUseCURL($useCURL)<a href="functions_configure.html#FMUseCURL"
+                                                                        name="FMUseCURL">#</a></h4>
+        <div id="FMUseCURL_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> This function is used to specify whether FX.php
+                accesses FileMaker&reg; data using cURL or sockets. FX.php has logic built in to detect cURL support,
+                but there may be times when it may be helpful to control this explicitly. By default, cURL is used.
+                Should you want or need to use sockets instead, <span class="code">FMUseCURL(false)</span> can be called.
+            </p>
+            <p class="note">
+                <strong>IMPORTANT:</strong> Although cURL and sockets are generally interchangeable, several calls to a
+                FileMaker&reg; data source from a single page using sockets may result in the truncation of your data.
+                For this reason, it&apos;s best to use this function sparingly.
+            </p>
+            <p>
+                <strong class="param">$useCURL</strong> - (optional) whether to use cURL to communicate with FileMaker&reg;
+                data sources. Default is true.
+            </p>
+            <pre class="code">
+// will request a random record via sockets using the default
+// data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;FMUseCURL(false);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
         <h4 id="PerformFMScript_" class="function_name">
-            PerformFMScript($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">TODO!!#</a><br>
+            PerformFMScript($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a><br>
             PerformFMScriptPrefind($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a><br>
             PerformFMScriptPresort($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a>
         </h4>
         <div id="PerformFMScript_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> When working with a FileMaker&reg; data source, there may
+                be cases when you would like to perform a script on the returned data set. In fact, at times, that is
+                precisely the best way to accomplish a task. These three functions do just that. When
+                <span class="code">PerformFMScript</span> is called, the specified FileMaker&reg; script will be executed
+                after the current find <em>and</em> sort (if any) are performed. Using <span class="code">PerformFMScriptPrefind</span>
+                causes the specified script to execute <em>before</em> the current find and sort are executed. Finally,
+                <span class="code">PerformFMScriptPresort</span> runs the specified FileMaker script <em>after</em> the
+                current find, but <em>before</em> the current sort is executed.
+            </p>
+            <p><strong class="param">$scriptName</strong> - the name of the script to execute.</p>
+            <p><strong class="param">$scriptParam</strong> - the value to be passed to the script as a parameter.</p>
+            <pre class="code">
+// will return a found set from the default FileMaker &ge; 7 database and port
+// the &quot;bestArtFirst&quot; script is called using a script parameter of &quot;Garfunkel&quot;
+// the script will be performed after the specified find and sort
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Culture&apos;;
+$layoutName = &apos;works&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;AddDBParam(&apos;Type&apos;, &apos;Art&apos;);
+$query-&gt;AddSortParam(&apos;Name&apos;);
+$query-&gt;PerformFMScript(&apos;bestArtFirst&apos;, &apos;Garfunkel&apos;);
+$foundSet = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
         </div>
         <h4 id="SetCharacterEncoding_" class="function_name">SetCharacterEncoding($encoding)<a
                 href="functions_configure.html#SetCharacterEncoding" name="SetCharacterEncoding">#</a></h4>
@@ -409,7 +574,7 @@ $query-&gt;SetDBUserPass($username, $password);
 $query-&gt;SetDBData($databaseName, $layoutName);
 $query-&gt;SetFMGlobal(&apos;Active_User_global&apos;, $_SESSION[&apos;user_id&apos;]);
 $query-&gt;PerformFMScript(&apos;getNewContacts&apos;, 20);
-// script found set will override the random record from the &quot;show_any&quot; query
+// script found set (if any) will override the random record from the &quot;show_any&quot; query
 $foundSet = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
         </div>
         <h4 id="SetLogicalOR_" class="function_name">SetLogicalOR()<a href="functions_configure.html#SetLogicalOR"
@@ -509,7 +674,7 @@ else {
                 href="functions_configure.html#SetPortalRow" name="SetPortalRow">#</a></h4>
         <div id="SetPortalRow_body" class="function_body inactive">
             <p>
-                This function, <strong>for FileMaker&reg; data sources only</strong>, is used to edit a portal row, or to
+                <strong class="data_source">FileMaker Only</strong> This function is used to edit a portal row, or to
                 create a record via a portal row. It's the equivalent of making several <span class="code">AddDBParam()</span>
                 calls using the full FileMaker&reg; portal syntax for the field name:
                 <span class="code">relationship_name::fieldName.rowIdentifier</span>.
@@ -615,6 +780,32 @@ $query-&gt;SetDBData($databaseName, $tableName);
 $query-&gt;SetRecordID($recordId);
 $query-&gt;AddDBParam(&apos;status&apos;, &apos;scared!&apos;);
 $queryResult = $query-&gt;DoFXAction(&apos;update&apos;);</pre>
+        </div>
+        <h4 id="SetSkipSize_" class="function_name">SetSkipSize($skipSize)<a href="functions_configure.html#SetSkipSize"
+                                                                             name="SetSkipSize">#</a></h4>
+        <div id="SetSkipSize_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker, PostgreSQL, MySQL Only</strong> There may be times when it is
+                desirable to skip a certain number of records/rows when returning data (e.g. when setting up a paging
+                interface.) <span class="code">SetSkipSize()</span> will cause FX.php to start returning data with
+                row/record <span class="code">$skipSize + 1</span>.
+            </p>
+            <p><strong class="param">$skipSize</strong> - number of records/rows to skip when returning data.</p>
+            <pre class="code">
+// query on default (FileMaker, PostgeSQL, or MySQL) database named &quot;CMS&quot;:
+// we&apos;ll skip the first row/record then return the next 10
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+$groupSize = 10;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName, $groupSize);
+$query-&gt;SetSkipSize(1);
+$findResult = $query-&gt;DoFXAction(&apos;show_all&apos;);</pre>
         </div>
         <h4 id="SQLFuzzyKeyLogicOn_" class="function_name">SQLFuzzyKeyLogicOn($logicSwitch)<a
                 href="functions_configure.html#SQLFuzzyKeyLogicOn" name="SQLFuzzyKeyLogicOn">TODO!!#</a></h4>

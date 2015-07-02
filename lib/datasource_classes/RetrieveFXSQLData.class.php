@@ -22,7 +22,7 @@ class RetrieveFXSQLData extends RetrieveFXData {
             $currentOrderBy .= ' ORDER BY ';
             foreach ($this->FX->sortParams as $key1 => $value1) {
                 $field = '';
-                $sortOrder = ''; // prevent IDE complaint. (msyk, Feb 1, 2012)
+                $sortOrder = '';
                 foreach ($value1 as $key2 => $value2) {
                     $$key2 = $value2;
                 }
@@ -33,6 +33,7 @@ class RetrieveFXSQLData extends RetrieveFXData {
                 if (substr_count(strtolower($sortOrder), 'desc') > 0) {
                     $currentOrderBy .= ' DESC';
                 }
+                else $currentOrderBy .= ' ASC';
                 ++$counter;
             }
             return $currentOrderBy;

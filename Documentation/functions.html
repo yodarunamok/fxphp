@@ -12,7 +12,7 @@
     </script>
 </head>
 <body>
-    <div id="main">
+    <div id="main" class="clear_fix">
         <div id="menu">
             <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
             <ul id="left_navigation" class="nav_list">
@@ -91,6 +91,22 @@
             <p>
                 <strong class="param">$dataURLType</strong> - (optional, FMS &ge; 7 only) possible values (case
                 insensitive): HTTP (assumed) or HTTPS. Used to connect to FileMaker&reg; Server via SSL.
+            </p>
+            <p class="return">
+                Returns an FX object. Its functions will allow you to <a href="functions_configure.html">set up</a> and
+                then <a href="functions_execute.html">execute</a> a query. After executing a query, the FX object has a
+                number of attributes you will find useful:<br>
+                <br><span class="mono">
+                $lastLinkPrevious - link to the previous &quot;page&quot; of data<br>
+                $lastLinkNext &nbsp;&nbsp;&nbsp;&nbsp;- link to the next &quot;page&quot; of data<br>
+                $lastFoundCount &nbsp;&nbsp;- number of records/rows from query<br>
+                $lastFields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- array of field/column data<br>
+                $lastURL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- URL of query, if FileMaker<br>
+                $lastQuery &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SQL of query, if relevant<br>
+                $lastQueryParams &nbsp;- parameters used to generate query<br>
+                $lastErrorCode &nbsp;&nbsp;&nbsp;- error code associated with query<br>
+                $lastValueLists &nbsp;&nbsp;- FileMaker value lists, as appropriate<br>
+                $lastDebugMessage - debug message, if any</span><br>
             </p>
             <pre class="code">
 /* quick FX call that will return a random record from FMS7 or later */

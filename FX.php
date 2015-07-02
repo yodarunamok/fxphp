@@ -833,7 +833,15 @@ $wo_find->FindQuery_Append($searchFields);
         }
     }
 
+    /**
+     * @deprecated
+     * @param $skipSize
+     */
     function FMSkipRecords ($skipSize) {
+        $this->SetSkipSize($skipSize);
+    }
+
+    function SetSkipSize ($skipSize) {
         $this->currentSkip = $skipSize;
     }
 
@@ -851,6 +859,9 @@ $wo_find->FindQuery_Append($searchFields);
 
     // By default, FX.php adds an extra layer to the returned array to allow for repeating fields and portals.
     // When these are not present, or when accessing SQL data, this may not be desirable.  FlattenInnerArray() removes this extra layer.
+    /**
+     * @deprecated
+     */
     function FlattenInnerArray () {
         $this->useInnerArray = false;
     }

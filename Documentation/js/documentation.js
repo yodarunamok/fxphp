@@ -23,7 +23,12 @@ var sections = [
         {label: 'Query Customization', address: 'functions_configure.html', children: [
             {label: 'AddDBParam()', address: 'functions_configure.html#AddDBParam', children: null},
             {label: 'AddDBParamArray()', address: 'functions_configure.html#AddDBParamArray', children: null},
+            {label: 'AddSortParam()', address: 'functions_configure.html#AddSortParam', children: null},
             {label: 'FindQuery_AND()', address: 'functions_configure.html#FindQuery_AND', children: null},
+            {label: 'FlattenInnerArray', address: 'functions_configure.html#FlattenInnerArray', children: null},
+            {label: 'FMPostQuery()', address: 'functions_configure.html#FMPostQuery', children: null},
+            {label: 'FMSkipRecords()', address: 'functions_configure.html#FMSkipRecords', children: null},
+            {label: 'FMUseCURL()', address: 'functions_configure.html#FMUseCURL', children: null},
             {label: 'PerformFMScript()', address: 'functions_configure.html#PerformFMScript', children: null},
             {label: 'PerformFMScriptPrefind()', address: 'functions_configure.html#PerformFMScript', children: null},
             {label: 'PerformFMScriptPresort()', address: 'functions_configure.html#PerformFMScript', children: null},
@@ -39,6 +44,7 @@ var sections = [
             {label: 'SetModID()', address: 'functions_configure.html#SetModID', children: null},
             {label: 'SetPortalRow()', address: 'functions_configure.html#SetPortalRow', children: null},
             {label: 'SetRecordID()', address: 'functions_configure.html#SetRecordID', children: null},
+            {label: 'SetSkipSize()', address: 'functions_configure.html#SetSkipSize', children: null},
             {label: 'SQLFuzzyKeyLogicOn()', address: 'functions_configure.html#SQLFuzzyKeyLogicOn', children: null}
         ]},
         {label: 'Query Execution', address: 'functions_execute.html', children: null}

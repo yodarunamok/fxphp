@@ -126,7 +126,7 @@ if (fopen("http://$FXE_FMServerIP:$FXE_FMWCPort/", 'r')) {
                 }
             }
             $FXQuery->SetDBData($FXE_currentDatabaseName, $FXE_currentLayoutName, $FXE_groupSize);
-            $FXQuery->FMSkipREcords($skip);
+            $FXQuery->SetSkipSize($skip);
             $ReturnedData = $FXQuery->FMFindAll();                                      // This demo finds all records in the current database.
             if ($FXE_currentLayoutName != '') {
                 $fieldLayout = array();
