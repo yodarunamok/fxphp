@@ -13,7 +13,7 @@
 #                                                                       #
 #########################################################################
 
-define('FX_VERSION', '6.9');
+define('FX_VERSION', '6.10');
 define('FX_VERSION_FULL', 'FX.php version ' . FX_VERSION . ' (16 Jun 2015) by Chris Hansen, Chris Adams, G G Thorsen, Masayuki Nii, and others.');
 
 require_once('lib/FX_Error.php');
