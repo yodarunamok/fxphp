@@ -4,7 +4,7 @@
 #       By: Chris Hansen                                                #
 #  Version: 1.0                                                         #
 #     Date: 25 Feb 2008                                                 #
-#  License: Artistic License and addendum (included with release)       #
+#  License: Artistic License (included with release)                    #
 # Web Site: www.iviking.org                                             #
 #  Details: FX_Fuzzy_Debugger is part of the FX.php distribution.  It   #
 #          is designed to work with both FX.php and the FileMaker API   #

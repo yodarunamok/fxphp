@@ -2,7 +2,7 @@
 /*******************************************************************************************\
 |                                                                                           |
 |   This file is part of the FX.php release from www.iviking.org and is released under the  |
-|   artistic license and the FX license addendum (which are also included with the release. |
+|   artistic license (which is also included with the release.                              |
 |                                                                                           |
 |   The main purpose of these functions is to handle the secure output of image URLs from   |
 |   FileMaker and the proxying of requests for these images.                                |

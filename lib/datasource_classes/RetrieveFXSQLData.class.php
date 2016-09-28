@@ -4,7 +4,7 @@ require_once('RetrieveFXData.class.php');
 
 #### Part of FX.php #####################################################
 #                                                                       #
-#  License: Artistic License and addendum (included with release)       #
+#  License: Artistic License (included with release)                    #
 # Web Site: www.iviking.org                                             #
 #                                                                       #
 #########################################################################

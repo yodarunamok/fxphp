@@ -537,10 +537,14 @@ class FX {
         $this->SetDBPassword($DBPassword, $DBUser);
     }
 
-    function SetCustomPrimaryKey ($fieldname) {
-        $this->customPrimaryKey = $fieldname;
+    function SetCustomPrimaryKey ($fieldName) {
+        $this->customPrimaryKey = $fieldName;
     }
 
+    /**
+     * @deprecated
+     * Unused and undocumented.
+     */
     function SetNumberAutoConversionComma2PeriodForDecimal () {
         $this->useComma2Period = true;
     }
