@@ -27,7 +27,7 @@ So, a reference to a specific value will be structured like one of the following
 * $dataArray['12.3']['First_Name'][0]
 * $dataArray['data']['12.3']['First_Name'][0]
 
-Look at the sample code to get a better feel for how things work.  You can also see it at work on [my site]( http://www.iviking.org/FX.php/ )
+Look at the sample code to get a better feel for how things work.  You can also get more information on [the official website]( http://fx.iviking.org/ ).
 
 
 FileMaker Pro has quite a following, and with good reason:  it mixes the power of a relational database with phenomenal ease-of-use.  It scales better than similar solutions like Microsoft Access, while providing tools for creating elegant interfaces.
