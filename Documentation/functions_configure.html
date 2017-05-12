@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Customizing Your Query</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+<div id="main">
+    <div id="menu">
+        <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+        <ul id="left_navigation" class="nav_list">
+            <li>Loading...</li>
+        </ul>
+    </div>
+    <div id="content">
+        <h2>Next Functions to Call</h2>
+        <p>
+            The functions within this group can be called in any order (usually) relative to one another. Some of these
+            functions are required in a specific use case, but all of them are optional in one context or another.
+            It&apos;s also worth noting that certain functions can be used multiple times within a given query.
+        </p>
+        <p><strong>Click</strong> on a function&apos;s header to maximize or minimize it.</p>
+        <h4 id="AddDBParam_" class="function_name">AddDBParam($name, $value, $op)<a
+                href="functions_configure.html#AddDBParam" name="AddDBParam">#</a></h4>
+        <div id="AddDBParam_body" class="function_body inactive">
+            <p>
+                Though not technically required (you won&apos;t see a query related error if you omit it), many of the
+                <a href="functions_execute.html">execution functions</a> won&apos;t behave as expected, or do much without
+                it. <span class="code">AddDBParam()</span> is the method by which query criteria are specified. It is
+                common to use more than one instance of this function in a query, especially when performing complex
+                searches or updating an existing record/row.
+            </p>
+            <p><strong class="param">$name</strong> - name of the entity (usually a field/column) against which to query.</p>
+            <p class="note">
+                Something for FileMaker&reg; developers to keep in mind:<br>
+                <br>
+                If the field is from a related table and/or database, you&apos;ll need to make sure that the
+                relationship is appended to the field name, e.g. <span class="code">relationship_name::field_name</span>.
+            </p>
+            <p><strong class="param">$value</strong> - value for the named entity.</p>
+            <p class="note">
+                For FileMaker&reg; users, note that wild cards can be used in <span class="code">$value</span> just like
+                they can in your queries. If your wild cards seem to be behaving strangely, try using PHP&apos;s
+                <span class="code">urlencode()</span> function on the value passed in.
+            </p>
+            <p class="note">
+                For those using SQL data sources, please note that begins with, ends with, and contains operators
+                generate the commonly used wild card patterns for the associated type of operation. For finer control
+                &mdash; though without auto-magic SQL generation &mdash; you may find the
+                <span class="code"><a href="functions_execute.html#PerformSQLQuery">PerformSQLQuery()</a></span>
+                method useful.
+            </p>
+            <p><strong class="param">$op</strong> - (optional, searches only) operator to use.</p>
+            <p class="note">
+                Default is a &quot;begins with&quot; query, though this behavior can be changed with the
+                <span class="code"><a href="#SetDefaultOperator">SetDefaultOperator()</a></span> function. Available
+                operators are as follows:<br>
+                <br><span class="inline code">
+                    <span class="uLine">$op</span>&nbsp;&nbsp;&nbsp;<span class="uLine">function performed on field/column</span><br>
+                    eq &nbsp;- an &apos;equals&apos; search.<br>
+                    cn &nbsp;- a &apos;contains&apos; search.<br>
+                    bw &nbsp;- a &apos;begins with&apos; search.<br>
+                    ew &nbsp;- an &apos;ends with&apos; search.<br>
+                    gt &nbsp;- a &apos;greater than&apos; search.<br>
+                    gte - a &apos;greater than or equal to&apos; search.<br>
+                    lt &nbsp;- a &apos;less than&apos; search.<br>
+                    lte - a &apos;less than or equal to&apos; search.<br>
+                    neq - a &apos;not equal to&apos; search.
+                </span>
+            </p>
+            <pre class="code">
+// query on FileMaker &ge;7 DB named &quot;CMS&quot; returning 50 records (the default)
+// with first names starting with &quot;Jo&quot; and last names ending with &quot;sen&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 80;
+$serverType = &apos;FMPro7&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Jo&apos;); // begins with is default
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;sen&apos;, &apos;ew&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="AddDBParamArray_" class="function_name">AddDBParamArray($paramsArray, $paramOperatorsArray)<a
+                href="functions_configure.html#AddDBParamArray" name="AddDBParamArray">#</a></h4>
+        <div id="AddDBParamArray_body" class="function_body inactive">
+            <p>
+                This function is designed to streamline the creation of FX.php database queries. Instead of calling
+                <span class="code"><a href="#AddDBParam">AddDBParam()</a></span> multiple times, the field names and
+                parameters can be combined into one array, the operators in another, and a single call made to
+                <span class="code">AddDBParamArray()</span>.
+            </p>
+            <p>
+                <strong class="param">$paramsArray</strong> - array where each key is a field/column name, and each value
+                is as desired for the associated key.
+            </p>
+            <p>
+                <strong class="param">$paramOperatorsArray</strong> - (optional) array corresponding to
+                <span class="code">$paramsArray</span> with keys again equal to the associated field/column name, but
+                each value is the desired operator for that field.
+            </p>
+            <p class="note">
+                Note that in <span class="code">$paramOperatorsArray</span>, elements may be omitted for fields where the
+                default operator is the desired one.
+            </p>
+            <pre class="code">
+// equivalent to query example for AddDBParam(), above
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 80;
+$serverType = &apos;FMPro7&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+$groupSize = 15;
+$fieldsArray = array(&apos;first_name&apos; => &apos;Jo&apos;, &apos;last_name&apos; => &apos;sen&apos;);
+$operatorsArray = array(&apos;last_name&apos; => &apos;ew&apos;);
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName, $groupSize);
+$query-&gt;AddDBParamArray($fieldsArray, $operatorsArray);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="AddSortParam_" class="function_name">AddSortParam($field, $sortOrder, $performOrder)<a
+                href="functions_configure.html#AddSortParam" name="AddSortParam">#</a></h4>
+        <div id="AddSortParam_body" class="function_body inactive">
+            <p>
+                This function is used to determine how the specified data source will sort the found records/rows before
+                returning the data to FX. This method is optional when performing a search and is not relevant to any other
+                type of query. By default, the order in which multiple calls to <span class="code">AddSortParam()</span>
+                appear determines sort precedence &mdash; i.e. the results will first be sorted as specified in the first
+                call, next by the second, etc. This behavior can be modified by using the <span class="code">$performOrder</span>
+                parameter.
+            </p>
+            <p><strong class="param">$field</strong> - field/column to sort on.</p>
+            <p><strong class="param">$sortOrder</strong> - (optional) the type of sort (ascending by default.)</p>
+            <p class="note">
+                In FileMaker&reg; &ge; 7, the possible values of <span class="code">$sortOrder</span> are
+                <span class="code">ascend</span>, <span class="code">descend</span>, or the name of a value list. In the
+                event that the name of a value list is passed, the returned data will be sorted based on that value list.
+            </p>
+            <p class="note">
+                For SQL data sources, <span class="code">DESC</span> or <span class="code">Descend</span> will sort in
+                descending order. Otherwise, an ascending sort is specified in the SQL.
+            </p>
+            <p class="note">
+                <span class="code">$sortOrder</span> can contain one one of three values in FileMaker&reg; versions 5
+                through 6: <span class="code">Ascend</span>, <span class="code">Descend</span>, or
+                <span class="code">Custom</span>. Custom sorting works the same way that it does in FileMaker&reg; Pro
+                (i.e. it uses the value list formatted for the field specified on the current layout.)
+            </p>
+            <p><strong class="param">$performOrder</strong> - (optional) the order in which this sort should be performed.</p>
+            <p class="note">
+                The <span class="code">$performOrder</span> parameter can be used to order multiple sort requests as
+                desired, rather than in the order which they appear in your code. The value passed must be a
+                <strong>positive integer</strong>.
+            </p>
+            <pre class="code">
+// will return a found set from the default data source and port
+// by searching the works table/layout of the &quot;Culture&quot; DB for
+// rows/records of &quot;Type&quot;=&quot;Art&quot; - the results will first
+// be sorted by descending &quot;Medium&quot;, then by ascending &quot;Name&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Culture&apos;;
+$layoutName = &apos;works&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;AddDBParam(&apos;Type&apos;, &apos;Art&apos;);
+$query-&gt;AddSortParam(&apos;Medium&apos;, &apos;Descend&apos;);
+$query-&gt;AddSortParam(&apos;Name&apos;);
+$foundSet = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="FindQuery_AND_" class="function_name">FindQuery_AND()<a href="functions_configure.html#FindQuery_AND"
+                                                                        name="FindQuery_AND">TODO!!#</a></h4>
+        <div id="FindQuery_AND_body" class="function_body inactive">
+        </div>
+        <h4 id="FlattenInnerArray_" class="function_name deprecated">FlattenInnerArray()<a href="functions_configure.html#FlattenInnerArray"
+                                                                                name="FlattenInnerArray">#</a></h4>
+        <div id="FlattenInnerArray_body" class="function_body inactive">
+            <p>
+                This method has been deprecated as identical functionality if available via optional parameters of the
+                <a href="functions_execute.html">execute</a> functions.
+            </p>
+        </div>
+        <h4 id="FMPostQuery_" class="function_name">FMPostQuery($isPostQuery)<a href="functions_configure.html#FMPostQuery"
+                                                                                name="FMPostQuery">#</a></h4>
+        <div id="FMPostQuery_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> This optional function is used to change FX&apos;s
+                method of accessing FileMaker&reg; databases from an HTTP GET to an HTTP POST. FX.php uses POST by
+                default for a number of reasons. In the event that you wish to use a GET request for some reason,
+                <span class="code">FMPostQuery(false)</span> can be called.
+            </p>
+            <p class="note">
+                Because of GET&apos;s many limitations &mdash; including data limits that vary across servers and browsers
+                and poorer security &mdash; it is recommended that this method be used very sparingly.
+            </p>
+            <p class="note">
+                <span class="code">FMPostQuery()</span> determines the method in which data is sent from your web server
+                to your FileMaker&reg; data source, <em>not</em> the method by which data is sent from a user&apos;s
+                browser to your server (that is most often done in the HTML &lt;form&gt; tag.)
+            </p>
+            <p><strong class="param">$isPostQuery</strong> - (optional) whether to use POST. Default is true.</p>
+            <pre class="code">
+// will request a random record via GET using the default
+// data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;FMPostQuery(false);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="FMSkipRecords_" class="function_name deprecated">FMSkipRecords($skipSize)<a
+                href="functions_configure.html#FMSkipRecords" name="FMSkipRecords">#</a></h4>
+        <div id="FMSkipRecords_body" class="function_body inactive">
+            <p>
+                <strong>Deprecated!</strong> (see <span class="code"><a href="#SetSkipSize">SetSkipSize()</a></span>)
+            </p>
+            <p><strong class="param">$skipSize</strong> - number of records/rows to skip when returning data.</p>
+        </div>
+        <h4 id="FMUseCURL_" class="function_name">FMUseCURL($useCURL)<a href="functions_configure.html#FMUseCURL"
+                                                                        name="FMUseCURL">#</a></h4>
+        <div id="FMUseCURL_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> This function is used to specify whether FX.php
+                accesses FileMaker&reg; data using cURL or sockets. FX.php has logic built in to detect cURL support,
+                but there may be times when it may be helpful to control this explicitly. By default, cURL is used.
+                Should you want or need to use sockets instead, <span class="code">FMUseCURL(false)</span> can be called.
+            </p>
+            <p class="note">
+                <strong>IMPORTANT:</strong> Although cURL and sockets are generally interchangeable, several calls to a
+                FileMaker&reg; data source from a single page using sockets may result in the truncation of your data.
+                For this reason, it&apos;s best to use this function sparingly.
+            </p>
+            <p>
+                <strong class="param">$useCURL</strong> - (optional) whether to use cURL to communicate with FileMaker&reg;
+                data sources. Default is true.
+            </p>
+            <pre class="code">
+// will request a random record via sockets using the default
+// data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;FMUseCURL(false);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="PerformFMScript_" class="function_name">
+            PerformFMScript($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a><br>
+            PerformFMScriptPrefind($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a><br>
+            PerformFMScriptPresort($scriptName, $scriptParam)<a href="functions_configure.html#PerformFMScript" name="PerformFMScript">#</a>
+        </h4>
+        <div id="PerformFMScript_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> When working with a FileMaker&reg; data source, there may
+                be cases when you would like to perform a script on the returned data set. In fact, at times, that is
+                precisely the best way to accomplish a task. These three functions do just that. When
+                <span class="code">PerformFMScript</span> is called, the specified FileMaker&reg; script will be executed
+                after the current find <em>and</em> sort (if any) are performed. Using <span class="code">PerformFMScriptPrefind</span>
+                causes the specified script to execute <em>before</em> the current find and sort are executed. Finally,
+                <span class="code">PerformFMScriptPresort</span> runs the specified FileMaker script <em>after</em> the
+                current find, but <em>before</em> the current sort is executed.
+            </p>
+            <p><strong class="param">$scriptName</strong> - the name of the script to execute.</p>
+            <p><strong class="param">$scriptParam</strong> - the value to be passed to the script as a parameter.</p>
+            <pre class="code">
+// will return a found set from the default FileMaker &ge; 7 database and port
+// the &quot;bestArtFirst&quot; script is called using a script parameter of &quot;Garfunkel&quot;
+// the script will be performed after the specified find and sort
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Culture&apos;;
+$layoutName = &apos;works&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;AddDBParam(&apos;Type&apos;, &apos;Art&apos;);
+$query-&gt;AddSortParam(&apos;Name&apos;);
+$query-&gt;PerformFMScript(&apos;bestArtFirst&apos;, &apos;Garfunkel&apos;);
+$foundSet = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="SetCharacterEncoding_" class="function_name">SetCharacterEncoding($encoding)<a
+                href="functions_configure.html#SetCharacterEncoding" name="SetCharacterEncoding">#</a></h4>
+        <div id="SetCharacterEncoding_body" class="function_body inactive">
+            <p>
+                This function, and its companion &mdash; <span class="code">SetDataParamsEncoding()</span> &mdash; are used
+                when connecting to a multi-byte data source without using UTF-8 html encoding. Note that both of these functions
+                require that multi-byte support be compiled into PHP.
+            </p>
+            <p class="note">
+                Even if your site is based on UTF-8, it&apos;s a good idea to call the
+                <span class="code">SetCharacterEncoding()</span> method. You might see any multi-byte characters as you&apos;d
+                expect in your browser, but behind the scenes they would be numeric character references styled like so:
+                &quot;&amp;#nnnnn;&quot; That is, they would show as a valid letter, but performing string operations would
+                be problematic. These methods allow valid encoded characters to pass through.
+            </p>
+            <p>
+                <strong class="param">$encoding</strong> - used to determine both how data is passed to FileMaker, and how
+                data is returned from FileMaker.
+            </p>
+            <p class="note">
+                If you need to set separate encoding for each direction when communicating with your database, first use
+                <span class="code">SetCharacterEncoding()</span> to set the encoding of incoming data, then use its companion
+                <span class="code">SetDataParamsEncoding()</span> to set the encoding of data being passed upstream.
+            </p>
+            <pre class="code">
+// will return a random record using the default data source and port
+// data will be encoded properly as UTF-8 (without use of html entities)
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;SetCharacterEncoding(&apos;UTF-8&apos;);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="SetCustomPrimaryKey_" class="function_name">SetCustomPrimaryKey($fieldName)<a
+                href="#SetCustomPrimaryKey" name="SetCustomPrimaryKey">TODO!!#</a></h4>
+        <div id="SetCustomPrimaryKey_body" class="function_body inactive"></div>
+        <h4 id="SetDataKey_" class="function_name">SetDataKey($keyField, $modifyField, $separator)<a
+                href="#SetDataKey" name="SetDataKey">TODO!!#</a></h4>
+        <div id="SetDataKey_body" class="function_body inactive"></div>
+        <h4 id="SetDataParamsEncoding_" class="function_name">SetDataParamsEncoding($encoding)<a
+                href="functions_configure.html#SetDataParamsEncoding" name="SetDataParamsEncoding">#</a></h4>
+        <div id="SetDataParamsEncoding_body" class="function_body inactive">
+            <p>
+                Only determines how data is passed <em>to</em> your database. See the notes for its companion function,
+                <span class="code"><a href="#SetCharacterEncoding">SetCharacterEncoding()</a></span>, for information on how
+                to use the encoding functions together.
+            </p>
+            <p><strong class="param">$encoding</strong> - the encoding to use when sending data.</p>
+            <pre class="code">
+// will return a random record using the default data source and port
+// data will be encoded as UTF-8 up, UTF-16 down (no use of html entities)
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;SetCharacterEncoding(&apos;UTF-16&apos;);
+$query-&gt;SetDataParamsEncoding(&apos;UTF-8&apos;);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="SetDBData_" class="function_name">SetDBData($database, $layout, $groupSize, $responseLayout)<a
+                href="functions_configure.html#SetDBData" name="SetDBData" class="doc_link">#</a></h4>
+        <div id="SetDBData_body" class="function_body inactive">
+            <p>
+                <span class="code">SetDBData()</span> is a required function for most of the
+                <a href="functions_execute.html">functions which execute a query</a>. Documentation for each function will
+                indicate whether this is the case. Failure to call this method when it is required, will cause your query
+                to return an error.
+            </p>
+            <p><strong class="param">$database</strong> - the name of the database to be accessed.</p>
+            <p>
+                <strong class="param">$layout</strong> - the name of the layout (in FileMaker &reg; databases) or table
+                (for SQL databases) to access.
+            </p>
+            <p class="note">
+                <span class="code">$layout</span> is technically an optional parameter for FileMaker versions 5 through 6, but
+                is required for most other queries performed via FX. Failure to specify <span class="code">$layout</span>
+                when it is required will cause your query to return an FX Error Object. It is optional in older versions
+                of FileMaker&reg; databases because by default these versions will access a FileMaker&reg; internal layout which
+                contains every field. However, using the default layout will almost always result in reduced performance.
+                See the <a href="best_practices.html">Best Practices</a> page for suggestions about the right way to
+                design FileMaker&reg; layouts for the web.
+            </p>
+            <p>
+                <strong class="param">$groupSize</strong> - (optional) how many records FX returns per query. Defaults to
+                50. Generally an integer, but may be the special value &quot;All&quot; (<strong>use &quot;All&quot; with
+                caution!</strong>
+            </p>
+            <p>
+                <strong class="param">$responseLayout</strong> - (optional, FMS &ge; 7 only) the layout from which to return
+                data.
+            </p>
+            <p class="note">
+                When accessing a FileMaker&reg; version 7 or later data source, it is possible to perform the request on
+                one layout, and then use a different layout to pull the returned data. Caution should be used with this
+                parameter since a change in layout may correspond to a change in context (e.g. a query that was performed
+                on a layout with a &quot;Contacts&quot; table context, should not try to return data via a layout based
+                on a table called &quot;Movie_Titles&quot;.)
+            </p>
+            <pre class="code">
+// query to FMS7+ that uses different layouts for query and return
+// would return up to 10 records, but &quot;show_any&quot; returns a single record
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 80;
+$serverType = &apos;FMPro7&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;Contacts&apos;;
+$queryLO = &apos;web_ContactSearch&apos;;
+$responseLO = &apos;web_ContactDetails&apos;;
+$groupSize = 10;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $queryLO, $groupSize, $responseLO);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        <pre class="code">
+// query on PostgreSQL database named &quot;CMS&quot;:
+// SELECT * FROM contacts WHERE last_name = &apos;Smith&apos; LIMIT 15
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 5432;
+$serverType = &apos;PostgreSQL&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+$groupSize = 15;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName, $groupSize);
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;Smith&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="SetDBPassword_" class="function_name">SetDBPassword($DBPassword, $DBUser)<a
+                href="functions_configure.html#SetDBPassword" name="SetDBPassword" class="doc_link">#</a></h4>
+        <div id="SetDBPassword_body" class="function_body inactive">
+            <p>
+                Used to specify the password and user name &mdash; <strong>in that order</strong> &mdash; for the current
+                query. The function <span class="code"><a href="functions_configure.html#SetDBUserPass">SetDBUserPass</a></span>
+                performs the same task, but the parameters are in a more traditional order. Most queries need to specify
+                a username and password. It is important that the credentials specified provide the required access to
+                perform the current query.
+            </p>
+            <p class="note">
+                This particular function, with it&apos;s non-traditional parameter order, has its roots in the versions of
+                FileMaker&reg; databases in use when FX was first created. At that time, FileMaker&reg; databases had a
+                password at most; and sometimes, authentication was not present at all. It was not until version 7 that
+                FileMaker&reg; databases first used user names, and credentials became ubiquitous.
+            </p>
+            <p><strong class="param">$DBPassword</strong> - password to be used for the current query.</p>
+            <p>
+                <strong class="param">$DBUser</strong> - (optional) user name to be used for the current query. Default is
+                &apos;FX&apos;.
+            </p>
+            <pre class="code">
+// query on PostgreSQL database named &quot;CMS&quot; returning a random record
+// to work, there must be a user &quot;FX&quot; with password &quot;saysME&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 5432;
+$serverType = &apos;PostgreSQL&apos;;
+$password = &apos;saysME&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBPassword($password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$queryResult = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="SetDBUserPass_" class="function_name">SetDBUserPass($DBUser, $DBPassword)<a
+                href="functions_configure.html#SetDBUserPass" name="SetDBUserPass">#</a></h4>
+        <div id="SetDBUserPass_body" class="function_body inactive">
+            <p>
+                Used to specify the user name and password required for the current query. It is important that the
+                credentials specified provide the required access to perform the current query.
+            </p>
+            <p><strong class="param">$DBUser</strong> - user name to be used for the current query.</p>
+            <p>
+                <strong class="param">$DBPassword</strong> - (optional) password for the specified user. Defaults to blank
+                password.
+            </p>
+            <pre class="code">
+// will return a random record using the default data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="SetDefaultOperator_" class="function_name">SetDefaultOperator($op)<a
+                href="functions_configure.html#SetDefaultOperator" name="SetDefaultOperator">#</a></h4>
+        <div id="SetDefaultOperator_body" class="function_body inactive">
+            <p>
+                By default, FX.php performs &quot;begins with&quot; searches when performing a find. If desired,
+                <span class="code">SetDefaultOperator()</span> can be used to change this behavior &mdash; if, for example,
+                most of your queries compare using equals.
+            </p>
+            <p>
+                <strong class="param">$op</strong> - the desired default operator. Possible values are covered in detail in the
+                <span class="code">$op</span> parameter section of <span class="code"><a href="#AddDBParam">AddDBParam()</a></span>.
+            </p>
+            <pre class="code">
+// query on default database named &quot;CMS&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+
+// begins with queries -- would return Jon Smith, Jonathan Smits, etc.
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Jon&apos;);
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;Smit&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);
+
+// equals queries -- would return only Jon Smit
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;SetDefaultOperator(&apos;eq&apos;);
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Jon&apos;);
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;Smit&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="SetFMGlobal_" class="function_name">SetFMGlobal($globalFieldName, $globalFieldValue)<a
+                href="functions_configure.html#SetFMGlobal" name="SetFMGlobal">#</a></h4>
+        <div id="SetFMGlobal_body" class="function_body inactive">
+            <p>
+                This function is only for use with FileMaker&reg; version 7 and later databases. In order to ensure that
+                a global field is set properly (before performing a script, for example), use this function instead of
+                <span class="code"><a href="#AddDBParam">AddDBParam()</a></span> to set the field.
+            </p>
+            <p><strong class="param">$globalFieldName</strong> - the name of the global field to set.</p>
+            <p><strong class="param">$globalFieldValue</strong> - the desired value for the global field.</p>
+            <pre class="code">
+// will return the found set resulting from the &quot;getNewContacts&quot; script
+// using a script parameter of &quot;20&quot; after first setting a global,
+// using the default FileMaker &ge; 7 data source and port
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;knock_knock&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$query-&gt;SetFMGlobal(&apos;Active_User_global&apos;, $_SESSION[&apos;user_id&apos;]);
+$query-&gt;PerformFMScript(&apos;getNewContacts&apos;, 20);
+// script found set (if any) will override the random record from the &quot;show_any&quot; query
+$foundSet = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+        </div>
+        <h4 id="SetLogicalOR_" class="function_name">SetLogicalOR()<a href="functions_configure.html#SetLogicalOR"
+                                                                      name="SetLogicalOR">#</a></h4>
+        <div id="SetLogicalOR_body" class="function_body inactive">
+            <p>
+                Because of its heritage, FX.php searches are logical &quot;AND&quot; queries by default. This function
+                toggles the current query to use logical &quot;OR&quot; instead.
+            </p>
+            <p class="note">
+                By default, FX.php uses the same logical keyword, whether &quot;OR&quot;, or &quot;AND&quot;, between
+                <strong>all</strong> elements of a query. For more complex queries that mix the two, the
+                <span class="code"><a href="#FindQuery_AND">FindQuery_AND()</a></span> function can be used. When working
+                with SQL data sources, <span class="code"><a href="functions_execute.html#PerformSQLQuery">PerformSQLQuery()</a></span>
+                can be used to explicitly define the SQL query to be performed.
+            </p>
+            <pre class="code">
+// query on a MySQL database named &quot;CMS&quot; returning 50 rows (the default)
+// with first names starting with &quot;Jo&quot; OR last names ending with &quot;sen&quot;
+// some possible names returned: Joe Smith, Mark Jensen, John Hansen
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 3306;
+$serverType = &apos;MySQL&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;SetLogicalOR();
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Jo&apos;); // begins with is default
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;sen&apos;, &apos;ew&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);</pre>
+        </div>
+        <h4 id="SetModID_" class="function_name">SetModID($modID)<a href="functions_configure.html#SetModID" name="SetModID">#</a></h4>
+        <div id="SetModID_body" class="function_body inactive">
+            <p>
+                When editing or deleting records/rows in some more advanced use cases, it can be important to insure that
+                the record/row hasn&apos;t changed since the current data was retrieved. For example, this might be useful
+                in a high traffic solution with multiple users performing edits.
+            </p>
+            <p><strong class="param">$modID</strong> - the modification identifier of the specified record/row.</p>
+            <p class="note">
+                In FileMaker&reg; databases, each record has a built-in ModID that is managed behind the scenes. In the
+                event that a database operation fails because of an outdated ModID, FileMaker&reg; Server will return
+                error code 306.
+            </p>
+            <p class="note">
+                Basic support for the concept of a column that tracks row modification is built into FX.php via the
+                <span class="code"><a href="#SetDataKey">SetDataKey()</a></span> method. The second parameter of this
+                method is the name of a column which provides this functionality (e.g. a modification timestamp), and the
+                third parameter allows a separator between the record and modification identifiers &mdash; other than a
+                period &mdash; to be specified.
+            </p>
+            <pre class="code">
+// update query on default (FileMaker &ge;7) database named &quot;CMS&quot;:
+// we&apos;ll try to grab Ichabod Crane&apos;s record, display his current status, then
+// set it to &quot;scared!&quot; We&apos;re going to decrement the ModID, so this will fail.
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;Contacts&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Ichabod&apos;, &apos;eq&apos;);
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;Crane&apos;, &apos;eq&apos;);
+$findResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);
+if (FX::isError($findResult) || $findResult-&gt;lastErrorCode != 0) {
+    echo &apos;An error occurred!&apos;;
+    exit;
+}
+$ichabodCrane = each($findResult);
+list($recordId, $modId) = explode(&apos;.&apos;, $ichabodCrane[&apos;key&apos;]);
+$ichabodCrane = $ichabodCrane[&apos;value&apos;];
+echo $ichabodCrane[&apos;status&apos;];
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;SetRecordID($recordId);
+$query-&gt;SetModID(--$modId); // decrementing the ModID
+$query-&gt;AddDBParam(&apos;status&apos;, &apos;scared!&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;update&apos;);
+if (FX::isError($findResult) || $findResult-&gt;lastErrorCode != 306) {
+    echo &apos;An unexpected result occurred!&apos;;
+}
+else {
+    echo &apos;ModID value was lower than the value in the database.&apos;;
+}</pre>
+        </div>
+        <h4 id="SetPortalRow_" class="function_name">SetPortalRow($fieldsArray, $portalRowID, $relationshipName)<a
+                href="functions_configure.html#SetPortalRow" name="SetPortalRow">#</a></h4>
+        <div id="SetPortalRow_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker Only</strong> This function is used to edit a portal row, or to
+                create a record via a portal row. It's the equivalent of making several <span class="code">AddDBParam()</span>
+                calls using the full FileMaker&reg; portal syntax for the field name:
+                <span class="code">relationship_name::fieldName.rowIdentifier</span>.
+            </p>
+            <p>
+                <strong class="param">$fieldsArray</strong> - an array of the data to be passed into the portal row. Each
+                element of the array should have the FileMaker&reg; field name as the key, with the desired value as the
+                value.
+            </p>
+            <p><strong class="param">$portalRowID</strong> - (optional) the ID of the relevant portal row.</p>
+            <p class="note">
+                For FileMaker&reg; 7 and later, this means the RecordID of the row in question, whereas for FileMaker 5/6,
+                this is the number of the portal row (e.g. the third row of the portal would be &quot;3&quot;.) The default
+                value, 0 (zero), creates a new portal row. Note that only one row may be created in this manner per query,
+                and the associated relationship must allow the creation of records, as appropriate. On the other hand,
+                multiple calls to SetPortalRow() <em>could</em> be used to edit multiple records in a portal via a single
+                FX.php action.
+            </p>
+            <p>
+                <strong class="param">$relationshipName</strong> - (optional) the relationship name with which to prefix
+                each field name.
+            </p>
+            <p class="note">
+                The <span class="code">$relationshipName</span> parameter is intended to reduce repetition in the common
+                case where all fields in a portal use the same relationship. For example, instead of prefixing all of your
+                field names with &quot;myRelationship::&quot;, you could just pass &quot;myRelationship&quot; (no double
+                colon) as the value of this parameter.
+            </p>
+            <pre class="code">
+// update query on default (FileMaker &ge;7) database named &quot;CMS&quot;:
+// for a Contact record with a RecordID of 29 - one record will be created
+// in the Contact_Phones portal, and a row with RecordID = 7 will be updated
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;Contacts&apos;;
+$fieldsArray0 = array(&apos;number&apos; => &apos;555-555-4321&apos;, &apos;label&apos; => &apos;cell&apos;);
+$fieldsArray7 = array(&apos;number&apos; => &apos;555-555-4343&apos;, &apos;label&apos; => &apos;main&apos;);
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;SetRecordID(29);
+$query-&gt;SetPortalRow($fieldsArray0, 0, &apos;Contact_Phones&apos;); // new portal row
+$query-&gt;SetPortalRow($fieldsArray7, 7, &apos;Contact_Phones&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;update&apos;);</pre>
+        </div>
+        <h4 id="SetRecordID_" class="function_name">SetRecordID($recordID)<a href="functions_configure.html#SetRecordID"
+                                                                             name="SetRecordID">#</a></h4>
+        <div id="SetRecordID_body" class="function_body inactive">
+            <p>
+                When updating or deleting a single record/row in a database, this method is the typical method of
+                identifying the desired one.
+            </p>
+            <p><strong class="param">$recordID</strong> - the ID of the record of interest.</p>
+            <p class="note">
+                FileMaker&reg; records have a built-in identifier, the record ID, that is used when working with a specific
+                record. If you&apos;re not familiar with how this works, review the &quot;Getting Started&quot; portion
+                of this documentation, especially the <a href="parser_out.html">FX Parser Output</a> section. There's not
+                a built-in method of updating or deleting multiple FileMaker&reg; records at once, though this can be done
+                via the <span class="code"><a href="#SetPortalRow">SetPortalRow()</a></span> function (if the records of
+                interest appear, or can be made to appear, within the same portal), or by using
+                <a href="#PerformFMScript">FileMaker Scripts</a>.
+            </p>
+            <p class="note">
+                Most SQL data sources do not have built-in identifiers, but rather primary keys. That said, this method
+                is designed to work with SQL databases in a couple of different ways: first, the
+                <span class="code"><a href="#SetDataKey">SetDataKey()</a></span> can be used to explicitly pass in the
+                name of a primary key field; second, FX.php includes an attribute called <span class="code">$fuzzyKeyLogic</span>
+                which works as part of a system to auto-magically figure out what the identifier column should be. More
+                information about <span class="code">$fuzzyKeyLogic</span> can be found in the documentation for the
+                <span class="code"><a href="#SQLFuzzyKeyLogicOn">SQLFuzzyKeyLogicOn()</a></span> method.
+            </p>
+            <pre class="code">
+// update query on default (FileMaker &ge;7) database named &quot;CMS&quot;:
+// we&apos;ll grab Ichabod Crane&apos;s record, display his current status,
+// then set it to &quot;scared!&quot;
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;Contacts&apos;;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;AddDBParam(&apos;first_name&apos;, &apos;Ichabod&apos;, &apos;eq&apos;);
+$query-&gt;AddDBParam(&apos;last_name&apos;, &apos;Crane&apos;, &apos;eq&apos;);
+$findResult = $query-&gt;DoFXAction(&apos;perform_find&apos;);
+if (FX::isError($findResult) || $findResult-&gt;lastErrorCode != 0) {
+    echo &apos;An error occurred!&apos;;
+    exit;
+}
+$ichabodCrane = each($findResult);
+list($recordId, $modId) = explode(&apos;.&apos;, $ichabodCrane[&apos;key&apos;]);
+$ichabodCrane = $ichabodCrane[&apos;value&apos;];
+echo $ichabodCrane[&apos;status&apos;];
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName);
+$query-&gt;SetRecordID($recordId);
+$query-&gt;AddDBParam(&apos;status&apos;, &apos;scared!&apos;);
+$queryResult = $query-&gt;DoFXAction(&apos;update&apos;);</pre>
+        </div>
+        <h4 id="SetSkipSize_" class="function_name">SetSkipSize($skipSize)<a href="functions_configure.html#SetSkipSize"
+                                                                             name="SetSkipSize">#</a></h4>
+        <div id="SetSkipSize_body" class="function_body inactive">
+            <p>
+                <strong class="data_source">FileMaker, PostgreSQL, MySQL Only</strong> There may be times when it is
+                desirable to skip a certain number of records/rows when returning data (e.g. when setting up a paging
+                interface.) <span class="code">SetSkipSize()</span> will cause FX.php to start returning data with
+                row/record <span class="code">$skipSize + 1</span>.
+            </p>
+            <p><strong class="param">$skipSize</strong> - number of records/rows to skip when returning data.</p>
+            <pre class="code">
+// query on default (FileMaker, PostgeSQL, or MySQL) database named &quot;CMS&quot;:
+// we&apos;ll skip the first row/record then return the next 10
+$serverAddress = &apos;192.168.22.11&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;CMS&apos;;
+$tableName = &apos;contacts&apos;;
+$groupSize = 10;
+
+$query = new FX($serverAddress);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $tableName, $groupSize);
+$query-&gt;SetSkipSize(1);
+$findResult = $query-&gt;DoFXAction(&apos;show_all&apos;);</pre>
+        </div>
+        <h4 id="SQLFuzzyKeyLogicOn_" class="function_name">SQLFuzzyKeyLogicOn($logicSwitch)<a
+                href="functions_configure.html#SQLFuzzyKeyLogicOn" name="SQLFuzzyKeyLogicOn">TODO!!#</a></h4>
+        <div id="SQLFuzzyKeyLogicOn_body" class="function_body inactive"></div>
+        <p class="footer">
+            FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+            U.S.and other countries.<br>
+        </p>
+    </div>
+</div>
+<script src="js/documentation.js"></script>
+<script type="text/javascript">
+    $(function(){
+        initializePage();
+        openFunction(window.location.hash);
+    });
+</script>
+</body>
+</html>

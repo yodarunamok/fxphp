@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FX Functions List</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main" class="clear_fix">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Function Reference for FX.php</h2>
+            <p>
+                This document is intended to demonstrate the functions in FX.php. Almost all of the functions within FX
+                can be called in any order. There are two exceptions: 1) a declaration of an instance of FX must come
+                before the others; and 2) one of the <a href="functions_execute.html">query functions</a> must be called
+                last. The functions in each section include descriptions of what they do, their <strong class="param">
+                parameters</strong>, and <span class="code">sample code</span>.
+            </p>
+            <p class="note">
+                In the original 2001 release, the FX class was called FMData() instead.
+            </p>
+            <h3>First Function to Call</h3>
+            <h4 class="function_name">FX($dataServer, $dataPort, $dataType, $dataURLType=&apos;&apos;)<a
+                    href="functions.html#FX" name="FX" class="doc_link">#</a></h4>
+            <p>
+                The constructor method of the FX class. Used with the keyword <span class="code">new</span> to create and
+                return a new FX object.
+            </p>
+            <p><strong class="param">$dataServer</strong> - the address of the machine where your data source is running.</p>
+            <p>
+                <strong class="param">$dataPort</strong> - (optional) the port on which your data source is listening.
+                Defaults to 80.
+            </p>
+            <p class="note">
+                In the case of <strong>FileMaker&reg; Server (version 7 and later)</strong>, FileMaker&reg; data will be
+                accessible on the web server port on that machine. This will usually be port 80, or port 443 for SSL
+                connections.
+            </p>
+            <p class="note">
+                In <strong>FileMaker&reg; Pro 5 and FileMaker&reg; Unlimited 6</strong>, this can be configured under the
+                &quot;Edit&quot; menu on most platforms or the &quot;FileMaker Pro&quot; menu in Mac OS X under:<br>
+                <br>
+                <span class="code">Preferences &gt; Application &gt; Plug-Ins</span><br>
+                <br>
+                Then select &quot;Web Companion&quot; and click the &quot;Configure...&quot; button. There will be a box
+                where the Port Number can be entered. This is set to port 80 by default, but it states in the FileMaker&reg;
+                help (under &quot;Web Companion, Specifying a port number for web publishing&quot;):<br>
+                <br>
+                FileMaker, Inc. has registered port number 591 with the Internet Assigned Numbers Authority (IANA) for
+                use with FileMaker Pro Web Companion.<br>
+                <br>
+                If neither of these ports works for you, you might also consider using one of the ports between 49152 and
+                65535. According to IANA, these ports are considered Dynamic and/or Private. That is to say, they aren&apos;t
+                registered to any specific application.
+            </p>
+            <p>
+                <strong class="param">$dataType</strong> - (optional) the type of data source that will be accessed.
+                Default is set via the <span class="code">$dataServerType</span> and <span class="code">$dataServerVersion</span>
+                attributes of the FX object.
+            </p>
+            <p class="note">If you will always (or almost always) be accessing the same type of data source, you can simply
+                change the default via these lines in FX.php:<br>
+                <br>
+                <span class="code">var $dataServerType = 'xxxxx';</span><br>
+                <span class="code">var $dataServerVersion = 7; // ignored for non-FM data sources</span><br>
+                <br>
+                <span class="code">$dataServerVersion</span> should mirror the version of FileMaker&reg; data being used.
+                Note that the numbers 5 and 6 are functionally equivalent, as are numbers 7 and greater.<br>
+                <br>
+                The possible values for <span class="code">xxxx</span> (case is not important) are:<br>
+                <br>
+                <strong>FMPro</strong> - for FileMaker&reg; data sources.<br>
+                <strong>ODBC</strong> - to connect to an ODBC data source.<br>
+                <strong>MySQL</strong> - if connecting to a MySQL server.<br>
+                <strong>OpenBase</strong> - if connecting to an OpenBase data source.<br>
+                <strong>PostgreSQL</strong> - for connections to PostgreSQL.<br>
+                <strong>CAFEphp4PC</strong> - when using FMWebschool&apos;s CAFEphp with FileMaker&reg; client on the PC.
+            </p>
+            <p>
+                <strong class="param">$dataURLType</strong> - (optional, FMS &ge; 7 only) possible values (case
+                insensitive): HTTP (assumed) or HTTPS. Used to connect to FileMaker&reg; Server via SSL.
+            </p>
+            <p class="return">
+                Returns an FX object. Its functions will allow you to <a href="functions_configure.html">set up</a> and
+                then <a href="functions_execute.html">execute</a> a query. After executing a query, the FX object has a
+                number of attributes you will find useful:<br>
+                <br><span class="mono">
+                $lastLinkPrevious - link to the previous &quot;page&quot; of data<br>
+                $lastLinkNext &nbsp;&nbsp;&nbsp;&nbsp;- link to the next &quot;page&quot; of data<br>
+                $lastFoundCount &nbsp;&nbsp;- number of records/rows from query<br>
+                $lastFields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- array of field/column data<br>
+                $lastURL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- URL of query, if FileMaker<br>
+                $lastQuery &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SQL of query, if relevant<br>
+                $lastQueryParams &nbsp;- parameters used to generate query<br>
+                $lastErrorCode &nbsp;&nbsp;&nbsp;- error code associated with query<br>
+                $lastValueLists &nbsp;&nbsp;- FileMaker value lists, as appropriate<br>
+                $lastDebugMessage - debug message, if any</span><br>
+            </p>
+            <pre class="code">
+/* quick FX call that will return a random record from FMS7 or later */
+$serverAddress = &apos;192.168.22.11&apos;;
+$serverPort = 80;
+$serverType = &apos;FMPro7&apos;;
+$username = &apos;web_user&apos;;
+$password = &apos;password&apos;;
+$databaseName = &apos;Contacts&apos;;
+$layoutName = &apos;web_Contact&apos;;
+
+$query = new FX($serverAddress, $serverPort, $serverType);
+$query-&gt;SetDBUserPass($username, $password);
+$query-&gt;SetDBData($databaseName, $layoutName);
+$randomRecord = $query-&gt;DoFXAction(&apos;show_any&apos;);</pre>
+            <p class="footer">
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

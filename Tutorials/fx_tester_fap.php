@@ -4,13 +4,11 @@
  * Please remember that this code is being released as open source   *
  * under The Artistic License of PERL fame...                        *
  * http://www.opensource.org/licenses/artistic-license.html          *
- *...and is also covered by the FX.php license addendum...           *
- * http://www.iviking.org/downloads/ADDENDUM.txt                     *
  *********************************************************************/
 
-require_once('../server_data.php');
+require_once('../lib/server_data.php');
 require_once('FileMaker.php');
-require_once('../FX_Fuzzy_Debugger.php');
+require_once('../lib/FX_Fuzzy_Debugger.php');
 
 if (DEBUG_FUZZY) {
     $messageType = 'Fuzzy';
@@ -21,9 +19,9 @@ if (DEBUG_FUZZY) {
 if (isset($_POST['find_records'])) { // a search is only preformed if the form was submitted
 
     // by placing the form values in an array, we can loop to set all of our find criteria
-    $searchRecordsArray = array('First_Namer' => $_POST['fname'], 'Last_Name' => $_POST['lname'], 'Phone_1 ' => $_POST['phone']);
+    $searchRecordsArray = array('First_Name' => $_POST['fname'], 'Last_Name' => $_POST['lname'], 'Phone_1 ' => $_POST['phone']);
     // configure a connection to FileMaker Server Advanced
-    $contactsListConnection = new FileMaker('Contacts.fp7', $serverIP . ':' . $webCompanionPort, $webUN, $webPW);
+    $contactsListConnection = new FileMaker('Contacts', $serverIP . ':' . $webCompanionPort, $webUN, $webPW);
     // set database and layout information
     $contactsListQuery = $contactsListConnection->newFindCommand('web_list');
     // add find parameters
@@ -36,7 +34,7 @@ if (isset($_POST['find_records'])) { // a search is only preformed if the form w
 } else { // otherwise, find all records
 
     // configure a connection to FileMaker Server Advanced
-    $contactsListConnection = new FileMaker('Contacts.fp7', $serverIP . ':' . $webCompanionPort, $webUN, $webPW);
+    $contactsListConnection = new FileMaker('Contacts', $serverIP . ':' . $webCompanionPort, $webUN, $webPW);
     // create a new findall query
     $contactsListQuery = $contactsListConnection->newFindAllCommand('web_list');
     // perform query

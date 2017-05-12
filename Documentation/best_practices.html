@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Best Practices</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Some Thoughts on Best Practices for Beginners</h2>
+            <h4>Finding Errors and Debugging</h4>
+            <ol>
+                <li>
+                    <strong>Choose your editor wisely.</strong> Line numbers, syntax coloring, error checking, debugging,
+                    and unit test support are some of the items that text editors and IDEs offer to help developers. Look
+                    at the options available for your platform of choice, and try out a few of them. JetBrains makes
+                    awesome IDEs for various languages (and combinations thereof) on multiple platforms, including
+                    <a href="https://www.jetbrains.com/phpstorm/">PhpStorm</a>.
+                </li>
+                <li>
+                    <strong>Use all the available tools.</strong> In addition to the tools built into your IDE (as
+                    discussed above), there are server-side tools at your disposal. Be sure to make use of them! On your
+                    development environment, use a high level of PHP error reporting like <span class="code">E_ALL</span>;
+                    become conversant with server logs; and use the tools built into FX.php by defining as &quot;true&quot;
+                    the <span class="code">DEBUG</span> and <span class="code">DEBUG_FUZZY</span> constants.
+                </li>
+            </ol>
+            <h4>FileMaker Database Design for the web</h4>
+            <ol>
+                <li>
+                    <strong>Make web optimized layouts.</strong> With FileMaker, every field on the specified layout is
+                    returned when you perform a query. So, for best performance, create separate layouts for your web
+                    queries; and only place the fields on it that you need for that query.
+                </li>
+                <li>
+                    <strong>Be careful what you put on a web layout.</strong> Summary fields on web layouts can make
+                    things grind to a halt. Unstored calculations can really slow things down too. And, as mentioned
+                    elsewhere, a portal on a layout with a scroll bar will return every related record for the current
+                    one. (Some FileMaker developers avoid using portals for the web, and just do an additional query
+                    instead.)
+                </li>
+                <li>
+                    <strong>Use underscores rather than spaces.</strong> Since you&apos;re typing in the names of fields,
+                    layouts, etc. an invisible character like a space can be problematic. If possible, consider using
+                    underscores when choosing names.
+                </li>
+            </ol>
+            <h4>Performance &amp; Query Optimization</h4>
+            <ol>
+                <li>
+                    <strong>Avoid returning large found sets.</strong> Use the optional, third parameter of
+                    <span class="code">SetDBData()</span> to break found sets into reasonable chunks; then either provide
+                    a paging interface, or use AJAX (asynchronous JavaScript and XML) to pull additional records as users
+                    scroll through your page.
+                </li>
+                <li>
+                    <strong>Make smart use of field/column indexing.</strong> Unless your data set is never going to
+                    grow, searching on a non-indexed field is asking for trouble. Also, become familiar with the types of
+                    indexing offered by your data source of choice &mdash; there may be options, other than the default,
+                    that work better for your needs.
+                </li>
+                <li>
+                    <strong>Be careful about how you use relationships.</strong> Sometimes, there is no substitute for
+                    relational data in a query (that&apos;s why we use relational databases, right?) On the other hand,
+                    relational data <em>will</em> slow your queries, so be judicious in your use of all that power.
+                </li>
+                <li>
+                    <strong>Test your queries during development.</strong> Keep in mind that people are used to quick
+                    responses from web pages, and web browsers will give up if your pages take too long to load. In some
+                    cases, caching may make sense (there's a MySQL caching class for FileMaker&reg; databases in the EXTRAS
+                    directory of this distribution, and there are other options out there.) And when testing, check both
+                    common and uncommon text &mdash; you may be surprised at the results.
+                </li>
+                <li>
+                    <strong>Use the right database software for the job.</strong> FileMaker&reg; databases scale to millions
+                    of records, MySQL can handle more, and PostgreSQL scales further still. For truly massive data sets,
+                    you may need to look at a NoSQL option. Keep in mind that if you need to move to a different option
+                    down-the-line, FX.php is designed to move with you.
+                </li>
+            </ol>
+            <h4>Security</h4>
+            <ol>
+                <li>
+                    <strong>Store passwords, etc. securely.</strong> Though simply putting items in the web root makes
+                    getting started with development easy, that&apos;s not where everything should be long-term &mdash;
+                    especially for servers accessible via the internet. When possible, keep sensitive data &mdash;
+                    like user names and passwords &mdash; out of the web path. A quick look at the output from PHP&apos;s
+                    <span class="code">phpinfo()</span> function will tell you about the current include path, and the
+                    location of the active <span class="code">php.ini</span> file (just in case you want to change it.)
+                    There&apos;s lots more great information in <a href="http://php.net/manual/en/function.include.php">
+                    the php include documentation</a>.
+                </li>
+                <li>
+                    <strong>Pick good passwords.</strong> There&apos;s lots of great information out there about what
+                    makes a good password (or pass phrase), so I won&apos;t rehash that here. Just make sure to avail
+                    yourself of that information when picking database passwords.
+                </li>
+                <li>
+                    <strong>Don&apos;t use an account with full access on the web.</strong> Should someone manage to
+                    compromise your system, the less access the better. Create database credentials for web access with
+                    just the privileges that you need there.
+                </li>
+            </ol>
+            <p class="footer">
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

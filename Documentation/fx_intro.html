@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The FX Parser</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Understanding the FX Class</h2>
+            <h4>What is the FX Class?</h4>
+            <p>
+                More generally, what is a Class? In PHP you can write a little program that has its own functions and
+                its own variables; it&apos;s called a Class. It&apos;s an object that you can instantiate and use
+                whenever you want. If that&apos;s clear, you can move on; if not, keep going. You can think of a class
+                as as specific type of object in the world around you: like a seasoned developer, a man-eating beast, a
+                nose, or a foot.  Each of these has functions (things they can do) like smell, and variables (attributes)
+                like size and color. Objects of the same class will have the same functions &mdash; developers will have a
+                writeCode() function &mdash; though their attributes will likely vary somewhat. As you program, it&apos;s
+                important to keep in mind that although objects of <em>different</em> classes may have functions with the
+                same name, they might do quite different things (compare the smell() functions of a nose and a foot, for
+                example.)
+            </p>
+            <p>
+                The actual FX object, or class, is written in a document called FX.php. That document is in the folder
+                that you downloaded, and is why you have to put this directory on your web server to &quot;install&quot;
+                FX.
+            </p>
+            <h4>How does FX talk to FileMaker Pro?</h4>
+            <p>
+                You could talk to FileMaker Pro yourself using any web browser by typing the URL that connects you to
+                your host (for example, fmserver.mydomain.com or 192.168.1.11), then adding onto the URL specific,
+                FileMaker-defined, WPE&sup1; syntax. The WPE&sup1; syntax and how to use it can be found in the
+                FileMaker&reg; Pro documentation on Custom Web Publishing with XML.
+            </p>
+            <p>
+                When you use WPE&sup1; syntax in the URL &mdash; for example to perform a find &mdash; your web browser
+                will connect to the server, authenticate, and load the results. The returned data, however, is formatted
+                in XML and contains all sorts of other metadata beyond what you might have expected from your original
+                query.
+            </p>
+            <p>
+                The FX class simplifies this. Giving you PHP functions very similar in name to their FileMaker&reg; Pro
+                counterparts, it builds the URL query for you, sends it to the server, and then parses the XML results
+                into a beautiful PHP array.
+            </p>
+            <p>
+                You don’t have to know FileMaker URL syntax to use the FX Class. You don’t have to know XML. You never
+                have to leave the PHP environment.
+            </p>
+            <h4>How do I use the FX Class?</h4>
+            <p>
+                The rest of this &quot;Getting Started&quot; section shows a simple PHP script that performs a
+                find on your data source of choice using the FX Parser. Use of the FX Class is explained briefly here,
+                with enough details to get you started. For more detail see the <a href="functions.html">functions
+                documentation</a>.
+            </p>
+            <p class="footer">
+                1. WPE is short for "Web Publishing Engine", <strong>not</strong> "Why Parse Exemel"<br>
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

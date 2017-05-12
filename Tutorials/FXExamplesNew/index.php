@@ -15,10 +15,10 @@ if (! isset($_SERVER['DOCUMENT_ROOT'])) {
 
 // END MICROSOFT IIS TWEAKS
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/FX/FX.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/FX/Developer/FMErrors.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/FX/server_data.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/FX/image_proxy.php");
+require_once('../../FX.php');
+require_once('../../Developer/FMErrors.php');
+require_once('../../server_data.php');
+require_once('../../image_proxy.php');
 
 $currentParameterArray = '_' . strtoupper($_SERVER['REQUEST_METHOD']);
 foreach ($$currentParameterArray as $key => $value) {
@@ -126,7 +126,7 @@ if (fopen("http://$FXE_FMServerIP:$FXE_FMWCPort/", 'r')) {
                 }
             }
             $FXQuery->SetDBData($FXE_currentDatabaseName, $FXE_currentLayoutName, $FXE_groupSize);
-            $FXQuery->FMSkipREcords($skip);
+            $FXQuery->SetSkipSize($skip);
             $ReturnedData = $FXQuery->FMFindAll();                                      // This demo finds all records in the current database.
             if ($FXE_currentLayoutName != '') {
                 $fieldLayout = array();

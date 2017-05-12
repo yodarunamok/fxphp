@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FX Parser Output</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Using the Output from the FX Parser</h2>
+            <h4>Displaying Your Results</h4>
+            <p>
+                If you have filled all the parameters of the functions above correctly, and your PHP and database
+                software installations are configured correctly, this page is ready to be displayed.
+            </p>
+            <p>
+                Know this, however, rarely does the first time prove successful. Learning to setup and configure
+                FileMaker Pro for XML sharing is cumbersome in its own right. SQL data sources each have their own
+                complexities. Adding to that the possible configuration challenges of PHP and your web server software
+                can <em>really</em> complicate things.
+            </p>
+            <p>
+                Upload this index.php file to your web server and direct your browser to it. If you have blatant PHP
+                errors they will be displayed immediately. If you see the basic FX Parser page displayed then you are
+                close to success.
+            </p>
+            <p>
+                If your communication with FileMaker Pro was unsuccessful, there are a plethora of possible reasons:
+                sharing configuration and account privileges are the most common issues at first. Either way, you will
+                receive a resulting array from the FX class.
+            </p>
+            <p>
+                FX Parser will loop through this array and show you all the elements of the first level in red. If any of
+                the elements in this first level contain arrays, FX Parser will give you a link with the following icon:
+            </p>
+            <img src="img/array_link.png" height="11" width="49">
+            <p>
+                Any array icon can be clicked on to display it’s contents. If you had a successful query against your
+                database, you will see an element in the first level of the result called &quot;data&quot;. Click on the
+                array icon and you will be able to drill down into the sub level arrays to see your resulting data.
+            </p>
+            <p>
+                If there were errors, you will see elements in the first level array that describe the errors to help you
+                troubleshoot the problem.
+            </p>
+            <h4>The FX Data Set Displayed</h4>
+            <p>
+                If you received a successful data set from your query you will receive and array with 9 elements. The
+                &quot;key&quot; or index of those elements are displayed at the left in white, and are as follows:
+                data, linkNext, linkPrevious, foundCount, fields, URL, query, errorCode, and valueLists.
+            </p>
+            <img src="img/parser_screen_01.png">
+            <p>
+                So the array of our $queryResult has 9 elements. FX Parser shows us those elements and the data that each
+                element contains:
+            </p>
+            <pre class="code">
+$queryResult[&apos;data&apos;] = array
+$queryResult[&apos;linkNext&apos;] = /fx_parser/index.php?skip=3&
+$queryResult[&apos;linkPrevious&apos;] =
+$queryResult[&apos;foundCount&apos;] = 7
+$queryResult[&apos;fields&apos;] = array
+$queryResult[&apos;URL&apos;] = // the URL created to make the XML request to FileMaker
+$queryResult[&apos;query&apos;] =
+$queryResult[&apos;errorCode&apos;] = 0
+$queryResult[&apos;valueLists&apos;] = array</pre>
+            <p>
+                Two interesting elements here are the &quot;errorCode&quot; and the &quot;foundCount&quot;. It used to be
+                that when no records were returned from a find, the result was simply a foundCount of zero. That's still
+                true of SQL data sources. However, in more recent versions of FileMaker Server, a 401 errorCode is
+                returned, as well.  So, if you wanted to check for results and display a &quot;Sorry, no records were
+                found&quot; message, you would simply use the following code (if you&apos;re not connecting to a FileMaker
+                database, you can omit everything from the &quot;&amp;&amp;&quot; on):
+            </p>
+            <pre class="code">
+if($queryResult[&apos;foundCount&apos;]==0 &amp;&amp; $queryResult[&apos;errorCode&apos;]==401)
+    echo &apos;Sorry, no records were found.&apos;;</pre>
+            <p>
+                Typically in a web page you want to display the data. Therefore, most of your time is going to be spent
+                working with the contents of the <span class="code">[&apos;data&apos;]</span> element.
+            </p>
+            <p>
+                Click on the <img src="img/array_link.png" height="11" width="49"> icon in your web browser to see the
+                contents of <span class="code">$queryResult[&apos;data&apos;].</span>
+            </p>
+            <img src="img/parser_screen_02.png" height="212" width="480">
+            <p>
+                In my example, there is were seven found records, so why is it when I click on the Array icon I see
+                only three items in red? Here you see that <span class="code">$recordsPerPage</span> variable in action.
+                You will have one red item in this display for every record in your found result, up to a maximum of
+                <span class="code">$recordsPerPage</span> records.
+            </p>
+            <p>
+                Notice the key or index for this record: &quot;6.12&quot;. That is the internal record ID and modification
+                ID from FileMaker, concatenated together with a period. This becomes important when you use FX to edit
+                and delete records because you need to pass the record ID as a parameter.
+            </p>
+            <p class="note">
+                In more advanced use cases, the modification ID can optionally be used when editing or deleting records
+                in FileMaker&reg; databases to ensure that the record in question has not changed since it was retrieved
+                by the current user.
+            </p>
+            <p class="note">
+                If you&apos;re using a non-FileMaker&reg; data source, you may note that the key or index for your rows
+                of data are just integers. This is because most of these options don&apos;t have a built-in, internal
+                row identifier like FileMaker&reg; databases do. That said, FX.php has a function just for this:<br><br>
+                <span class="code">SetDataKey($keyField, $modifyField='', $separator='.')</span><br><br>
+                Only the first parameter (usually the column name of your primary key) is required, and it gives you the
+                same functionality as the built-in FileMaker&reg; items.
+            </p>
+            <p>
+                So to recap, inside the data element is an array with an element for each found record up to a specified
+                maximum &mdash; three in the current example. The keys for those elements are 6.12, 14.0, and 25.0; and
+                the contents (or value) of each of those elements is... another array!
+            </p>
+            <p>
+                Again, click on the <img src="img/array_link.png" height="11" width="49"> icon to see what&apos;s inside.
+                Remember we are now looking at the contents of
+                <span class="code">$queryResult[&apos;data&apos;][&apos;6.12&apos;]</span>.
+            </p>
+            <p>My example:</p>
+            <img src="img/parser_screen_03.png" height="325" width="587">
+            <p>
+                The contents of the &quot;6.12&quot; element are now visible. Remember, this is another
+                array. Inside the &quot;6.12&quot; element is an array shown in green and it has elements for every field
+                on the layout you specified. My layout has more fields on it than I care to display here, but you can see
+                the first six elements and their keys (or indexes).
+            </p>
+            <p>
+                The keys for this array are the names of the fields. Remember, each element in and array has a key and a
+                value and in this instance the keys are the field names, the values are... more arrays! (I would like to
+                reassure you at this point that you have not, in fact, opened Pandora's box, and this is the last level
+                of nested arrays.  Isn&apos;t that a relief?)
+            </p>
+            <p>
+                Let&apos;s reflect on where we are. We are looking at the variable <span class="code">$queryResult</span>.
+                This is the variable that you made equal to <span class="code">$query->FMFind()</span> remember:
+            <pre class="code">$queryResult = $query-&gt;FMFind();</pre>
+            <p>
+                Inside the $queryResult variable is an array with a &apos;data&apos; element.
+            </p>
+            <pre class="code">$queryResult[&apos;data&apos;];</pre>
+            <p>
+                Inside the <span class="code">data</span> element is an array with an element for each record in the
+                found set, up to a maximum of <span class="code">$recordsPerPage</span>. We selected the first record
+                with a key of the <span class="code">recID.modID</span> of <span class="code">6.12</span>.
+            </p>
+            <pre class="code">$queryResult[&apos;data&apos;][&apos;6.12&apos;];</pre>
+            <p>
+                Inside the <span class="code">6.12</span> element is an array with an element for every field on the
+                specified layout. These elements contain keys and values. The key is the name of the field, the value is
+                another array.
+            </p>
+            <p>
+                Click on the <img src="img/array_link.png" height="11" width="49"> icon to display the contents of one of
+                the field elements.
+            </p>
+            <img src="img/parser_screen_04.png" height="250" width="587">
+            <p>
+                I clicked on the icon for the &quot;Name&quot; field. It&apos;s content is another array with only one
+                element. That element is the holy grail of all the the array elements: it is always going have a key of
+                zero, and its value will be the field contents.
+            </p>
+            <p class="note">
+                Okay, perhaps I should have said "almost always going to have a key of zero."  The exceptions are when
+                dealing with either fields in a portal, or repeating fields &mdash; both items specific to FileMaker&reg;.
+                In these cases, there will be one array element (with indexes starting at zero) for <em>each</em> row in
+                the portal, or each field repetition. It&apos;s also useful to note that the XML output honors options
+                that you set on the layout in FileMaker&reg; Pro.  So, if you only display four repetitions out of ten,
+                only four will be returned in the XML; or, if you limit your portal to three rows, three will be the
+                maximum number of rows returned.  One more caveat: if the scroll bar option for your portal is turned on,
+                then <strong>all</strong> rows of the portal will be returned, regardless of the number displayed &mdash;
+                use caution!
+            </p>
+            <p>
+                So we have taken the variable <span class="code">$queryResult</span>, gone into the <span
+                    class="code">data</span> element, then the <span class="code">6.12</span> element, then the
+                <span class="code">Name</span> element, and finally the <span class="code">0</span> element. How do you
+                output this to your web page? Like so:
+            </p>
+            <pre class="code">
+echo $queryResult[&apos;data&apos;][&apos;6.12&apos;][&apos;Name&apos;][0];
+// prints to the browser, &quot;Eustace Smith&quot;</pre>
+            <p class="note">
+                At some point you&apos;re sure to think: &quot;Wow! Constant use of the data element and a trailing zero
+                gets really repetitive!&quot; I agree. In fact, there are optional parameters that allow you to not have
+                do deal with them in your data. Perhaps better still, the <span class="code">DoFXAction()</span> function
+                defaults to this behavior. (Keep in mind you will need that last layer for repeating fields or portals.)
+                As for the other data in the top level, e.g. foundCount, errorCode, etc.; since you&apos;re working with
+                an object (<span class="code">$query</span> in this example) you can still access all of that information
+                directly from the object. And like functions, <span class="code">-&gt;</span> is used for this. See
+                <a href="functions.html">the functions documentation</a> for more details.
+            </p>
+            <p>
+                The FX Parser shows you visually each array and it&apos;s elements. You can drill down by clicking on the
+                <img src="img/array_link.png" height="11" width="49"> links. You can also see a straight text display of
+                the whole result set, parsed out in mono font, with colored syntax, by click on the TEXT ONLY link at top.
+            </p>
+            <p>
+                This is only one example how to use the FX Class. See the <a href="functions.html">FX Functions
+                document</a> to learn how FX can be used to it’s fullest capacity. No matter what the FX function, you
+                can use the FX Parser to display the results and help understand the array structures.
+            </p>
+            <p class="footer">
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+<?phpinclude('../image_proxy.php'); // fix this path based on where you installed image_proxy.phpecho(generateKey(256));

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The FX Parser</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/minified-web.js"></script>
+    <script type="text/javascript">
+        var MINI = require('minified');
+        var $ = MINI.$, $$ = MINI.$$, EE = MINI.EE;
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="menu">
+            <a href="http://www.iviking.org/FX.php/"><img src="img/FX_Logo_Small.png" width="150" height="81" id="logo"></a>
+            <ul id="left_navigation" class="nav_list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div id="content">
+            <h2>Setting Up the FX Parser</h2>
+            <h3>What is FX Parser</h3>
+            <p>
+                The FX Parser is a handy example of how to use the FX class. It is a PHP program that will show you how
+                to setup FX for your particular data source. What FX Parser does after that, is give you a robust and
+                interactive outline of the data array as it comes back from your database server: it parses the returned
+                array into a JavaScript driven HTML viewer.
+            </p>
+            <h4>Installing the FX Class and FX Parser</h4>
+            <p>
+                The FX Parser is distributed with the FX class from <a href="https://github.com/yodarunamok/fxphp">
+                github</a>. Make sure you have downloaded the latest version of this distribution.
+            </p>
+            <p>
+                The FX Class does not have an installer, it is simply in a folder called &quot;FX&quot; or
+                &quot;fxphp&quot;. For consistency, go ahead and rename the directory &quot;FX&quot;, if it isn&apos;t
+                already. To install the FX class put its folder at the root level of your site. Your site should now
+                have the path www.your_domain.com/FX/.
+            </p>
+            <p class="note">
+                Although installing FX as described above is a great way to get started (especially with a development
+                setup), at some point you&apos;ll likely want to move the FX directory somewhere more secure &mdash; at
+                the very least, the configuration data is likely quite sensitive. For now, concentrate on becoming more
+                familiar with FX.php and web development. There are more details about this in the
+                <a href="best_practices.html">Best Practices</a> documentation.
+            </p>
+            <p>
+                Inside the FX folder are documentation, helper files, and of course the FX Parser. The FX Parser
+                resides in its own folder called &quot;fx_parser&quot; at the root level of the FX folder. With your
+                favorite text editor or IDE open up the document &quot;index.php&quot; inside the &quot;fx_parser&quot;
+                folder and you&apos;ll be ready to go!
+            </p>
+            <h4>Recap of what you are about to do</h4>
+            <p>
+                When you become familiar with PHP and the FX class you will be typing your own PHP code, querying
+                against a live databases, and building dynamic web pages. But right now, we&apos;re going to show you how
+                that&apos;s done using the FX Parser. We will edit some PHP code in the &quot;index.php&quot; document
+                and then load the page to see the results.
+            </p>
+            <h3>Editing the FX Parser &quot;index.php&quot;</h3>
+            <p>
+                The FX Parser is a document call &quot;index.php&quot; inside the &quot;fx_parser&quot; folder at the
+                root level of the &quot;FX&quot; folder. Open &quot;index.php&quot; in your favorite text editor.
+            </p>
+            <p>We will be editing the lines of code near the top between the lines marked</p>
+            <pre class="code">
+# BEGINNING OF USER CODE HERE
+
+....
+
+# END OF USER CODE HERE</pre>
+            <p>
+                The code you need to modify is well documented. These lines of code are good examples of how you will
+                use FX in your own web solutions. What follows are step-by-step instructions of how to modify these
+                lines of code so that FX Parser works, and you can see how to use the FX Class.
+            </p>
+            <h4>Configuring Your Environment</h4>
+            <p>
+                The first step is to set up the configuration variables at the top of the <span class="code">USER
+                CODE</span> section.  The comments here will walk you through what each item does.  For now, leave the
+                <span class="code">$recordsPerPage</span> variable at its initial setting.
+            </p>
+            <pre class="code">
+#   First off, change the values below to match how your database server is
+#   set up. Keeping things together this way, and using variables, makes it
+#   easier to find things and change them later.
+#
+#   Your database server's address may be an IP address like "192.168.1.12",
+#   or it may be a hostname like "fms.your-domain.com".
+    $serverAddress = 'your_server_address';
+
+#   The port on which the database server is listening, usually:
+#   - 80 for FileMaker Server
+#   - 3306 for MySQL
+#   - 5432 for PostgreSQL
+    $serverPort = 80;
+
+#   The type of server being accessed. For FileMaker, the XML has not changed
+#   since version 7 (though you may use FMPro13, for example, if you prefer.)
+#   You can also use mysql, postgresql, etc. See the functions documentation
+#   for more details.
+    $serverType = 'FMPro7';
+
+#   The username and password combination for your database. In FileMaker,
+#   this user will need the fmxml extended privilege (note that FX.php does NOT
+#   use the php extended privilege in FileMaker.)
+    $username = 'your_username';
+    $password = 'your_password';
+
+#   The name of your database and layout (table for SQL data sources) are
+#   specified here, as well as how many records (rows) you would like returned
+#   at once (this example limits the result record set to 3)
+    $databaseName = 'your_database';
+    $layoutOrSqlTable = 'your_layout';
+    $recordsPerPage = 3;</pre>
+            <p>
+                Once you&apos;ve set these to match your environment, you&apos;re ready for the next step. If a value
+                is a string (that is, text), be sure to enclose it in quotes!
+            </p>
+            <h4>Instantiating and Configuring the FX Object</h4>
+            <p>
+                The next line of code needs to tell PHP where the FX object code is located. You do this by using the
+                <span class="code">include</span> or <span class="code">require</span> statement(s).
+            </p>
+            <pre class="code">
+require_once('../FX.php');</pre>
+            <p>
+                With this line, we’ve loaded the FX object so if PHP receives any calls to FX functions they can be
+                executed.
+            </p>
+            <p>
+                Now we need to get FX going. This is done be creating an FX object. Once we create an FX object then we
+                can start talking to it and telling it what to do.
+            </p>
+            <pre class="code">
+$query = new FX($serverAddress, $serverPort, $serverType);</pre>
+            <p>
+                No tricks here. You are saying that the variable <span class="code">$query</span> will be an FX object.
+                When creating the FX object called <span class="code">$query</span>, three variables that you set
+                above are used: <span class="code">$serverAddress</span> contains the address of your database server,
+                <span class="code">$serverPort</span> is the port number on which your database server is listening, and
+                <span class="code">$serverType</span> is the type of data source you are using. More information on this
+                is found in the <a href="functions.html">FX functions documentation</a>.
+            </p>
+            <p>
+                Now that we have an &quot;instance&quot; of FX, we can work with it and eventually tell it to give us
+                the results of a find of our choice.
+            </p>
+            <p>
+                Two important lines come next, one deals with authentication and the other with the database. First,
+                authentication:
+            </p>
+            <pre class="code">$query->SetDBUserPass($username, $password);</pre>
+            <p>
+                Of course your web available databases should be protected with user names and passwords. Notice the
+                syntax here:
+            <pre class="code">$query->SetDBPassword ...</pre>
+            <p>
+                To use the functions in an FX class object, we first type the object&apos;s name, <span
+                class="code">$query</span>, then we use the symbols <span class="code">-&gt;</span>, then we type the
+                function. This syntax for calling object functions and setting object parameters is consistent
+                throughout the object oriented programming of PHP and will be used when working with the FX class.
+            </p>
+            <p>
+                Next, we need to tell <span class="code">$query</span>, which database file to use and which layout to
+                work from.  Again, this information is contained in the variables that you prepared above.
+            </p>
+            <pre class="code">$query->SetDBData($databaseName, $layoutOrSqlTable, $recordsPerPage);</pre>
+            <p>
+                The SetDBData() function is used here. The first two parameters are your file name and layout name
+                respectively. The last parameter <span class="code">$recordsPerPage</span> is optional &mdash; you
+                could completely remove it and the preceding comma, and your code would still work (though you might
+                get more records at once than you&apos;d wanted since it specifies how many records to display in the
+                result.)
+            <h4>Review of our New FX Object</h4>
+            <p>
+                So far we have told PHP where to find the FX related code by using a require statement. We then created
+                an FX object called <span class="code">$query</span>, passing the server address, port number and
+                datasource type as parameters.
+            </p>
+            <p>
+                Once the FX object was created we called the two basic and essential functions:
+                <span class="code">SetDBUserPass()</span> and <span class="code">SetDBData()</span>. PHP now knows
+                about FX and can execute its code. FX now knows about your database server, it&apos;s port, username,
+                password, database name, and layout (or SQL table) name.
+            </p>
+            <p>
+                Don’t forget to make sure the account you use for this job has access to the database and layout or table
+                that was specified.
+            </p>
+            <p>
+                We are now at exactly the same point in a FileMaker&reg; database that a user would be if they just
+                opened up a file, logged in, and navigated to a specific layout. What we&apos;re going to do now is
+                perform a find using that layout.
+            </p>
+            <h4>Performing the Find</h4>
+            <p>
+                In FileMaker&reg; Pro, you would perform a find by entering find mode first, and then typing the
+                criteria in the desired field(s). With FX it&apos;s even easier because you don&apos;t have to enter
+                find mode, you just start entering find criteria right into the fields. This is done with the
+                <span class="code">AddDBParam()</span> function. Only one <span class="code">AddDBParam()</span>
+                function per field &mdash; there are some <a href="functions.html">FX functions</a> that you may prefer
+                as you become more experienced.
+            </p>
+            <pre class="code">$query->AddDBParam('your_field_name', 'your_find_criteria');</pre>
+            <p>
+                Again, your parameters for this function are strings, so you will need to enclose them in quotes. To
+                search on criteria in more than one field you just keep adding <span class="code">AddDBParam()</span>
+                lines.
+            </p>
+            <pre class="code">
+$query->AddDBParam('your_field_name2', 'your_find_criteria2');
+$query->AddDBParam('your_field_name3', 'your_find_criteria3');</pre>
+            <p>
+                In FileMaker&reg; Pro, the logical OR can be added to a find by creating new find requests. In SQL, you
+                would separate your find criteria with the keyword &quot;OR&quot;. To do this with FX, you simply call
+                the <span class="code"><a href="functions_configure.html#SetLogicalOR">SetLogicalOR()</a></span> function,
+                like so:
+            </p>
+            <pre class="code">$query->SetLogicalOR();</pre>
+            <p>
+                This <span class="code">SetLogicalOR()</span> line creates a new Find Request. Just like being in
+                FileMaker&reg; Find Mode and then selecting &quot;New Request&quot; from the menu.
+            </p>
+            <p>
+                You can now populate the fields in this request by using the <span class="code">AddDBParam()</span>
+                function, one line per field, just like you did on the first request. When you are satisfied with the
+                criteria setup for your find you ready to perform the find.
+            </p>
+            <p class="note">
+                Some of you may be saying at this point: &quot;but what if I want a find that <strong>combines</strong>
+                logical AND and logical OR?&quot;  There&apos;s an FX function for that, but it&apos;s complex enough to
+                be outside of the scope of this basic &quot;getting started&quot; documentation. It&apos;s called
+                <span class="code">FindQuery_AND()</span> and you can see more about it in the
+                <a href="functions.html#FindQuery_AND">functions documentation</a>.
+            </p>
+            <p>
+                Actually performing the find is the easiest part. This is done with the function FMFind() with one
+                important difference. You need to use a new variable for the last function to work: a new variable that
+                will hold the results of your search. If you just type
+            </p>
+            <pre class="code">$query-&gt;FMFind();</pre>
+            <p>
+                it will indeed perform a find, but it also wants to give you an array of the results. You need to
+                define a variable to hold that array.
+            </p>
+            <p>
+                So, a proper find is executed with code like this,
+            </p>
+            <pre class="code">$queryResult = $query-&gt;FMFind();</pre>
+            <p>
+                and that is exactly what you see in the FX Parser. Please remember that the code
+            </p>
+            <pre class="code">$queryResult = $query-&gt;FMFind();</pre>
+            <p>
+                must not be changed in the FX Parser. The Parser will work with an array call $queryResult and if you
+                change the name of that variable... oops... it breaks.
+            </p>
+            <p class="footer">
+                FileMaker is a trademark of <a href="http://www.filemaker.com">FileMaker, Inc.</a>, registered in the
+                U.S.and other countries.<br>
+            </p>
+        </div>
+    </div>
+    <script src="js/documentation.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            initializePage();
+        });
+    </script>
+</body>
+</html>
