@@ -1,0 +1,27 @@
+{
+    "name": "yodarunamok/fxphp",
+    "type": "library",
+    "keywords": ["FileMaker", "PHP", "CWP", "XML", "MySQL"],
+    "license": "Artistic License",
+    "description": "A Free, Open Source PHP database abstraction class for accessing FileMaker Pro and other data sources.",
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "classmap": ["FX.php"]
+    },
+    "authors": [
+        {
+            "name": "Chris Hansen"
+        },
+        {
+            "name": "Chris Adams"
+        },
+        {
+            "name": "G G Thorsen"
+        },
+        {
+            "name": "Masayuki Nii"
+        }
+    ]
+}
