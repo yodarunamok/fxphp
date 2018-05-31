@@ -1,0 +1,51 @@
+{
+    "name": "yodarunamok/fxphp",
+    "description": "FX.php is a FMPXMLRESULT parser class for php",
+    "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP"],
+    "homepage": "https://github.com/yodarunamok/fxphp",
+    "type": "library",
+    "license": "Artistic-2.0",
+    "authors": [
+        {
+            "name": "Chris Hansen",
+            "email": "chris@iviking.org",
+            "homepage": "http://www.iviking.org"
+        },
+        {
+            "name": "Gjermund Gusland Thorsen",
+            "email": "gjermundprivat@gmail.com"
+        },
+        {
+            "name": "Chris Adams"
+        },
+        {
+            "name": "Masayuki Nii"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/yodarunamok/fxphp/issues"
+    },
+    "require": {
+        "php": "^5.3.2 || ^7.0"
+    },
+    "require-dev": {
+    },
+    "config": {
+        "platform": {
+            "php": "5.3.9"
+        }
+    },
+    "suggest": {
+    },
+    "autoload": {
+      "classmap": ["FX.php"]
+    },
+    "autoload-dev": {
+    },
+    "extra": {
+        "branch-alias": {
+        }
+    },
+    "scripts": {
+    }
+}
