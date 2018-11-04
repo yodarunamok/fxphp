@@ -1,7 +1,7 @@
 {
     "name": "yodarunamok/fxphp",
     "description": "FX.php is a FMPXMLRESULT parser class for php",
-    "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP", "XML", "MySQL"],
+    "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP"],
     "homepage": "https://github.com/yodarunamok/fxphp",
     "type": "library",
     "license": "Artistic-2.0",
