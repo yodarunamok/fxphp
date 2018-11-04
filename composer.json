@@ -1,6 +1,6 @@
 {
     "name": "yodarunamok/fxphp",
-    "description": "A Free, Open Source PHP database abstraction class for accessing FileMaker Pro and other data sources.",
+    "description": "FX.php is a FMPXMLRESULT parser class for php",
     "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP", "XML", "MySQL"],
     "homepage": "https://github.com/yodarunamok/fxphp",
     "type": "library",
