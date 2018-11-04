@@ -13,7 +13,7 @@ class RetrieveFXData {
     /** @var FX $FX */
     var $FX;
 
-    function RetrieveFXData(&$FX) {
+    function __construct(&$FX) {
         $this->FX =& $FX;
     }
 

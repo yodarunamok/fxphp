@@ -1,7 +1,7 @@
 {
     "name": "yodarunamok/fxphp",
-    "description": "FX.php is a FMPXMLRESULT parser class for php",
-    "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP"],
+    "description": "A Free, Open Source PHP database abstraction class for accessing FileMaker Pro and other data sources.",
+    "keywords": ["FX.php", "FMPXMLRESULT", "FileMaker", "CWP", "FileMaker CWP", "XML", "MySQL"],
     "homepage": "https://github.com/yodarunamok/fxphp",
     "type": "library",
     "license": "Artistic-2.0",
@@ -20,7 +20,9 @@
             "name": "Chris Adams"
         },
         {
-            "name": "Masayuki Nii"
+            "name": "Masayuki Nii",
+            "email": "nii@msyk.net",
+            "homepage": "http://msyk.net/"
         }
     ],
     "support": {
