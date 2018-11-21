@@ -20,7 +20,9 @@
             "name": "Chris Adams"
         },
         {
-            "name": "Masayuki Nii"
+            "name": "Masayuki Nii",
+            "email": "nii@msyk.net",
+            "homepage": "http://msyk.net/"
         }
     ],
     "support": {
