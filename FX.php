@@ -3,26 +3,24 @@
 #                                                                       #
 #       By: Chris Hansen with Chris Adams, G G Thorsen, Masayuki Nii,   #
 #           and others                                                  #
-#  Version: 6.9                                                         #
-#     Date: 16 Jun 2015                                                 #
 #  License: Artistic License                                            #
-# Web Site: www.iviking.org                                             #
+# Web Site: fx.iviking.org                                              #
 #  Details: FX is a free open-source PHP class for accessing FileMaker  #
 #          and other databases.  For complete details about this class, #
 #          please visit www.iviking.org.                                #
 #                                                                       #
 #########################################################################
 
-define('FX_VERSION', '6.10');
-define('FX_VERSION_FULL', 'FX.php version ' . FX_VERSION . ' (16 Jun 2015) by Chris Hansen, Chris Adams, G G Thorsen, Masayuki Nii, and others.');
-
-require_once('lib/FX_Error.php');
+define('FX_VERSION', '7.0');
+define('FX_DATE', '21 Nov 2018');
+define('FX_VERSION_FULL', 'FX.php version ' . FX_VERSION . ' (' . FX_DATE . ')');
 
 if (! defined('DEBUG_FUZZY')) {
     define('DEBUG_FUZZY', false);
 }
 
 require_once('lib/FX_constants.php');
+require_once ('lib/FX_Error.php');
 
 define("EMAIL_ERROR_MESSAGES", FALSE);              // Set this to TRUE to enable emailing of specific error messages.
 define("DISPLAY_ERROR_MESSAGES", TRUE);             // Set this to FALSE to display the $altErrorMessage to the user.
@@ -53,22 +51,20 @@ function EmailErrorHandler ($FXErrorObj) {
 }
 
 class FX {
-
     // These are the basic database variables.
-    var $dataServer = '';
-    var $dataServerType = 'fmpro';
-    var $dataServerVersion = 7;
-    var $dataPort;
-    var $dataPortSuffix;
-    var $urlScheme;
-    var $useSSLProtocol = false;
-    var $verifyPeer = true;
-    var $database = '';
-    var $layout = ''; // the layout to be accessed for FM databases.  For SQL, the table to be accessed.
-    var $responseLayout = "";
-    var $groupSize = null;
-    var $currentSkip = 0;
-    var $defaultOperator = 'bw';
+    private $dataServer = '';
+    private $dataServerType = 'fmpro';
+    private $dataServerVersion = 7;
+    private $dataPort;
+    private $dataPortSuffix;
+    private $urlScheme;
+    private $useSSLProtocol = false;
+    private $database = '';
+    private $layout = '';
+    private $responseLayout = '';
+    private $groupSize = null;
+    private $currentSkip = 0;
+    private $defaultOperator = 'bw';
     var $findquerynumber = 1;
     var $findquerystring = '';
     var $dataParams = array();
@@ -171,7 +167,7 @@ class FX {
     var $fuzzyFXPass = ''; // this is to handle the fact that I couldn't provide a default value for a pass-by-value param in PHP4
 
     // Constructor
-    function FX ($dataServer, $dataPort=80, $dataType='', $dataURLType='') {
+    function __construct ($dataServer, $dataPort=80, $dataType='', $dataURLType='') {
         $this->dataServer = $dataServer;
         $this->dataPort = $dataPort;
         $this->dataPortSuffix = ':' . $dataPort;
@@ -194,6 +190,18 @@ class FX {
 
         $this->ClearAllParams();
         $this->lastDebugMessage = '<p>Instantiating FX.php.</p>';
+    }
+
+    public function __get($name)
+    {
+        $accessibleAttrs = array(
+            'dataServer', 'dataPort', 'dataPortSuffix', 'urlScheme',
+            'useSSLProtocol', 'database', 'layout', 'responseLayout', 'groupSize',
+            'currentSkip', 'defaultOperator'
+        );
+        if (in_array($name, $accessibleAttrs)) return $this->$name;
+        // TODO: handle attempts to retrieve other attributes
+        return false;
     }
 
     function BuildExtendedChar ($byteOne, $byteTwo="\x00", $byteThree="\x00", $byteFour="\x00") {
@@ -225,7 +233,6 @@ class FX {
         $this->fieldCount = 0;
         $this->currentSkip = 0;
         $this->currentData = array();
-        $this->columnCount = -1;
         $this->isPostQuery = $this->defaultPostPolicy;
         $this->isFOpenQuery = $this->defaultFOpenPolicy;
         $this->primaryKeyField = '';
@@ -299,6 +306,7 @@ class FX {
                 $datasourceDescription = 'CAFEphp';
                 break;
             default:
+                require_once('lib/FX_Error.php');
                 return new FX_Error("Unknown data source type: {$this->dataServerType}");
         }
 
@@ -411,6 +419,8 @@ class FX {
                 }
 
                 break;
+            // 'full' and 'basic' share some data, so just fall through...
+            /** @noinspection PhpMissingBreakStatementInspection */
             case 'full':
                 $dataSet['data'] = $this->currentData;
                 if (defined('FX_OBJECTIVE')) {
@@ -452,7 +462,7 @@ class FX {
                     require_once('lib/FX_Fuzzy_Debugger.php');
                     $fuzzyErrorData = new FX_Fuzzy_Debugger($this, $this->fuzzyFXPass);
                     if ($fuzzyErrorData !== false) {
-                        $this->lastDebugMessage .= $fuzzyErrorData;
+                        $this->lastDebugMessage .= $fuzzyErrorData->fuzzyOut;
                     }
                 }
 
@@ -556,11 +566,12 @@ class FX {
 
 // start of findquery section
     /**
-    * Returns the "q" number (q1, q2, etc) if a duplicate name/value pair exists already, else returns a false value (q cannot be 0 anyway).
-    *
-    * @param mixed $name
-    * @param mixed $value
-    */
+     * Returns the "q" number (q1, q2, etc) if a duplicate name/value pair exists already, else returns a false value (q cannot be 0 anyway).
+     *
+     * @param mixed $name
+     * @param mixed $value
+     * @return int|false
+     */
     function FindQuery_DuplicateExists($name, $value)
     {
         $currentParamList = $this->GetKeyPairDataParams();
@@ -581,14 +592,15 @@ class FX {
     }
 
     /**
-    * when using FMFindQuery, appends name and value pairs to the findquery query string. optionally (doModify=false), returns the string for further manipulation.
-    *  example:  $searchFields = array();
-$searchFields[] = array('zAssignedGroup::ID_Group', $group);
-$searchFields[] = array('DateClosed', $startdate.'...'.$enddate);
-$wo_find->FindQuery_Append($searchFields);
-    *   note the two arrays, to allow multiple of the same key in one find, to handle fields with multiple values separated by return.
-    * @param mixed $namevaluepair
-    * @param mixed $doModify
+     * when using FMFindQuery, appends name and value pairs to the findquery query string. optionally (doModify=false), returns the string for further manipulation.
+     *  example:  $searchFields = array();
+     *            $searchFields[] = array('zAssignedGroup::ID_Group', $group);
+     *            $searchFields[] = array('DateClosed', $startdate.'...'.$enddate);
+     *            $wo_find->FindQuery_Append($searchFields);
+     *   note the two arrays, to allow multiple of the same key in one find, to handle fields with multiple values separated by return.
+     * @param mixed $namevaluepair
+     * @param mixed $doModify
+     * @return string
     */
     function FindQuery_Append($namevaluepair = array(), $doModify = true)
     {
@@ -626,14 +638,16 @@ $wo_find->FindQuery_Append($searchFields);
                 }
             }
         }
+        return '';
     }
 
     /**
-    * exact duplicate of FindQuery_Append except for the '!' near the end..
-    *
-    * @param mixed $namevaluepair
-    * @param mixed $doModify
-    */
+     * exact duplicate of FindQuery_Append except for the '!' near the end..
+     *
+     * @param mixed $namevaluepair
+     * @param mixed $doModify
+     * @return string
+     */
     function FindQuery_Omit($namevaluepair = array(), $doModify = true)
     {
         $str = $this->FindQuery_Append($namevaluepair, false); // send false to not modify the internal query string.
@@ -644,6 +658,7 @@ $wo_find->FindQuery_Append($searchFields);
         } else {
             return ';!'.substr($str, 1);
         }
+        return '';
     }
 
     function GetKeyPairDataParams()
@@ -659,27 +674,23 @@ $wo_find->FindQuery_Append($searchFields);
     }
 
     /**
-    * Fields will be an array of fields you want to make an AND find on.
-    * the second param will be the querystring to be used.
-    * @param mixed $fields
-    */
+     * @param mixed $namevaluepair
+     */
     function FindQuery_AND ($namevaluepair = array())
     {
         $qnumlist = array(); // used to keep a list of the qnum we are ANDing.
+        $newquerystring = '';
         if (is_array($namevaluepair) && count($namevaluepair) > 0)
         {
-
             foreach($namevaluepair as $fieldInfo)
             {
-
-                    $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]);
-                    if (!$qnum)
-                    {
-                        $this->FindQuery_Append(array(array($fieldInfo[0], $fieldInfo[1])), false); // add parameters to the list of possible query params but don't modify the query yet.
-                        $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]); // find the q number after it has been created in the dataParams.
-                    }
-                    if ($qnum !== false) $qnumlist[] = $qnum;
-
+                $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]);
+                if (!$qnum)
+                {
+                    $this->FindQuery_Append(array(array($fieldInfo[0], $fieldInfo[1])), false); // add parameters to the list of possible query params but don't modify the query yet.
+                    $qnum = $this->FindQuery_DuplicateExists($fieldInfo[0], $fieldInfo[1]); // find the q number after it has been created in the dataParams.
+                }
+                if ($qnum !== false) $qnumlist[] = $qnum;
             }
 
             if ($this->findquerystring == '') // if starting with an AND, then do this
@@ -688,7 +699,7 @@ $wo_find->FindQuery_Append($searchFields);
                 foreach($qnumlist as $num)
                 {
                     // make sure that the query data is not already in this section ex: (q2,q2) is illegal
-                        $newquerystring .= ',q'.$num;
+                    $newquerystring .= ',q'.$num;
                 }
                 $newquerystring = ';('. substr($newquerystring, 1) .')'; // strip off initial comma
             } else {
@@ -702,7 +713,6 @@ $wo_find->FindQuery_Append($searchFields);
                         $newquerystring .= ';'.substr($findquerypiece, 0, (strlen($findquerypiece)-1));
                         if (strpos($findquerypiece, '!') === false)
                         {
-    //                        if (count($fieldnames) == 0 || in_array( /// check for field in dataParams for this query piece
                             foreach($qnumlist as $num)
                             {
                                 // make sure that the query data is not already in this section ex: (q2,q2) is illegal
@@ -714,15 +724,10 @@ $wo_find->FindQuery_Append($searchFields);
                         }
                             $newquerystring .= ')';
                     }
-//                     else {
-//                        $newquerystring .= ';'.$findquerypiece;
-//                    }
                 }
             }
         }
         $this->findquerystring = $newquerystring;
-
-
     }
 // end of findquery section
 
@@ -887,6 +892,7 @@ $wo_find->FindQuery_Append($searchFields);
         if (FX::isError($queryResult)){
             return $queryResult;
         }
+        return true;
     }
 
     function FMDBClose () {
@@ -894,6 +900,7 @@ $wo_find->FindQuery_Append($searchFields);
         if (FX::isError($queryResult)){
             return $queryResult;
         }
+        return true;
     }
 
     function FMDelete ($returnDataSet = false, $returnData = 'basic', $useInnerArray = true) {
