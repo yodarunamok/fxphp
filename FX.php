@@ -372,8 +372,8 @@ class FX {
 
     function AssembleDataSet ($returnData) {
         $dataSet = array();
-        $FMNext = $this->currentSkip + $this->groupSize;
-        $FMPrevious = $this->currentSkip - $this->groupSize;
+        $FMNext = $this->currentSkip + intval($this->groupSize);
+        $FMPrevious = $this->currentSkip - intval($this->groupSize);
 
         switch ($returnData) {
             case 'object':
