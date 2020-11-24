@@ -3,6 +3,8 @@
 A FREE, Open Source PHP database abstraction class for accessing FileMaker Pro and other data sources
 by Chris Hansen with Chris Adams, Gjermund Gusland Thorsen, Masayuki Nii, and others.
 
+Special thanks to Bob Patin and David Walton for generous donations to help support the project.
+
 FX.php is a PHP class originally conceived as a way to easily parse the XML output by FileMaker Pro's XML RPC (A.K.A. Web Publishing Engine or Custom Web Publishing) into a multi-level array which could easily be manipulated using PHP.  Full CRUD -- records (rows in SQL parlance) can be searched, edited, created, and deleted.  In addition, a number of other actions can be performed including script execution, etc.  (See the documentation for more details.)  When any action is performed, the returned array is organized in up to four arrays, as follows (these are the relevant indexes or key values):
 
 * Level 1: (optional, depending on the return type)
