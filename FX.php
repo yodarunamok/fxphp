@@ -225,7 +225,6 @@ class FX {
         $this->fieldCount = 0;
         $this->currentSkip = 0;
         $this->currentData = array();
-        $this->columnCount = -1;
         $this->isPostQuery = $this->defaultPostPolicy;
         $this->isFOpenQuery = $this->defaultFOpenPolicy;
         $this->primaryKeyField = '';
